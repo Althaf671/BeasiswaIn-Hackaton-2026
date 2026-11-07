@@ -41,4 +41,3 @@ public sealed record ScholarBotSource
 
 public sealed record ScholarBotToolTrace(string Name, bool Success, long DurationMilliseconds);
 public sealed record ScholarBotUsageSummary(int InputTokens, int OutputTokens, int ApiCalls, decimal? CostUsd);
-public sealed record ScholarBotToolResult(string Content, bool Success, IReadOnlyList<ScholarBotSource> Sources);

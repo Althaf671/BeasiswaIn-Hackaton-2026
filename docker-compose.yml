@@ -1,21 +1,4 @@
 services:
-  db:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:5431:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
   ai-service:
     build: ./src/AiService
     restart: unless-stopped
@@ -25,7 +8,8 @@ services:
       SCHOLARBOT_SERVICE_TOKEN: ${SCHOLARBOT_SERVICE_TOKEN:?Set a shared service token of at least 32 characters}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?Set OPENROUTER_API_KEY}
       OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
-      DOTNET_BASE_URL: http://web:8080
+      DATABASE_URL: ${DATABASE_URL:?Set the existing VPS PostgreSQL URI; no local database is created}
+      SCHOLARBOT_MATCHING_MODEL: ${SCHOLARBOT_MATCHING_MODEL:-gemini-3.1-flash-lite}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=3).close()"]
       interval: 10s
@@ -36,15 +20,13 @@ services:
     build: .
     restart: unless-stopped
     depends_on:
-      db:
-        condition: service_healthy
       ai-service:
         condition: service_healthy
     ports:
       - "${WEB_PORT:-8080}:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-      ConnectionStrings__Default: Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      ConnectionStrings__Default: ${DOTNET_DATABASE_CONNECTION_STRING:?Set the existing VPS connection string for .NET}
       ScholarBot__ServiceUrl: http://ai-service:8001
       ScholarBot__ServiceToken: ${SCHOLARBOT_SERVICE_TOKEN}
       OpenAi__ApiKey: ${OPENROUTER_API_KEY}
@@ -52,6 +34,3 @@ services:
       Cloudinary__CloudName: ${CLOUDINARY_CLOUD_NAME:?Set CLOUDINARY_CLOUD_NAME}
       Cloudinary__ApiKey: ${CLOUDINARY_API_KEY:?Set CLOUDINARY_API_KEY}
       Cloudinary__ApiSecret: ${CLOUDINARY_API_SECRET:?Set CLOUDINARY_API_SECRET}
-
-volumes:
-  pgdata:

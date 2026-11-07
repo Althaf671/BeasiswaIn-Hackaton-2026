@@ -4,17 +4,24 @@ import logging
 from contextlib import asynccontextmanager
 
 import httpx
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Security
 from fastapi.exceptions import RequestValidationError
+from fastapi.openapi.utils import get_openapi
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from openai import AsyncOpenAI
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
-from .contracts import MAX_BODY_BYTES, MAX_RESPONSE_BYTES, ChatRequest, ServiceError, parse_json
-from .runtime import OpenRouterProvider, ScholarRuntime
+from .contracts import (
+    ERRORS, MAX_BODY_BYTES, MAX_RESPONSE_BYTES, ChatRequest, ChatResponse,
+    ErrorResponse, HealthResponse, ServiceError, parse_json,
+)
+from .database import ScholarRepository
+from .provider import OpenRouterProvider
+from .runtime import ScholarRuntime
 from .settings import Settings
-from .tools import DotnetTools
+from .tools import TOOL_DEFINITIONS, DataTools
 
 
 def error_response(code: str) -> JSONResponse:
@@ -105,17 +112,31 @@ def create_app() -> FastAPI:
         logging.getLogger("openai").setLevel(logging.WARNING)
         logging.getLogger("httpx").setLevel(logging.WARNING)
         timeout = httpx.Timeout(settings.timeout_seconds, connect=10.0)
-        async with httpx.AsyncClient(timeout=timeout, follow_redirects=False, trust_env=False) as provider_http:
-            async with httpx.AsyncClient(timeout=timeout, follow_redirects=False, trust_env=False) as callback_http:
+        repository = await ScholarRepository.create(settings)
+        try:
+            async with httpx.AsyncClient(timeout=timeout, follow_redirects=False, trust_env=False) as provider_http:
                 async with AsyncOpenAI(api_key=settings.openrouter_api_key.get_secret_value(),
                                        base_url=settings.openrouter_base_url, max_retries=0,
                                        timeout=timeout, http_client=provider_http) as provider_client:
+                    provider = OpenRouterProvider(settings, provider_client, TOOL_DEFINITIONS)
                     api.state.settings = settings
-                    api.state.runtime = ScholarRuntime(settings, OpenRouterProvider(settings, provider_client),
-                                                       DotnetTools(settings, callback_http))
+                    api.state.runtime = ScholarRuntime(settings, provider, DataTools(settings, repository, provider))
                     yield
+        finally:
+            await repository.close()
 
-    api = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+    api = FastAPI(
+        title="ScholarBot REST API",
+        version="1.0.0",
+        description=(
+            "Scholarship-only assistant with read-only access to stored scholarship data. "
+            "Call from a trusted authenticated backend, never directly from a browser. "
+            "The backend must derive userId from its authenticated server principal. "
+            "The service Bearer token authorizes that backend; it is not an end-user token. "
+            "No database writes are available."
+        ),
+        lifespan=lifespan,
+    )
 
     api.add_middleware(AuthenticatedBodyLimit)
 
@@ -127,14 +148,48 @@ def create_app() -> FastAPI:
     async def safe_validation_error(_request, _error):
         return error_response("InvalidRequest")
 
-    @api.get("/health")
+    @api.get("/health", response_model=HealthResponse, summary="Public process liveness", description="Does not check database or provider availability.")
     async def health():
         return {"status": "ok"}
 
-    @api.post("/scholarbot/chat")
-    async def chat(request: Request):
+    bearer = HTTPBearer(
+        auto_error=False,
+        scheme_name="ServiceBearer",
+        description="Backend-only SCHOLARBOT_SERVICE_TOKEN; at least 32 URL-safe ASCII characters. Never expose it to the browser.",
+    )
+    error_responses = {}
+    for code, (status, message) in ERRORS.items():
+        response = error_responses.setdefault(status, {
+            "model": ErrorResponse,
+            "description": "",
+            "content": {"application/json": {"examples": {}}},
+        })
+        response["description"] += f"{code}: {message} "
+        response["content"]["application/json"]["examples"][code] = {"value": {"error": {"code": code, "message": message}}}
+
+    @api.post(
+        "/scholarbot/chat", response_model=ChatResponse, responses=error_responses,
+        summary="Answer a scholarship question",
+        description=(
+            "Requires an authenticated backend-supplied stored userId; an unknown account fails before any AI call. "
+            "Only message, history and userId are accepted. Tool arguments cannot select account identity. "
+            "Request body is capped at 262,144 bytes; authentication runs before body consumption. "
+            "Responses include actual provider and nested matcher usage; costUsd is null when any cost is unknown. "
+            "All error responses use the documented safe envelope."
+        ),
+        openapi_extra={"requestBody": {
+            "required": True,
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ChatRequest"}}},
+        }},
+    )
+    async def chat(
+        request: Request,
+        _credentials: HTTPAuthorizationCredentials | None = Security(bearer),
+    ):
         try:
             try:
+                # Parse manually so duplicate keys, invalid constants and excessive
+                # nesting all receive the same safe validation error.
                 value = ChatRequest.model_validate(parse_json(await request.body()))
             except (ValidationError, ValueError, UnicodeError, RecursionError):
                 return error_response("InvalidRequest")
@@ -152,8 +207,19 @@ def create_app() -> FastAPI:
         except asyncio.CancelledError:
             raise
         except Exception:
-            # Never serialize/log provider exceptions, request data or delegation.
+            # Never serialize/log provider exceptions, request data or identity.
             return error_response("Unavailable")
+
+    def documented_openapi():
+        if api.openapi_schema is None:
+            schema = get_openapi(title=api.title, version=api.version, description=api.description, routes=api.routes)
+            request_schema = ChatRequest.model_json_schema(ref_template="#/components/schemas/{model}")
+            schema["components"]["schemas"].update(request_schema.pop("$defs", {}))
+            schema["components"]["schemas"]["ChatRequest"] = request_schema
+            api.openapi_schema = schema
+        return api.openapi_schema
+
+    api.openapi = documented_openapi
 
     return api
 

@@ -3,21 +3,13 @@ import math
 import time
 from dataclasses import dataclass
 
-import httpx
-from openai import APIConnectionError, APIStatusError, APITimeoutError, AsyncOpenAI
-
-from .contracts import ChatRequest, ServiceError, Usage, normalize_tool_result, parse_json, text_limit
+from .contracts import ChatRequest, ServiceError, Usage, normalize_tool_result, text_limit
 from .instructions import create_instructions
 from .settings import Settings
-from .tools import KNOWN_TOOLS, TOOL_DEFINITIONS, DotnetTools, bounded_response
+from .provider import OpenRouterProvider, provider_usage
+from .tools import KNOWN_TOOLS, DataTools
 
 logger = logging.getLogger(__name__)
-
-
-def nonnegative_integer(value) -> int:
-    if type(value) is not int or not 0 <= value <= 2147483647:
-        raise ServiceError("InvalidResponse")
-    return value
 
 
 class UsageLedger:
@@ -49,20 +41,6 @@ class UsageLedger:
     def snapshot(self) -> dict:
         return {"inputTokens": self.input_tokens, "outputTokens": self.output_tokens,
                 "apiCalls": self.api_calls, "costUsd": self.cost if self.all_costs_known else None}
-
-
-def provider_usage(payload: dict) -> Usage:
-    raw = payload.get("usage")
-    if not isinstance(raw, dict):
-        raise ServiceError("InvalidResponse")
-    input_tokens = nonnegative_integer(raw.get("prompt_tokens"))
-    output_tokens = nonnegative_integer(raw.get("completion_tokens"))
-    if "total_tokens" in raw and nonnegative_integer(raw["total_tokens"]) != input_tokens + output_tokens:
-        raise ServiceError("InvalidResponse")
-    cost = raw.get("cost")
-    if cost is not None and (type(cost) not in {int, float} or not math.isfinite(cost) or cost < 0):
-        raise ServiceError("InvalidResponse")
-    return Usage(inputTokens=input_tokens, outputTokens=output_tokens, apiCalls=1, costUsd=cost)
 
 
 @dataclass(frozen=True)
@@ -131,40 +109,15 @@ def validate_calls(calls: list[dict]) -> list[dict]:
     return validated
 
 
-class OpenRouterProvider:
-    def __init__(self, settings: Settings, client: AsyncOpenAI):
-        self.settings = settings
-        self.client = client
-
-    async def complete(self, messages: list[dict], max_output_tokens: int) -> dict:
-        try:
-            async with self.client.chat.completions.with_streaming_response.create(
-                model=self.settings.model, messages=messages, tools=TOOL_DEFINITIONS,
-                parallel_tool_calls=False, max_tokens=max_output_tokens,
-            ) as response:
-                # The SDK still owns authentication/request construction and retry policy,
-                # while its raw streaming response lets us cap bytes before JSON parsing.
-                payload = parse_json(await bounded_response(response.http_response))
-            if not isinstance(payload, dict):
-                raise ServiceError("InvalidResponse")
-            return payload
-        except (APITimeoutError, httpx.TimeoutException):
-            raise ServiceError("Timeout") from None
-        except APIStatusError as error:
-            raise ServiceError("Timeout" if error.status_code in {408, 504} else "Unavailable") from None
-        except (APIConnectionError, httpx.HTTPError):
-            raise ServiceError("Unavailable") from None
-        except (ValueError, UnicodeError, RecursionError):
-            raise ServiceError("InvalidResponse") from None
-
-
 class ScholarRuntime:
-    def __init__(self, settings: Settings, provider: OpenRouterProvider, tools: DotnetTools):
+    def __init__(self, settings: Settings, provider: OpenRouterProvider, tools: DataTools):
         self.settings = settings
         self.provider = provider
         self.tools = tools
 
     async def chat(self, request: ChatRequest) -> dict:
+        if not await self.tools.user_exists(request.userId):
+            raise ServiceError("Unauthorized")
         limits = self.settings
         ledger = UsageLedger(limits.max_total_tokens)
         messages = [{"role": "system", "content": create_instructions()}]
@@ -200,7 +153,7 @@ class ScholarRuntime:
                 known = function["name"] in KNOWN_TOOLS
                 trace_name = function["name"] if known else "UnknownTool"
                 started = time.monotonic()
-                result = await self.tools.execute(function["name"], function["arguments"], request.contextToken,
+                result = await self.tools.execute(function["name"], function["arguments"], request.userId,
                                                   ledger.remaining, min(limits.max_output_tokens, ledger.remaining))
                 # Nested matching is charged even if its result must be normalized.
                 nested_usage = result.usage

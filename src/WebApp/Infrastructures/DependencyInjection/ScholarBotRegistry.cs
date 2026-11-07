@@ -24,15 +24,9 @@ internal static class ScholarBotRegistry
                     >= '0' and <= '9' or '-' or '_'),
                 "ScholarBot:ServiceToken is required and must contain at least 32 ASCII URL-safe characters; " +
                 "configure ScholarBot__ServiceToken to match Python's SCHOLARBOT_SERVICE_TOKEN.")
-            .Validate(options => options.MaxMatchingOutputTokens <= options.MaxMatchingTotalTokens,
-                "ScholarBot matching output limit must not exceed the matching total token budget.")
             .ValidateOnStart();
 
         services.TryAddSingleton(TimeProvider.System);
-        services.AddDataProtection();
-        services.AddSingleton<ScholarBotDelegation>();
-        services.AddScoped<ScholarBotUsage>();
-        services.AddScoped<IScholarBotTools, ScholarBotTools>();
         services.AddHttpClient<IScholarBotService, ScholarBotClient>((provider, client) =>
         {
             var options = provider.GetRequiredService<IOptions<ScholarBotOptions>>().Value;
@@ -47,7 +41,7 @@ internal static class ScholarBotRegistry
                 UseCookies = false
             })
             // No retry/resilience handlers: a failed request must never duplicate paid work.
-            // Remove HTTP logging entirely, including trace-level headers and delegation tokens.
+            // Remove HTTP logging entirely, including service authentication headers.
             .RemoveAllLoggers();
         return services;
     }

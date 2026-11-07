@@ -74,21 +74,19 @@ class HistoryMessage(Contract):
 
 
 class ChatRequest(Contract):
-    message: str
-    history: list[HistoryMessage] = Field(max_length=12)
-    contextToken: str
+    message: str = Field(description="Scholarship question or essay; at most 12,000 UTF-16 code units.")
+    history: list[HistoryMessage] = Field(max_length=12, description="User/assistant turns only; total conversation at most 48,000 UTF-16 code units.")
+    userId: str = Field(description="Stored account ID supplied exclusively by the trusted authenticated backend, never selected by the browser or model. At most 256 UTF-16 code units.")
 
     @field_validator("message")
     @classmethod
     def bounded_message(cls, value: str) -> str:
         return text_limit(value, 12000)
 
-    @field_validator("contextToken")
+    @field_validator("userId")
     @classmethod
-    def bounded_context(cls, value: str) -> str:
-        if not 1 <= len(value) <= 4096 or not value.isascii() or any(ord(c) < 33 or ord(c) > 126 for c in value):
-            raise ValueError("Invalid delegation context")
-        return value
+    def bounded_user_id(cls, value: str) -> str:
+        return text_limit(value, 256)
 
     @model_validator(mode="after")
     def bounded_context_text(self) -> "ChatRequest":
@@ -153,6 +151,32 @@ class Source(Contract):
         if date.tzinfo is None:
             raise ValueError("Missing deadline offset")
         return value
+
+
+class ToolCallTrace(Contract):
+    name: str
+    success: bool
+    durationMilliseconds: int = Field(ge=0)
+
+
+class ChatResponse(Contract):
+    answer: str
+    sources: list[Source]
+    toolCalls: list[ToolCallTrace]
+    usage: Usage
+
+
+class ErrorDetail(Contract):
+    code: Literal["Unauthorized", "InvalidRequest", "Unavailable", "Timeout", "BudgetExceeded", "InvalidResponse"]
+    message: str
+
+
+class ErrorResponse(Contract):
+    error: ErrorDetail
+
+
+class HealthResponse(Contract):
+    status: Literal["ok"]
 
 
 class ToolResult(Contract):

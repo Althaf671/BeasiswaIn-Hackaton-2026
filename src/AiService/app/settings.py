@@ -12,7 +12,8 @@ class Settings(BaseSettings):
     openrouter_api_key: SecretStr = Field(validation_alias="OPENROUTER_API_KEY")
     openrouter_base_url: str = Field(default="https://openrouter.ai/api/v1", validation_alias="OPENROUTER_BASE_URL")
     model: str = Field(default="openai/gpt-6-luna", validation_alias="SCHOLARBOT_MODEL")
-    dotnet_base_url: str = Field(default="http://127.0.0.1:5009", validation_alias="DOTNET_BASE_URL")
+    matching_model: str = Field(default="gemini-3.1-flash-lite", validation_alias="SCHOLARBOT_MATCHING_MODEL")
+    database_url: SecretStr = Field(validation_alias="DATABASE_URL")
     max_iterations: int = Field(default=6, ge=2, le=10, validation_alias="SCHOLARBOT_MAX_ITERATIONS")
     max_tool_calls: int = Field(default=8, ge=1, le=12, validation_alias="SCHOLARBOT_MAX_TOOL_CALLS")
     timeout_seconds: int = Field(default=90, ge=10, le=180, validation_alias="SCHOLARBOT_TIMEOUT_SECONDS")
@@ -35,7 +36,7 @@ class Settings(BaseSettings):
             raise ValueError("A valid API key is required")
         return value
 
-    @field_validator("openrouter_base_url", "dotnet_base_url")
+    @field_validator("openrouter_base_url")
     @classmethod
     def valid_url(cls, value: str) -> str:
         try:
@@ -50,11 +51,27 @@ class Settings(BaseSettings):
             raise ValueError("Service URL must be absolute HTTP(S), without credentials, query or fragment")
         return value.rstrip("/")
 
-    @field_validator("model")
+    @field_validator("model", "matching_model")
     @classmethod
     def valid_model(cls, value: str) -> str:
         if not value.strip() or len(value) > 256 or any(ord(c) < 32 for c in value):
             raise ValueError("Invalid model")
+        return value
+
+    @field_validator("database_url")
+    @classmethod
+    def valid_database_url(cls, value: SecretStr) -> SecretStr:
+        try:
+            raw = value.get_secret_value()
+            parsed = urlsplit(raw)
+            port = parsed.port
+            if (parsed.scheme not in {"postgresql", "postgres"} or not parsed.hostname
+                    or not parsed.path or parsed.path == "/" or parsed.fragment
+                    or raw != raw.strip() or any(ord(c) <= 32 for c in raw)
+                    or (port is not None and not 1 <= port <= 65535)):
+                raise ValueError
+        except ValueError:
+            raise ValueError("A valid PostgreSQL database URL is required") from None
         return value
 
     @model_validator(mode="after")

@@ -14,7 +14,6 @@ internal sealed class ScholarBotClient(
     HttpClient client,
     IUserContext userContext,
     IHttpContextAccessor httpContext,
-    ScholarBotDelegation delegation,
     IOptions<ScholarBotOptions> options,
     TimeProvider timeProvider,
     ILogger<ScholarBotClient> logger) : IScholarBotService
@@ -35,12 +34,11 @@ internal sealed class ScholarBotClient(
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, requestAborted, timeout.Token);
         try
         {
-            var contextToken = delegation.Create(userId!);
             var body = JsonSerializer.SerializeToUtf8Bytes(new
             {
                 request.Message,
                 request.History,
-                contextToken
+                userId
             }, ScholarBotProtocol.JsonOptions);
             if (body.Length > 262144)
                 return Result<ScholarBotResponse>.Failure(ScholarBotErrors.InvalidRequest);
@@ -62,7 +60,7 @@ internal sealed class ScholarBotClient(
             if (!IsValidResponse(document.RootElement))
                 return Result<ScholarBotResponse>.Failure(ScholarBotErrors.InvalidResponse);
             var result = document.RootElement.Deserialize<ScholarBotResponse>(ScholarBotProtocol.JsonOptions);
-            return result is null || ContainsDelegation(result, contextToken)
+            return result is null
                 ? Result<ScholarBotResponse>.Failure(ScholarBotErrors.InvalidResponse)
                 : Result<ScholarBotResponse>.Success(result);
         }
@@ -177,12 +175,6 @@ internal sealed class ScholarBotClient(
         }
         return true;
     }
-
-    private static bool ContainsDelegation(ScholarBotResponse response, string token) =>
-        response.Answer.Contains(token, StringComparison.Ordinal) || response.Sources.Any(source =>
-            source.Id.Contains(token, StringComparison.Ordinal) || source.Name.Contains(token, StringComparison.Ordinal) ||
-            (source.RegistrationUrl?.Contains(token, StringComparison.Ordinal) ?? false) ||
-            (source.GuideUrl?.Contains(token, StringComparison.Ordinal) ?? false));
 
     private static bool Text(JsonElement value, int maximum) => value.ValueKind == JsonValueKind.String &&
         ScholarBotProtocol.IsValidText(value.GetString(), maximum);

@@ -2,7 +2,9 @@ import pytest
 from pydantic import ValidationError
 
 from app.contracts import ChatRequest, ServiceError, Usage, normalize_tool_result, parse_json, tool_error, utf16_length
-from app.runtime import UsageLedger, parse_completion, provider_usage, validate_calls
+from app.provider import provider_usage
+from app.runtime import UsageLedger, parse_completion, validate_calls
+from app.settings import Settings
 
 
 @pytest.mark.parametrize("calls", [{}, "", 0, False])
@@ -15,7 +17,7 @@ def test_malformed_native_collection_cannot_turn_into_a_text_answer(calls):
 
 
 def request(message="halo", history=None, **extra):
-    return ChatRequest.model_validate({"message": message, "history": history or [], "contextToken": "opaque", **extra})
+    return ChatRequest.model_validate({"message": message, "history": history or [], "userId": "stored-account", **extra})
 
 
 def test_utf16_bounds_match_browser_and_dotnet():
@@ -39,14 +41,29 @@ def test_history_context_budget_and_role_dependent_limits():
                     [{"role": "user", "content": "a", "userId": "forged"}], [{"role": "user", "content": "a"}] * 13):
         with pytest.raises(ValidationError):
             request(history=history)
-    with pytest.raises(ValidationError):
-        request(userId="forged")
+    for extra in ({"contextToken": "obsolete"}, {"model": "untrusted"}, {"unknown": True}):
+        with pytest.raises(ValidationError):
+            request(**extra)
 
 
-def test_delegation_context_cannot_exceed_callback_header_bound():
-    request(contextToken="x" * 4096)
+def test_backend_account_id_is_required_strict_nonblank_and_utf16_bounded():
+    request(userId="😀" * 128)
+    for user_id in ("", " ", "😀" * 129, "\ud800", 123, None):
+        with pytest.raises(ValidationError):
+            request(userId=user_id)
     with pytest.raises(ValidationError):
-        request(contextToken="x" * 4097)
+        ChatRequest.model_validate({"message": "halo", "history": []})
+
+
+@pytest.mark.parametrize("url", ["https://db.example/database", "postgresql:///database",
+    "postgresql://db.example", "postgresql://db.example/database#secret", "postgresql://db.example:bad/database"])
+def test_database_configuration_rejects_invalid_dsn_without_leaking_secrets(url):
+    secret = "private-password"
+    url = url.replace("db.example", f"user:{secret}@db.example")
+    with pytest.raises(ValidationError) as error:
+        Settings(SCHOLARBOT_SERVICE_TOKEN="s" * 32, OPENROUTER_API_KEY="private-provider-key", DATABASE_URL=url)
+    assert secret not in str(error.value)
+    assert "private-provider-key" not in str(error.value)
 
 
 def test_ambiguous_and_nonstandard_json_rejected():

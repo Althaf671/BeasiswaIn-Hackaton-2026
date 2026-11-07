@@ -7,6 +7,7 @@ name = "beasiswain-ai-service"
 version = "1.0.0"
 requires-python = ">=3.11"
 dependencies = [
+  "asyncpg==0.30.0",
   "fastapi==0.115.6",
   "httpx==0.28.1",
   "openai==1.59.7",

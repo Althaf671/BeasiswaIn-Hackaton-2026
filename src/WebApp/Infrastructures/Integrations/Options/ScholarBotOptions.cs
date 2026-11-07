@@ -16,10 +16,4 @@ internal sealed class ScholarBotOptions
 
     [Range(10, 180)]
     public int TimeoutSeconds { get; init; } = 100;
-
-    [Range(256, 10000)]
-    public int MaxMatchingOutputTokens { get; init; } = 6000;
-
-    [Range(4000, 64000)]
-    public int MaxMatchingTotalTokens { get; init; } = 48000;
 }
