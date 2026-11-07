@@ -12,23 +12,10 @@ internal sealed class ApplicationDbContext
     : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
     public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
-
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
-
     public DbSet<Scholarship> Scholarships => Set<Scholarship>();
-
-    public DbSet<Competition> Competitions => Set<Competition>();
-
     public DbSet<ScholarshipCategory> ScholarshipCategories => Set<ScholarshipCategory>();
-
-    public DbSet<CompetitionCategory> CompetitionCategories => Set<CompetitionCategory>();
-
     public DbSet<ScholarshipCategoryAssignments> ScholarshipCategoryAssignments => Set<ScholarshipCategoryAssignments>();
-
-    public DbSet<CompetitionCategoryAssignments> CompetitionCategoryAssignments => Set<CompetitionCategoryAssignments>();
-
-    public DbSet<UserCompetitionPreferences> UserCompetitionPreferences => Set<UserCompetitionPreferences>();
-
     public DbSet<UserScholarshipPreferences> UserScholarshipPreferences => Set<UserScholarshipPreferences>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

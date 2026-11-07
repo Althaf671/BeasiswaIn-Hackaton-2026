@@ -4,7 +4,7 @@ namespace BeasiswaIn.Web.Infrastructures.DependencyInjection;
 
 internal static class CookieRegistry
 {
-    public static IServiceCollection AddCookie(
+    public static IServiceCollection AddAppCookie(
         this IServiceCollection services,
         IWebHostEnvironment environment)
     {

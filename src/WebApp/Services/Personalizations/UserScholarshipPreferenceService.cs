@@ -8,7 +8,6 @@ namespace BeasiswaIn.Web.Services.Personalizations;
 internal sealed class UserScholarshipPreferenceService : IUserScholarshipPreferenceService
 {
     private readonly IApplicationDbContext _dbContext;
-    private readonly ICompetitionService _competitionService;
     private readonly IScholarshipService _scholarshipService;
     private readonly IOpenAiService _openAiService;
     private readonly IImageStorageService _imageStorageService;
@@ -16,7 +15,6 @@ internal sealed class UserScholarshipPreferenceService : IUserScholarshipPrefere
 
     public UserScholarshipPreferenceService(
         IApplicationDbContext dbContext,
-        ICompetitionService competitionService,
         IScholarshipService scholarshipService,
         IOpenAiService openAiService,
         IImageStorageService imageStorageService,
@@ -24,7 +22,6 @@ internal sealed class UserScholarshipPreferenceService : IUserScholarshipPrefere
     {
         _dbContext = dbContext;
         _logger = logger;
-        _competitionService = competitionService;
         _scholarshipService = scholarshipService;
         _openAiService = openAiService;
         _imageStorageService = imageStorageService;

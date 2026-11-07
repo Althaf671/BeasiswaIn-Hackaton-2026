@@ -1,0 +1,112 @@
+/*
+ * BeasiswaIn
+ *
+ * Copyright (c) 2026 Althaf671
+ *
+ * Modification, redistribution, and commercial use are prohibited.
+ *
+ * See the project README for the complete license terms.
+ */
+
+.notyf {
+  --toast-surface: #ffffff;
+  --toast-ink: #1f1b18;
+  --toast-muted: #7d7167;
+  --toast-border: #e5e0d9;
+  --toast-accent: #c4673a;
+  --toast-success: #4f7a48;
+  --toast-error: #b4472f;
+  --toast-info: #666d75;
+
+  margin-top: 0.5rem;
+}
+
+.notyf .notyf__toast {
+  padding: 0;
+  background: transparent !important;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.notyf .toast,
+.notyf .toast-body {
+  color: var(--toast-ink) !important;
+}
+
+.notyf .toast {
+  width: 380px;
+  max-width: 100%;
+}
+
+.notyf .toast-header small {
+  white-space: nowrap;
+}
+
+.notyf .notyf__ripple,
+.notyf .notyf__icon,
+.notyf .notyf__dismiss {
+  display: none !important;
+}
+
+.notyf .notyf__wrapper {
+  padding: 0;
+}
+
+.notyf .notyf__message {
+  display: block;
+  width: 100%;
+}
+
+.notyf .toast {
+  width: fit-content;
+  min-width: 300px;
+  max-width: 380px;
+
+  --bs-toast-bg: var(--toast-surface);
+
+  background-color: var(--toast-surface);
+  color: var(--toast-ink);
+
+  box-shadow: var(--shadow-med);
+  font-family: var(--font-family-base);
+
+  border-radius: var(--radius-element);
+  border: 1px solid var(--toast-border);
+}
+
+.notyf .toast-header:last-child {
+  border-bottom: 0;
+  border-radius: var(--radius-element);
+}
+
+.notyf .toast-header {
+  color: var(--toast-ink);
+  background-color: var(--toast-surface);
+  border-bottom: 1px solid var(--toast-border);
+}
+
+.notyf .toast-body {
+  color: var(--toast-ink) !important;
+  background-color: var(--toast-surface);
+  border-radius: 0 0 var(--radius-element) var(--radius-element);
+}
+
+// -----------------------------------------------
+// Toast variants
+// -----------------------------------------------
+
+.notyf .toast.text-bg-success,
+.notyf .toast.bg-success {
+  border-color: var(--toast-success);
+}
+
+.notyf .toast.text-bg-danger,
+.notyf .toast.bg-danger {
+  border-color: var(--toast-error);
+}
+
+.notyf .toast.text-bg-info,
+.notyf .toast.bg-info {
+  border-color: var(--toast-info);
+}

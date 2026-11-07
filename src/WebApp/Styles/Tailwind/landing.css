@@ -1,0 +1,18 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* 
+Jadi halaman yang akan makai tailwind kita
+pakai set di sini.
+*/
+@source "../../Pages/Index.cshtml";
+@source "../../Pages/Home.cshtml";
+
+/*
+Alur langkah menjalankan tailwind:
+0. Masuk ke /src/WebApp
+1. npm run tw:landing
+2. npm run tw:landing:watch -> pada terminal 1
+3. dotnet watch run -> pada terminal 2
+4. Langkah 2 dan 3 harus selalu hidup biar tailwind dan c# di compile
+*/

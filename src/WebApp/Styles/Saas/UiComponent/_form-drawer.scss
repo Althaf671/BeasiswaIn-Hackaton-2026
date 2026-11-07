@@ -1,0 +1,161 @@
+// ==================================================
+// Form drawer
+// ==================================================
+.offcanvas:has(.form-stack) {
+  .offcanvas-body {
+    background: var(--color-background-muted);
+    padding: var(--spacing-4);
+  }
+
+  .offcanvas-header,
+  .offcanvas-body ~ div {
+    background: var(--color-background-surface);
+  }
+}
+
+// ---- section card ----
+.form-section {
+  --section-tint: color-mix(in srgb, var(--section-accent) 12%, transparent);
+
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-page);
+  background: var(--color-background-surface);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+.form-section__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(to right, var(--section-tint), transparent 70%);
+}
+
+.form-section__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: var(--radius-element);
+  background: var(--section-tint);
+  color: var(--section-accent);
+
+  svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.form-section__title {
+  margin: 0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.form-section__desc {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.form-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+}
+
+// ---- label ----
+.form-stack .form-label {
+  margin-bottom: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+
+  // tanda wajib kecil di atas, seperti Filament
+  &.required::after {
+    content: "*";
+    margin-left: 2px;
+    vertical-align: super;
+    font-size: 0.75em;
+    color: var(--color-error);
+  }
+}
+
+// ---- input ----
+.form-stack {
+  .form-control,
+  .form-select,
+  .input-group-text {
+    border-color: var(--color-border-emphasized);
+    font-size: var(--font-size-sm);
+  }
+
+  .form-control,
+  .form-select {
+    min-height: 38px;
+    background-color: var(--color-background-surface);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.03);
+
+    &::placeholder {
+      color: var(--color-text-disabled);
+    }
+
+    &:focus {
+      border-color: var(--section-accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--section-accent) 18%, transparent);
+    }
+
+    &.is-invalid {
+      border-color: var(--color-error);
+      background-image: none;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 12%, transparent);
+    }
+  }
+
+  // ikon di depan input
+  .input-group-text {
+    background: var(--color-background-muted);
+    color: var(--color-text-secondary);
+    transition: color var(--motion-fast) var(--easing-standard);
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .input-group:focus-within .input-group-text {
+    color: var(--section-accent);
+    border-color: var(--section-accent);
+  }
+
+  // ring fokus untuk seluruh group, bukan cuma input-nya
+  .input-group:focus-within {
+    border-radius: var(--radius-element);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--section-accent) 18%, transparent);
+
+    .form-control,
+    .form-select {
+      box-shadow: none;
+    }
+  }
+
+  textarea.form-control {
+    resize: vertical;
+  }
+
+  [data-valmsg-for],
+  .field-validation-error {
+    display: block;
+    margin-top: var(--spacing-1);
+  }
+}

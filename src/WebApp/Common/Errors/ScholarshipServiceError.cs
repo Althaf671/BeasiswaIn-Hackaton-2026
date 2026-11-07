@@ -1,6 +1,5 @@
 using BeasiswaIn.Web.Common.Abstractions;
 using BeasiswaIn.Web.Common.Enums;
-using BeasiswaIn.Web.Services.Competitions;
 using BeasiswaIn.Web.Services.Scholarships;
 
 namespace BeasiswaIn.Web.Common.Errors;

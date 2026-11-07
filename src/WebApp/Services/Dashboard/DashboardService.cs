@@ -70,17 +70,9 @@ internal sealed class DashboardService : IDashboardService
         var closingSoonLimit = now.AddDays(7);
         var weekStart = now.AddDays(-7);
 
-        var competitions = _dbContext.Competitions
-            .AsNoTracking()
-            .Where(x => !x.IsDeleted);
-
         var scholarships = _dbContext.Scholarships
             .AsNoTracking()
             .Where(x => !x.IsDeleted);
-
-        var competitionCategories = _dbContext.CompetitionCategories
-            .AsNoTracking()
-            .Where(x => x.IsActive);
 
         var scholarshipCategories = _dbContext.ScholarshipCategories
             .AsNoTracking()
@@ -96,24 +88,11 @@ internal sealed class DashboardService : IDashboardService
                 // Registration Deadline Metrics
                 // ==========================================
 
-                TotalCompetitionClosingSoon = new MetricResponse
-                {
-                    Value = competitions.Count(x =>
-                        x.RegistrationEndAt >= now &&
-                        x.RegistrationEndAt <= closingSoonLimit)
-                },
-
                 TotalScholarshipClosingSoon = new MetricResponse
                 {
                     Value = scholarships.Count(x =>
                         x.RegistrationEndAt >= now &&
                         x.RegistrationEndAt <= closingSoonLimit)
-                },
-
-                TotalExpiredCompetition = new MetricResponse
-                {
-                    Value = competitions.Count(x =>
-                        x.RegistrationEndAt < now)
                 },
 
                 TotalExpiredScholarship = new MetricResponse
@@ -126,12 +105,6 @@ internal sealed class DashboardService : IDashboardService
                 // Content Activity Metrics
                 // ==========================================
 
-                TotalCompetitionCreatedThisMonth = new MetricResponse
-                {
-                    Value = competitions.Count(x =>
-                        x.CreatedAt >= monthStart)
-                },
-
                 TotalScholarshipCreatedThisMonth = new MetricResponse
                 {
                     Value = scholarships.Count(x =>
@@ -141,14 +114,6 @@ internal sealed class DashboardService : IDashboardService
                 // ==========================================
                 // Category Metrics
                 // ==========================================
-
-                TotalCompetitionCategory = new MetricResponse
-                {
-                    Value = competitionCategories.Count(),
-
-                    TrendValue = competitionCategories.Count(x =>
-                        x.CreatedAt >= monthStart)
-                },
 
                 TotalScholarshipCategory = new MetricResponse
                 {

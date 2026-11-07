@@ -1,0 +1,89 @@
+body {
+    font-family: "Inter", sans-serif;
+    overflow: auto;
+    min-height: 100vh;  
+    margin-bottom: 0;
+}
+
+.btn-none {
+    border: none;
+    background-color: white;
+    padding: 0;
+    margin-top: -1rem;
+}
+
+.form-label.required::after {
+    content: " *";
+    color: var(--bs-danger, #dc3545);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: none !important;
+}
+
+.audit-log-card {
+    padding: 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.75rem;
+    background: var(--bs-body-bg);
+
+    &__icon {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 0.5rem;
+        background: var(--bs-tertiary-bg);
+
+        svg {
+            width: 19px;
+            height: 19px;
+        }
+    }
+
+    &__title {
+        font-size: 0.95rem;
+    }
+
+    &__metadata {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--bs-border-color);
+    }
+
+    &__label {
+        color: var(--bs-secondary-color);
+        font-size: 0.75rem;
+        margin-bottom: 0.3rem;
+    }
+
+    &__value {
+        font-size: 0.8rem;
+        font-weight: 500;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .audit-log-card__metadata {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.audit-log-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.audit-log-container__body {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}

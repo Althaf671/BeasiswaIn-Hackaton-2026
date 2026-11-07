@@ -1,0 +1,242 @@
+// Boostrap 5 Component Style Override
+@use "./tokens" as t;
+
+.btn {
+    border-radius: var(--radius-element);
+    transition: var(--motion-fast) ease-in;
+
+    &:hover {
+        opacity: 80%;
+    }
+
+    &:active {
+        opacity: 70%;
+    }
+
+    &:focus:not(:focus-visible) {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.btn-accent {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #80B155;
+    --bs-btn-border-color: #80B155;
+
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #709D48;
+    --bs-btn-hover-border-color: #709D48;
+
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #638B40;
+    --bs-btn-active-border-color: #638B40;
+
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #80B155;
+    --bs-btn-disabled-border-color: #80B155;
+}
+
+
+.btn-primary {
+    --bs-btn-color: var(--color-on-accent);
+    --bs-btn-bg: var(--color-accent);
+    --bs-btn-border-color: var(--color-accent);
+
+    --bs-btn-hover-color: var(--color-on-accent);
+    --bs-btn-hover-bg: var(--color-accent);
+    --bs-btn-hover-border-color: var(--color-accent);
+
+    --bs-btn-active-color: var(--color-on-accent);
+    --bs-btn-active-bg: var(--color-accent);
+    --bs-btn-active-border-color: var(--color-accent);
+}
+
+.btn-secondary {
+    --bs-btn-color: var(--color-on-accent-muted);
+    --bs-btn-bg: var(--color-accent-muted);
+    --bs-btn-border-color: var(--color-accent-muted);
+
+    --bs-btn-hover-color: var(--color-on-accent-muted);
+    --bs-btn-hover-bg: var(--color-accent-muted);
+    --bs-btn-hover-border-color: var(--color-accent-muted);
+
+    --bs-btn-active-color: var(--color-on-accent-muted);
+    --bs-btn-active-bg: var(--color-accent-muted);
+    --bs-btn-active-border-color: var(--color-accent-muted);
+}
+
+.modal {
+    --bs-modal-border-radius: var(--radius-none);
+}
+
+.modal-dialog {
+    margin-top: 1.5rem;
+}
+
+.modal-content {
+    border-radius: var(--radius-none);
+}
+
+
+.card {
+    background-color: var(--color-on-accent);
+    border: 0.5px solid var(--color-border-emphasized);
+    border-radius: var(--radius-container);
+}
+
+.card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card footer {
+    position: relative;
+    z-index: 1;
+}
+
+.card footer i {
+    position: relative;
+    z-index: 2;
+}
+
+.form-control,
+.form-select {
+    border-color: var(--color-border-emphasized);
+    border-radius: var(--radius-element);
+    color: var(--color-text-primary);
+    background-color: var(--color-background-surface);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-accent);
+}
+
+.form-control::placeholder {
+    opacity: 0.8;
+}
+
+.text-muted {
+    color: var(--color-text-secondary) !important;
+}
+
+.text-xs {
+    font-size: var(--font-size-xs);
+}
+
+.text-md {
+    font-size: var(--font-size-md);
+}
+
+.text-lg {
+    font-size: var(--font-size-lg);
+}
+
+.text-heading-sm {
+    font-size: var(--font-size-heading-sm);
+}
+
+.text-heading-md {
+    font-size: var(--font-size-heading-md);
+}
+
+.text-heading-lg {
+    font-size: var(--font-size-heading-lg);
+}
+
+.text-success {
+    color: var(--color-success-text);
+}
+
+.text-error {
+    color: var(--color-error-text);
+}
+
+.icon-sm {
+    font-size: var(--icon-size-sm);
+}
+
+.icon-md {
+    font-size: var(--icon-size-md);
+}
+
+.icon-lg {
+    font-size: var(--icon-size-lg);
+}
+
+// ==================================================
+// Bootstrap 5 dropdown, disamakan dengan app-navbar
+// ==================================================
+
+.dropdown-menu {
+  // container
+  --bs-dropdown-min-width: 250px;
+  --bs-dropdown-padding-x: var(--spacing-2);
+  --bs-dropdown-padding-y: var(--spacing-2);
+  --bs-dropdown-spacing: var(--spacing-2);          // jarak dari tombol
+  --bs-dropdown-bg: var(--color-background-popover);
+  --bs-dropdown-border-color: var(--color-border-emphasized);
+  --bs-dropdown-border-width: 0.5px;
+  --bs-dropdown-border-radius: var(--radius-container);
+  --bs-dropdown-inner-border-radius: var(--radius-element);
+  --bs-dropdown-box-shadow: var(--shadow-low);
+  --bs-dropdown-font-size: var(--font-size-base);
+  --bs-dropdown-color: var(--color-text-primary);
+
+  // item
+  --bs-dropdown-item-padding-x: var(--spacing-3);
+  --bs-dropdown-item-padding-y: var(--spacing-2);
+  --bs-dropdown-link-color: var(--color-text-primary);
+  --bs-dropdown-link-hover-color: var(--color-text-primary);
+  --bs-dropdown-link-hover-bg: var(--color-background-muted);
+  --bs-dropdown-link-active-color: var(--color-text-primary);
+  --bs-dropdown-link-active-bg: var(--color-background-muted);
+  --bs-dropdown-link-disabled-color: var(--color-text-secondary);
+
+  // divider & header
+  --bs-dropdown-divider-bg: var(--color-border);
+  --bs-dropdown-divider-margin-y: var(--spacing-2);
+  --bs-dropdown-header-color: var(--color-text-secondary);
+
+  z-index: 99;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  border-radius: var(--radius-element);
+  font-weight: var(--font-weight-regular);
+  transition: background-color var(--motion-fast) var(--easing-standard);
+  margin-top: 5px;
+  i,
+  svg {
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+    color: var(--color-icon-secondary);
+  }
+
+  // item terpilih (di JS kamu: "active disabled")
+  &.active,
+  &.active.disabled {
+    background: var(--color-background-muted);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
+    opacity: 1;
+  }
+
+  &.disabled:not(.active) {
+    opacity: 0.5;
+  }
+
+  // varian bahaya, samakan dengan &-dropdown-item--danger
+  &--danger {
+    color: var(--color-error-text);
+
+    i,
+    svg {
+      color: var(--color-error-text);
+    }
+  }
+}

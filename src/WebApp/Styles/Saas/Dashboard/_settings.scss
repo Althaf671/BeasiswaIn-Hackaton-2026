@@ -1,0 +1,187 @@
+// ========== layout ==========
+.settings-layout {
+  display: grid;
+  grid-template-columns: 1fr; // mobile: tumpuk
+  gap: 1.5rem;
+  width: 100%;
+  min-height: 75vh;
+  align-items: stretch;
+
+  > .settings-sidebar,
+  > .settings-content {
+    width: auto;
+    max-width: none;
+    flex: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  > .settings-sidebar > .card,
+  > .settings-content > .tab-content,
+  > .settings-content .tab-pane {
+    height: 100%;
+  }
+
+  > .settings-content {
+    min-width: 0; // supaya tabel lebar tidak mendorong grid
+  }
+}
+
+@media (min-width: 992px) {
+  .settings-layout {
+    grid-template-columns: 17rem minmax(0, 1fr);
+    transition: grid-template-columns 0.2s ease;
+
+    &:has(.settings-sidebar.is-collapsed) {
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+    }
+  }
+}
+
+// ========== sidebar: header ==========
+.settings-sidebar {
+  // ikon toggle: tampilkan satu saja
+  .icon-expand { display: none; }
+
+  &.is-collapsed {
+    .icon-collapse { display: none; }
+    .icon-expand   { display: inline-block; }
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2.25rem;           // sama dengan tinggi tombol
+    margin-bottom: 0.75rem;
+    padding: 0 0 0.75rem;
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+
+  &__title {
+    margin: 0;
+    padding-left: 0.75rem;         // sejajar dengan ikon menu
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0.75rem;        // sama dengan .nav-link
+    background: transparent;
+    color: var(--bs-secondary-color);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      background: var(--bs-secondary-bg);
+      color: var(--bs-body-color);
+    }
+  }
+}
+
+// ========== sidebar: menu ==========
+.settings-nav {
+  &__group {
+    padding: 0.75rem 0.75rem 0.25rem;
+    font-size: 0.75rem;
+    color: var(--bs-secondary-color);
+
+    &:first-child {
+      padding-top: 0.25rem;
+    }
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.75rem;
+    color: var(--bs-body-color);
+    text-align: left;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background: var(--bs-secondary-bg);
+    }
+
+    &.active {
+      background: var(--bs-secondary-bg);
+      color: var(--bs-body-color);
+      font-weight: 500;
+    }
+  }
+}
+
+// ========== sidebar: collapsed (desktop saja) ==========
+@media (min-width: 992px) {
+  .settings-sidebar.is-collapsed {
+    .settings-sidebar__head {
+      justify-content: center;
+    }
+
+    .settings-sidebar__title {
+      display: none;
+    }
+
+    .settings-nav {
+      .nav-link {
+        justify-content: center;
+        padding-inline: 0;
+      }
+
+      .settings-nav__label {
+        display: none;
+      }
+
+      // judul grup jadi garis pemisah tipis
+      .settings-nav__group {
+        height: 1px;
+        margin: 0.5rem;
+        padding: 0;
+        font-size: 0;
+        background: var(--bs-border-color);
+
+        &:first-child {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// ========== row pengaturan ==========
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+
+  &__text {
+    min-width: 0;
+  }
+
+  &__control {
+    width: auto;
+    min-width: 11rem;
+  }
+}

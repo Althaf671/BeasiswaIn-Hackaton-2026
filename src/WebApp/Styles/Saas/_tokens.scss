@@ -1,0 +1,374 @@
+/*
+ * BeasiswaIn
+ *
+ * Copyright (c) 2026 Althaf671
+ *
+ * Modification, redistribution, and commercial use are prohibited.
+ *
+ * See the project README for the complete license terms.
+ */
+
+
+@use "sass:map";
+
+// ==================================================
+// BeasiswaIn CMS Design Tokens v1.0
+// Based on Astryx — Light Mode
+// ==================================================
+
+
+// 1. COLOR PALETTE
+// --------------------------------------------------
+
+// Neutral
+$neutral-0: #000000;
+$neutral-5: #111111;
+$neutral-15: #262626;
+$neutral-35: #525252;
+$neutral-45: #6a6a6a;
+$neutral-50: #777777;
+$neutral-65: #9e9e9e;
+$neutral-85: #d4d4d4;
+$neutral-90: #e2e2e2;
+$neutral-95: #f1f1f1;
+$neutral-100: #ffffff;
+
+// Accent
+$blue-30: #00458c;
+$blue-50: #0074e2;
+$blue-80: #a1caff;
+$blue-85: #b9d7ff;
+
+// Success
+$green-30: #0b5615;
+$green-40: #237028;
+$green-45: #2f7d33;
+$green-65: #6ab26b;
+$green-75: #90ca90;
+$green-80: #a4d6a3;
+
+// Warning
+$yellow-30: #584400;
+$yellow-40: #745b00;
+$yellow-65: #c29900;
+$yellow-75: #e2b623;
+$yellow-80: #eec448;
+$yellow-85: #f8d36a;
+
+// Error
+$red-30: #8a0011;
+$red-35: #9e0015;
+$red-55: #de4745;
+$red-65: #fa6762;
+$red-70: #ff7f77;
+$red-80: #ffaea7;
+$red-85: #ffc4be;
+
+// Additional Astryx colors
+$orange-30: #733100;
+$orange-75: #ff9e55;
+$orange-85: #ffc7a1;
+
+
+// 2. SEMANTIC COLORS
+// --------------------------------------------------
+
+$color-background-body: $neutral-95;
+$color-background-surface: $neutral-100;
+$color-background-card: $neutral-100;
+$color-background-popover: $neutral-100;
+$color-background-muted: $neutral-95;
+$color-background-gray: $neutral-90;
+
+$color-text-primary: $neutral-5;
+$color-text-secondary: $neutral-35;
+$color-text-disabled: $neutral-65;
+$color-text-gray: $neutral-15;
+
+$color-icon-primary: $neutral-5;
+$color-icon-secondary: $neutral-50;
+$color-icon-disabled: $neutral-65;
+
+$color-border: #00000014;
+$color-border-emphasized: $neutral-85;
+
+$color-accent: $blue-50;
+$color-accent-muted: $neutral-95;
+
+$color-success: #198100;
+$color-success-text: $green-40;
+$color-success-muted: #bce0bb;
+
+$color-warning: #ffce2f;
+$color-warning-text: $yellow-40;
+$color-warning-muted: #fae19e;
+
+$color-error: #c9303a;
+$color-error-text: $red-35;
+$color-error-muted: $red-85;
+
+$color-on-accent: $neutral-100;
+$color-on-success: $neutral-100;
+$color-on-warning: $neutral-5;
+$color-on-error: $neutral-100;
+
+// Semantic color families
+$color-background-red: #ffc4be;
+$color-text-red: $red-30;
+
+$color-background-orange: #ffc7a1;
+$color-text-orange: $orange-30;
+
+$color-background-yellow: #fae19e;
+$color-text-yellow: $yellow-30;
+
+$color-background-green: #bce0bb;
+$color-text-green: $green-30;
+
+$color-background-blue: $blue-85;
+$color-text-blue: $blue-30;
+
+$color-background-teal: #a9e2d6;
+$color-text-teal: #005348;
+
+$color-background-gray: $neutral-90;
+$color-text-gray: $neutral-15;
+
+
+// 3. TYPOGRAPHY
+// --------------------------------------------------
+
+$font-family-base:
+  "Figtree",
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Roboto,
+  Helvetica,
+  Arial,
+  sans-serif;
+
+$font-family-heading: $font-family-base;
+$font-family-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco,
+  Consolas, "Liberation Mono", monospace;
+
+$font-size-base: 14px;
+$font-scale-ratio: 1.2;
+
+$font-size-xs: 12px;
+$font-size-sm: 13px;
+$font-size-md: 16px;
+$font-size-lg: 17px;
+
+$font-size-heading-sm: 20px;
+$font-size-heading-md: 24px;
+$font-size-heading-lg: 29px;
+$font-size-display: 35px;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.2;
+$line-height-base: 1.5;
+
+
+// 4. BORDER RADIUS
+// --------------------------------------------------
+
+$radius-none: 0;
+
+$radius-inner: 0.625rem;    // 10px
+$radius-element: 1rem;     // 16px
+$radius-container: 1.5rem; // 24px
+$radius-page: 1rem;        // 32px
+$radius-full: 9999px;
+
+
+// 5. SHADOWS
+// --------------------------------------------------
+
+$shadow-low:
+  0 2px 4px rgba(0, 0, 0, 0.05),
+  0 4px 8px rgba(0, 0, 0, 0.10);
+
+$shadow-med:
+  0 2px 4px rgba(0, 0, 0, 0.05),
+  0 4px 12px rgba(0, 0, 0, 0.10);
+
+$shadow-high:
+  0 4px 6px rgba(0, 0, 0, 0.10),
+  0 12px 24px rgba(0, 0, 0, 0.15);
+
+
+// 6. SPACING
+// --------------------------------------------------
+// Saranin convention: 4px base unit.
+// These are project conventions, not verified Astryx values.
+
+$spacing-0: 0;
+$spacing-1: 0.25rem; // 4px
+$spacing-2: 0.5rem;  // 8px
+$spacing-3: 0.75rem; // 12px
+$spacing-4: 1rem;    // 16px
+$spacing-5: 1.25rem; // 20px
+$spacing-6: 1.5rem;  // 24px
+$spacing-8: 2rem;    // 32px
+$spacing-10: 2.5rem; // 40px
+$spacing-12: 3rem;   // 48px
+$spacing-16: 4rem;   // 64px
+
+
+// 7. MOTION
+// --------------------------------------------------
+
+$motion-fast: 125ms;
+$motion-medium: 300ms;
+$motion-slow: 700ms;
+$motion-ratio: 0.75;
+
+$easing-standard: cubic-bezier(0.2, 0, 0, 1);
+$easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+
+// 8. CSS CUSTOM PROPERTIES
+// --------------------------------------------------
+// Available to regular CSS, Razor Pages and JS-driven UI.
+
+
+:root {
+  // font family
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Poppins", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  // gutter
+  --page-gutter: 3rem;
+
+  // Backgrounds
+  --color-background-body: #{$color-background-body};
+  --color-background-surface: #{$color-background-surface};
+  --color-background-card: #{$color-background-card};
+  --color-background-popover: #{$color-background-popover};
+  --color-background-muted: #{$color-background-muted};
+  --color-background-gray: #{$color-background-gray};
+
+  // Text
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-disabled: #{$color-text-disabled};
+  --color-text-gray: #{$color-text-gray};
+  --color-text-white: #{$neutral-100};
+
+  // Icons
+  --color-icon-primary: #{$color-icon-primary};
+  --color-icon-secondary: #{$color-icon-secondary};
+  --color-icon-disabled: #{$color-icon-disabled};
+  --icon-size-sm: 16px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+
+  // Borders
+  --color-border: #{$color-border};
+  --color-border-emphasized: #{$color-border-emphasized};
+
+  // Accent and status
+  --color-accent: #{$color-accent};
+  --color-accent-muted: #{$color-accent-muted};
+
+  --color-success: #{$color-success};
+  --color-success-text: #{$color-success-text};
+  --color-success-muted: #{$color-success-muted};
+
+  --color-warning: #{$color-warning};
+  --color-warning-text: #{$color-warning-text};
+  --color-warning-muted: #{$color-warning-muted};
+
+  --color-error: #{$color-error};
+  --color-error-text: #{$color-error-text};
+  --color-error-muted: #{$color-error-muted};
+
+  --color-on-accent: #{$color-on-accent};
+  --color-on-success: #{$color-on-success};
+  --color-on-warning: #{$color-on-warning};
+  --color-on-error: #{$color-on-error};
+
+  // Semantic color families
+  --color-background-red: #{$color-background-red};
+  --color-text-red: #{$color-text-red};
+
+  --color-background-orange: #{$color-background-orange};
+  --color-text-orange: #{$color-text-orange};
+
+  --color-background-yellow: #{$color-background-yellow};
+  --color-text-yellow: #{$color-text-yellow};
+
+  --color-background-green: #{$color-background-green};
+  --color-text-green: #{$color-text-green};
+
+  --color-background-blue: #{$color-background-blue};
+  --color-text-blue: #{$color-text-blue};
+
+  --color-background-teal: #{$color-background-teal};
+  --color-text-teal: #{$color-text-teal};
+
+  // Typography
+  --font-family-base: #{$font-family-base};
+  --font-family-heading: #{$font-family-heading};
+  --font-family-monospace: #{$font-family-monospace};
+
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
+  --font-size-base: #{$font-size-base};
+  --font-size-md: #{$font-size-md};
+  --font-size-lg: #{$font-size-lg};
+
+  --font-size-heading-sm: #{$font-size-heading-sm};
+  --font-size-heading-md: #{$font-size-heading-md};
+  --font-size-heading-lg: #{$font-size-heading-lg};
+  --font-size-display: #{$font-size-display};
+
+  --font-weight-regular: #{$font-weight-regular};
+  --font-weight-medium: #{$font-weight-regular};
+  --font-weight-semibold: #{$font-weight-medium};
+  --font-weight-bold: #{$font-weight-bold};
+
+  --line-height-tight: #{$line-height-tight};
+  --line-height-base: #{$line-height-base};
+
+  // Radius
+  --radius-none: #{$radius-none};
+  --radius-inner: #{$radius-inner};
+  --radius-element: #{$radius-inner};
+  --radius-container: #{$radius-inner};
+  --radius-page: #{$radius-inner};
+  --radius-full: #{$radius-full};
+
+  // Shadows
+  --shadow-low: #{$shadow-low};
+  --shadow-med: #{$shadow-med};
+  --shadow-high: #{$shadow-high};
+
+  // Spacing
+  --spacing-0: #{$spacing-0};
+  --spacing-1: #{$spacing-1};
+  --spacing-2: #{$spacing-2};
+  --spacing-3: #{$spacing-3};
+  --spacing-4: #{$spacing-4};
+  --spacing-5: #{$spacing-5};
+  --spacing-6: #{$spacing-6};
+  --spacing-8: #{$spacing-8};
+  --spacing-10: #{$spacing-10};
+  --spacing-12: #{$spacing-12};
+  --spacing-16: #{$spacing-16};
+
+  // Motion
+  --motion-fast: #{$motion-fast};
+  --motion-medium: #{$motion-medium};
+  --motion-slow: #{$motion-slow};
+  --motion-ratio: #{$motion-ratio};
+
+  --easing-standard: #{$easing-standard};
+  --easing-emphasized: #{$easing-emphasized};
+}
