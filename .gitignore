@@ -481,11 +481,11 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 
-*.env
-.env
+# *.env
+# .env
 
 .DS_Store
 
-.env.development
-.env.production
-.env.staging
+# .env.development
+# .env.production
+# .env.staging
