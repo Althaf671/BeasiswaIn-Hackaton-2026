@@ -16,7 +16,7 @@ internal class AppSeeder
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IDatasetReader _datasetReader;
 
-    private static readonly string[] Roles = [AppRoles.Admin];
+    private static readonly string[] Roles = [AppRoles.Student];
 
     public AppSeeder(
         IIdentityService identityService,

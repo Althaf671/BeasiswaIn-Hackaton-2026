@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using BeasiswaIn.Web.Common.Abstractions;
 using BeasiswaIn.Web.Models.Auth;
 
@@ -7,6 +8,8 @@ public interface IIdentityService
 {
     public Task<Result<string>> RegisterUserAccountAsync(string username, string password, string email, string role, bool emailConfirmed);
     public Task<Result<string>> LoginAsync(LoginRequest request);
+    public Result<AuthenticationProperties> CreateGoogleLoginProperties(string callbackUrl);
+    public Task<Result> LoginWithGoogleAsync(string? remoteError = null);
     public Task<Result> LogoutAsync();
     public Task<Result<GetMyAccountResponse>> GetMyAccountAsync();
     public Task<Result<TwoFactorStatusResponse>> GetTwoFactorStatusAsync();

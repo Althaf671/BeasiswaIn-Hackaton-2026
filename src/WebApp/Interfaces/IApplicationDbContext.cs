@@ -12,6 +12,8 @@ public interface IApplicationDbContext
     internal DbSet<ScholarshipCategory> ScholarshipCategories { get; }
     internal DbSet<ScholarshipCategoryAssignments> ScholarshipCategoryAssignments { get; }
     internal DbSet<UserScholarshipPreferences> UserScholarshipPreferences { get; }
+    internal DbSet<Notification> Notifications { get; }
+    internal DbSet<StudentProfile> StudentProfiles { get; }
     internal DbSet<AuditLog> AuditLogs { get; }
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct);

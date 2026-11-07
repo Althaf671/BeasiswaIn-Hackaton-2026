@@ -14,7 +14,8 @@ internal static class AuthenticationRegistry
 {
     public static IServiceCollection AddAppAuthentication(
         this IServiceCollection services,
-        IWebHostEnvironment environment)
+        IWebHostEnvironment environment,
+        IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
         services.AddScoped<IUserContext, UserContext>();
@@ -37,6 +38,8 @@ internal static class AuthenticationRegistry
 
             // user policy
             options.User.RequireUniqueEmail = true;
+            // Google profile names can contain spaces and non-Latin characters.
+            options.User.AllowedUserNameCharacters = string.Empty;
             
             // sign-in policy
             options.SignIn.RequireConfirmedEmail = false;
@@ -44,6 +47,20 @@ internal static class AuthenticationRegistry
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();  
+
+        services.AddAuthentication().AddGoogle(options =>
+        {
+            options.ClientId = configuration["Authentication:Google:ClientId"] ?? string.Empty;
+            options.ClientSecret = configuration["Authentication:Google:ClientSecret"] ?? string.Empty;
+            options.SignInScheme = IdentityConstants.ExternalScheme;
+            options.CallbackPath = "/signin-google";
+            options.Events.OnRemoteFailure = context =>
+            {
+                context.HandleResponse();
+                context.Response.Redirect("/identity/login-student?googleError=true");
+                return Task.CompletedTask;
+            };
+        });
 
         services.ConfigureApplicationCookie(options =>
         {

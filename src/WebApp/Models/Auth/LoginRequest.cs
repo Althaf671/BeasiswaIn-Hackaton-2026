@@ -20,3 +20,10 @@ public sealed record LoginRequest
     [Display(Name = "Ingat Saya")]
     public bool RememberMe { get; init; }
 }
+
+public sealed record LoginOAuthRequest
+{
+    [Required]
+    [EmailAddress]
+    public string Email { get; init; } = string.Empty;
+}

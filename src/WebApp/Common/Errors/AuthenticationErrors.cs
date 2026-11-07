@@ -8,6 +8,13 @@ internal static class AuthenticationErrors
 {
     private const string Domain = "Authentication";
 
+    internal static Error GoogleNotConfigured =>
+        Error.Create(ErrorType.InternalServerError, "GoogleNotConfigured",
+            "Login Google belum dikonfigurasi.", Domain);
+
+    internal static Error GoogleLoginFailed(string message) =>
+        Error.Create(ErrorType.Unauthorized, "GoogleLoginFailed", message, Domain);
+
     internal static string PasswordTooShort =>
         $"Kata sandi harus terdiri dari minimal {IdentityConstant.MinPasswordLength} karakter.";
 

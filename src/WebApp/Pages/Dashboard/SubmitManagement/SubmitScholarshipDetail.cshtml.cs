@@ -1,0 +1,1 @@
+namespace BeasiswaIn.Web.Pages.Dashboard.SubmitManagement;

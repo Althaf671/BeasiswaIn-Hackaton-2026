@@ -23,14 +23,14 @@ namespace BeasiswaIn.Web.Pages.Identity;
 
 [AllowAnonymous]
 [EnableRateLimiting(RateLimitRegistry.HighRateAuthPolicy)]
-public class LoginModel : PageModel
+public class LoginAdminModel : PageModel
 {
     private const string DefaultRedirect = "/dashboard";
 
     private readonly IIdentityService _identityService;
     private readonly INotyfService _toast;
 
-    public LoginModel(IIdentityService identityService, INotyfService toast)
+    public LoginAdminModel(IIdentityService identityService, INotyfService toast)
     {
         _identityService = identityService;
         _toast = toast;

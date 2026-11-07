@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 
 
 using System.Globalization;
@@ -20,12 +23,15 @@ internal sealed class IdentityService : IIdentityService
     private const string AuthenticatorIssuer = "BeasiswaIn";
     private const int RecoveryCodeCount = 10;
 
+    private readonly IApplicationDbContext _dbContext;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IWebHostEnvironment _environment;
     private readonly IUserContext _userContext;
     private readonly UrlEncoder _urlEncoder;
     private readonly ILogger<IdentityService> _logger;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IConfiguration _configuration;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
@@ -33,7 +39,10 @@ internal sealed class IdentityService : IIdentityService
         IWebHostEnvironment webHostEnvironment,
         IUserContext userContext,
         UrlEncoder urlEncoder,
-        ILogger<IdentityService> logger)
+        ILogger<IdentityService> logger,
+        RoleManager<IdentityRole> roleManager,
+        IConfiguration configuration,
+        IApplicationDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -41,6 +50,137 @@ internal sealed class IdentityService : IIdentityService
         _userContext = userContext;
         _urlEncoder = urlEncoder;
         _logger = logger;
+        _roleManager = roleManager;
+        _configuration = configuration;
+        _dbContext = dbContext;
+    }
+
+    public Result<AuthenticationProperties> CreateGoogleLoginProperties(string callbackUrl)
+    {
+        if (string.IsNullOrWhiteSpace(_configuration["Authentication:Google:ClientId"]) ||
+            string.IsNullOrWhiteSpace(_configuration["Authentication:Google:ClientSecret"]))
+            return Result<AuthenticationProperties>.Failure(AuthenticationErrors.GoogleNotConfigured);
+
+        return Result<AuthenticationProperties>.Success(
+            _signInManager.ConfigureExternalAuthenticationProperties(
+                GoogleDefaults.AuthenticationScheme, callbackUrl));
+    }
+
+    public async Task<Result> LoginWithGoogleAsync(string? remoteError = null)
+    {
+        if (remoteError is not null)
+            return await GoogleLoginFailureAsync("Login Google dibatalkan atau gagal.");
+
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info is null || info.LoginProvider != GoogleDefaults.AuthenticationScheme)
+            return await GoogleLoginFailureAsync("Sesi login Google tidak valid. Silakan coba lagi.");
+
+        var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+        if (user is null)
+        {
+            // Only trust the email returned by Google, never a posted email address.
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrWhiteSpace(email))
+                return await GoogleLoginFailureAsync("Google tidak memberikan alamat email.");
+
+            if (await _userManager.FindByEmailAsync(email) is not null)
+                return await GoogleLoginFailureAsync("Email sudah terdaftar. Gunakan metode login akun yang sudah ada; akun Google belum ditautkan.");
+
+            if (!await _roleManager.RoleExistsAsync(AppRoles.Student))
+            {
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole(AppRoles.Student));
+                if (!roleResult.Succeeded && !await _roleManager.RoleExistsAsync(AppRoles.Student))
+                    return await GoogleLoginFailureAsync("Tidak dapat menyiapkan role Student.", roleResult);
+            }
+
+            user = new ApplicationUser
+            {
+                UserName = await CreateGoogleUsernameAsync(info.Principal),
+                Email = email
+            };
+            
+            var created = await _userManager.CreateAsync(user);
+            if (!created.Succeeded)
+                return await GoogleLoginFailureAsync("Tidak dapat membuat akun Student.", created);
+
+            var assigned = await _userManager.AddToRoleAsync(user, AppRoles.Student);
+
+            var linked = assigned.Succeeded ? await _userManager.AddLoginAsync(user, info) : assigned;
+            if (!linked.Succeeded)
+            {
+                var cleanup = await _userManager.DeleteAsync(user);
+                if (!cleanup.Succeeded)
+                    _logger.LogError("Could not remove incomplete Google account {UserId}", user.Id);
+
+                return await GoogleLoginFailureAsync("Tidak dapat menautkan akun Google. Silakan coba lagi.", linked);
+            }
+        }
+
+        if (!await _userManager.IsInRoleAsync(user, AppRoles.Student))
+            return await GoogleLoginFailureAsync("Akun ini tidak memiliki akses Student.");
+
+        // Replace usernames generated by the old Google registration flow on next login.
+        if (user.UserName is { } currentName && currentName.StartsWith("student_", StringComparison.Ordinal) &&
+            currentName.Length == 40 && Guid.TryParseExact(currentName[8..], "N", out _))
+        {
+            var username = await CreateGoogleUsernameAsync(info.Principal);
+            var updated = await _userManager.SetUserNameAsync(user, username);
+            if (!updated.Succeeded)
+                return await GoogleLoginFailureAsync("Tidak dapat memperbarui nama akun Google.", updated);
+        }
+
+        var result = await _signInManager.ExternalLoginSignInAsync(
+            info.LoginProvider, 
+            info.ProviderKey, 
+            isPersistent: false, 
+            bypassTwoFactor: false);
+
+        await _signInManager.Context.SignOutAsync(IdentityConstants.ExternalScheme);
+
+        if (result.RequiresTwoFactor)
+        {
+            // A 2FA page is not available yet. Do not bypass this requirement.
+            await _signInManager.Context.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
+
+            return GoogleLoginFailure("Akun memerlukan autentikasi dua faktor. Halaman verifikasi belum tersedia.");
+        }
+        if (!result.Succeeded)
+            return GoogleLoginFailure(result.IsLockedOut
+                ? "Akun sementara terkunci. Silakan coba lagi nanti."
+                : "Akun belum diizinkan masuk.");
+
+        _logger.LogInformation("Student {UserId} signed in with Google", user.Id);
+        
+        return Result.Success;
+    }
+
+    private async Task<string> CreateGoogleUsernameAsync(ClaimsPrincipal principal)
+    {
+        var googleName = principal.FindFirstValue(ClaimTypes.Name)?.Trim();
+        if (string.IsNullOrWhiteSpace(googleName))
+            googleName = principal.FindFirstValue(ClaimTypes.Email)?.Split('@')[0] ?? "Student";
+
+        // Identity stores usernames in a column limited to 256 characters.
+        var baseName = googleName.Length > 240 ? googleName[..240] : googleName;
+        var username = baseName;
+        for (var suffix = 2; await _userManager.FindByNameAsync(username) is not null; suffix++)
+            username = $"{baseName} {suffix}";
+
+        return username;
+    }
+
+    private static Result GoogleLoginFailure(string message) =>
+        Result.Failure(AuthenticationErrors.GoogleLoginFailed(message));
+
+    private async Task<Result> GoogleLoginFailureAsync(string message, IdentityResult? result = null)
+    {
+        if (result is not null)
+            _logger.LogWarning(
+                "Google account operation failed: {Codes}",
+                string.Join(", ", result.Errors.Select(error => error.Code)));
+
+        await _signInManager.Context.SignOutAsync(IdentityConstants.ExternalScheme);
+        return GoogleLoginFailure(message);
     }
 
     public async Task<Result<GetMyAccountResponse>> GetMyAccountAsync()

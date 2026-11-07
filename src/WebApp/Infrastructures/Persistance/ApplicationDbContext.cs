@@ -17,6 +17,8 @@ internal sealed class ApplicationDbContext
     public DbSet<ScholarshipCategory> ScholarshipCategories => Set<ScholarshipCategory>();
     public DbSet<ScholarshipCategoryAssignments> ScholarshipCategoryAssignments => Set<ScholarshipCategoryAssignments>();
     public DbSet<UserScholarshipPreferences> UserScholarshipPreferences => Set<UserScholarshipPreferences>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<StudentProfile> StudentProfiles => Set<StudentProfile>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base (options)
