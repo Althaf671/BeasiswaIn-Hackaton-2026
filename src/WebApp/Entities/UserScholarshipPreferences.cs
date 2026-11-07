@@ -2,13 +2,13 @@ namespace BeasiswaIn.Web.Entities;
 
 internal sealed class UserScholarshipPreferences
 {
-    public string UserId { get; set; } = string.Empty;
-    #warning ganti categoryId jadi scholarshipId
-    public string CategoryId { get; set; } = string.Empty;
+    public string StudentId { get; set; } = string.Empty;
 
-    public UserScholarshipPreferences(string userId, string categoryId)
+    public string ScholarshipId { get; set; } = string.Empty;
+
+    public UserScholarshipPreferences(string studentId, string scholarshipId)
     {
-        UserId = userId;
-        CategoryId = categoryId;
+        StudentId = studentId;
+        ScholarshipId = scholarshipId;
     }
 }

@@ -9,30 +9,30 @@ internal sealed class UserScholarshipPreferencesConfiguration : IEntityTypeConfi
 {
     public void Configure(EntityTypeBuilder<UserScholarshipPreferences> builder)
     {
-        builder.ToTable("user_scholarship_preferences");
-        builder.HasKey(x => new { x.UserId, x.CategoryId });
+        builder.ToTable("student_scholarship_preferences");
+        builder.HasKey(x => new { x.StudentId, x.ScholarshipId });
 
-        builder.Property(x => x.UserId)
-            .HasColumnName("user_id")
+        builder.Property(x => x.StudentId)
+            .HasColumnName("student_id")
             .HasMaxLength(IdentityConstant.UlidAbsoluteLength)
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.Property(x => x.CategoryId)
-            .HasColumnName("category_id")
+        builder.Property(x => x.ScholarshipId)
+            .HasColumnName("scholarship_id")
             .HasMaxLength(IdentityConstant.UlidAbsoluteLength)
             .ValueGeneratedNever()
             .IsRequired();
 
-        builder.HasOne<ApplicationUser>()
+        builder.HasOne<StudentProfile>()
             .WithMany()
-            .HasForeignKey(x => x.UserId)
+            .HasForeignKey(x => x.StudentId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<ScholarshipCategory>()
+        builder.HasOne<Scholarship>()
             .WithMany()
-            .HasForeignKey(x => x.CategoryId)
+            .HasForeignKey(x => x.ScholarshipId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

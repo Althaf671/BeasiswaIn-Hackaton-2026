@@ -328,23 +328,82 @@ namespace BeasiswaIn.Web.Migrations
                     b.ToTable("student_profile", (string)null);
                 });
 
+            modelBuilder.Entity("BeasiswaIn.Web.Entities.SubmittedScholarship", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(26)
+                        .HasColumnType("character varying(26)")
+                        .HasColumnName("submitted_scholarship_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_deleted");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("ScholarshipContentPublicId")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("scholarship_content_public_id");
+
+                    b.Property<string>("ScholarshipContentUrl")
+                        .HasMaxLength(2100)
+                        .HasColumnType("character varying(2100)")
+                        .HasColumnName("scholarship_content_url");
+
+                    b.Property<string>("ScholarshipSourceUrl")
+                        .HasMaxLength(2100)
+                        .HasColumnType("character varying(2100)")
+                        .HasColumnName("scholarship_source_url");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasMaxLength(26)
+                        .HasColumnType("character varying(26)")
+                        .HasColumnName("student_profile_id");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("timestamptz")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("submitted_scholarship", (string)null);
+                });
+
             modelBuilder.Entity("BeasiswaIn.Web.Entities.UserScholarshipPreferences", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("StudentId")
                         .HasMaxLength(26)
                         .HasColumnType("character varying(26)")
-                        .HasColumnName("user_id");
+                        .HasColumnName("student_id");
 
-                    b.Property<string>("CategoryId")
+                    b.Property<string>("ScholarshipId")
                         .HasMaxLength(26)
                         .HasColumnType("character varying(26)")
-                        .HasColumnName("category_id");
+                        .HasColumnName("scholarship_id");
 
-                    b.HasKey("UserId", "CategoryId");
+                    b.HasKey("StudentId", "ScholarshipId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("ScholarshipId");
 
-                    b.ToTable("user_scholarship_preferences", (string)null);
+                    b.ToTable("student_scholarship_preferences", (string)null);
                 });
 
             modelBuilder.Entity("BeasiswaIn.Web.Infrastructures.Persistance.ApplicationUser", b =>
@@ -610,17 +669,26 @@ namespace BeasiswaIn.Web.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BeasiswaIn.Web.Entities.SubmittedScholarship", b =>
+                {
+                    b.HasOne("BeasiswaIn.Web.Entities.StudentProfile", null)
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BeasiswaIn.Web.Entities.UserScholarshipPreferences", b =>
                 {
-                    b.HasOne("BeasiswaIn.Web.Entities.ScholarshipCategory", null)
+                    b.HasOne("BeasiswaIn.Web.Entities.Scholarship", null)
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("ScholarshipId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeasiswaIn.Web.Infrastructures.Persistance.ApplicationUser", null)
+                    b.HasOne("BeasiswaIn.Web.Entities.StudentProfile", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

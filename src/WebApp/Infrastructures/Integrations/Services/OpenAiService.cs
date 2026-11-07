@@ -25,11 +25,6 @@ internal sealed class OpenAiService : IOpenAiService
         _scholarshipService = scholarshipService;
     }
 
-    public Task AnalyzeBesCompetitionChoices()
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<string> AnalyzeBestScholarshipChoices(
         string essay,
         string extractionResult,
@@ -163,6 +158,29 @@ internal sealed class OpenAiService : IOpenAiService
 
         Console.WriteLine(response.Content[0].Text);
         return response.Content[0].Text;
+    }
+
+    public async Task<string> SendMessageAsync(
+        string message,
+        List<ChatMessage> conversation,
+        CancellationToken cancellationToken)
+    {
+        conversation.Add(new UserChatMessage(message));
+
+        ChatCompletion response = await _chatClient.CompleteChatAsync(
+            conversation,
+            cancellationToken: cancellationToken
+        );
+
+        var answer = response.Content
+            .FirstOrDefault(x => x.Kind == ChatMessageContentPartKind.Text)?.Text;
+
+        if (string.IsNullOrWhiteSpace(answer))
+            throw new InvalidOperationException("AI tidak menghasilkan jawaban.");
+
+        conversation.Add(new AssistantChatMessage(answer));
+
+        return answer;
     }
 
     private static readonly JsonSerializerOptions PromptJsonOptions = new()

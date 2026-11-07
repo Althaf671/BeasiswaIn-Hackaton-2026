@@ -1,5 +1,6 @@
 using BeasiswaIn.Web.Common.Abstractions;
 using BeasiswaIn.Web.Common.Errors;
+using BeasiswaIn.Web.Common.Helpers;
 using BeasiswaIn.Web.Models.Dashboard;
 using BeasiswaIn.Web.Models.Scholarships;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace BeasiswaIn.Web.Services.Scholarships;
 
 internal sealed partial class ScholarshipService
 {
-    private const int TrendingMinScore = 200;
+    private const int TrendingMinScore = 5;
     private const int TrendingMaxItems = 10;
 
     public async Task<Result<IReadOnlyList<ScholarshipResponse>>> GetEligibleByCategoryIdsAsync(
@@ -95,7 +96,9 @@ internal sealed partial class ScholarshipService
     }
 
     public async Task<Result<ScholarshipListResponse>> GetAllTrendingAsync(
-        CancellationToken cancellationToken)
+        int page = 1, 
+        int pageSize = 20, 
+        CancellationToken cancellationToken = default)
     {
         var items = await (
             from scholarship in _dbContext.Scholarships.AsNoTracking()
@@ -182,13 +185,6 @@ internal sealed partial class ScholarshipService
         }
 
         return Result<ScholarshipResponse>.Success(response);
-    }
-
-    public Task<Result<ScholarshipResponse>> GetBySlugAsync(
-        string slug, 
-        CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<Result<ScholarshipListResponse>> GetAllByCategoryId(
@@ -301,5 +297,122 @@ internal sealed partial class ScholarshipService
         ?? new MetricScholarshipResponse();
 
         return Result<MetricScholarshipResponse>.Success(data);
+    }
+
+    public async Task<Result<ScholarshipListResponse>> GetLatestAsync(
+        int page = 1, 
+        int pageSize = 20, 
+        CancellationToken cancellationToken = default)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var since = now.AddDays(-15);
+
+        var query =
+            from scholarship in _dbContext.Scholarships.AsNoTracking()
+            where scholarship.RegistrationStartAt >= since &&
+                scholarship.RegistrationStartAt <= now
+            orderby
+                scholarship.RegistrationStartAt descending,
+                scholarship.Id
+            select new ScholarshipResponse
+            {
+                Id = scholarship.Id,
+                Name = scholarship.Name,
+                Description = scholarship.Description,
+                TotalPrize = scholarship.TotalPrize,
+                ContentImageUrl = scholarship.ContentImageUrl,
+                GuideUrl = scholarship.GuideUrl,
+                RegistrationUrl = scholarship.RegistrationUrl,
+                Requirement = scholarship.Requirement,
+                ContactPerson = scholarship.ContactPerson,
+                IsEligible = scholarship.IsEligible,
+                RegistrationStartAt = scholarship.RegistrationStartAt,
+                RegistrationEndAt = scholarship.RegistrationEndAt,
+                IsBookmarked = scholarship.IsBookmarked,
+                UpdatedAt = scholarship.UpdatedAt,
+                CreatedAt = scholarship.CreatedAt
+            };
+
+        var items = await query.ToListAsync(cancellationToken);
+
+        return Result<ScholarshipListResponse>.Success(
+            new ScholarshipListResponse
+            {
+                Items = items,
+                Page = 1,
+                PageSize = items.Count,
+                TotalCount = items.Count
+            });
+    }
+
+    public async Task<Result<ScholarshipListResponse>> GetMyRecommendedAsync(
+        string appUserId,
+        int page = 1, 
+        int pageSize = 20, 
+        CancellationToken cancellationToken = default)
+    {
+        var studentProfileId = await (
+            from studentProfile in _dbContext.StudentProfiles.AsNoTracking()
+            where studentProfile.AppUserId == appUserId
+            select studentProfile.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (studentProfileId is null)
+        {
+            var error = StudentProfileServiceError.NotFound;
+            _logger.LogWarning("{Code} - {Message}", error.Code, error.Description);
+            return Result<ScholarshipListResponse>.Failure(error);
+        }
+
+        var query =
+            from preference in _dbContext.UserScholarshipPreferences.AsNoTracking()
+            join scholarship in _dbContext.Scholarships.AsNoTracking()
+                on preference.ScholarshipId equals scholarship.Id
+            where preference.StudentId == studentProfileId
+            orderby
+                scholarship.IsEligible descending,
+                scholarship.Id
+            select new ScholarshipResponse
+            {
+                Id = scholarship.Id,
+                Name = scholarship.Name,
+                Description = scholarship.Description,
+                TotalPrize = scholarship.TotalPrize,
+                ContentImageUrl = scholarship.ContentImageUrl,
+                GuideUrl = scholarship.GuideUrl,
+                RegistrationUrl = scholarship.RegistrationUrl,
+                Requirement = scholarship.Requirement,
+                ContactPerson = scholarship.ContactPerson,
+                IsEligible = scholarship.IsEligible,
+                RegistrationStartAt = scholarship.RegistrationStartAt,
+                RegistrationEndAt = scholarship.RegistrationEndAt,
+                IsBookmarked = scholarship.IsBookmarked,
+                UpdatedAt = scholarship.UpdatedAt,
+                CreatedAt = scholarship.CreatedAt
+            };
+
+        
+
+        var items = await query.ToListAsync(cancellationToken);
+
+        var result = await query.ToListAsync(cancellationToken);
+        Console.WriteLine($"=== Preferensi student {studentProfileId}: {result.Count} item ===");
+
+        for (var i = 0; i < result.Count; i++)
+        {
+            var s = result[i];
+            Console.WriteLine(
+                $"[{i + 1}] {s.Id} | {s.Name} | eligible={s.IsEligible} | " +
+                $"{s.RegistrationStartAt:yyyy-MM-dd} s/d {s.RegistrationEndAt:yyyy-MM-dd}");
+        }
+
+        return Result<ScholarshipListResponse>.Success(
+            new ScholarshipListResponse
+            {
+                Items = items,
+                Page = 1,
+                PageSize = items.Count,
+                TotalCount = items.Count
+            });
     }
 }

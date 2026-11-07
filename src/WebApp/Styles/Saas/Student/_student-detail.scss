@@ -1,0 +1,153 @@
+// student-profile-detail.scss
+// Komponen khusus halaman /student-profile-detail.
+// Memakai ulang .item-detail__section-icon dan .item-detail__long-text yang sudah ada.
+
+.student-profile {
+  .min-w-0 {
+    min-width: 0;
+  }
+
+  // ---------- Hero ----------
+  &__hero {
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 6px;
+      background: linear-gradient(
+        90deg,
+        var(--bs-primary),
+        rgba(var(--bs-primary-rgb), 0.35)
+      );
+    }
+  }
+
+  &__avatar {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--bs-primary);
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    border: 3px solid rgba(var(--bs-primary-rgb), 0.25);
+    user-select: none;
+
+    @media (min-width: 768px) {
+      width: 112px;
+      height: 112px;
+      font-size: 2.25rem;
+    }
+  }
+
+  &__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    max-width: 100%;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 999px;
+    color: var(--bs-body-color);
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+
+    svg {
+      flex: 0 0 auto;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__completion {
+    width: 100%;
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+    }
+
+    @media (min-width: 768px) {
+      width: 220px;
+      flex: 0 0 auto;
+    }
+  }
+
+  // ---------- Stat tile ----------
+  &__stat {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    height: 100%;
+    padding: 1rem;
+    border-radius: var(--bs-border-radius-lg);
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+  }
+
+  &__stat-icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--bs-border-radius);
+    color: var(--bs-primary);
+    background: rgba(var(--bs-primary-rgb), 0.1);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  // ---------- Empty state ----------
+  &__empty {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem;
+    color: var(--bs-secondary-color);
+    border: 1px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  // ---------- Checklist ----------
+  &__checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--bs-secondary-color);
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      &.is-done {
+        color: var(--bs-body-color);
+
+        svg {
+          color: var(--bs-success);
+        }
+      }
+    }
+  }
+}

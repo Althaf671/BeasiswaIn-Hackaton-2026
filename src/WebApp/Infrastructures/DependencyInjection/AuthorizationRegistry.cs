@@ -14,8 +14,13 @@ internal static class AuthorizationRegistry
                 policy
                     .RequireAuthenticatedUser()
                     .RequireRole(AppRoles.Admin));
-        });
 
+            options.AddPolicy(AuthorizationPolicies.StudentOnly, policy =>
+                policy
+                    .RequireAuthenticatedUser()
+                    .RequireRole(AppRoles.Student));
+        });
+            
         return services;
     }
 }

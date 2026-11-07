@@ -41,9 +41,9 @@
                 </a>
             </li>
             <li>
-                <a asp-page="/Dashboard/CompetitionManagement/Competitions"
-                class="app-navbar-link @Active("/dashboard/competition-management")">
-                    Perlombaan
+                <a asp-page="/Dashboard/SubmitManagement/SubmitScholarships"
+                class="app-navbar-link @Active("/dashboard/submit-management")">
+                    Submission
                 </a>
             </li>
         </ul>
@@ -99,7 +99,7 @@
                 <a asp-page="/Dashboard/AccountSettings/Index" class="app-navbar-dropdown-item border-top" role="menuitem">
                     <i data-lucide="settings"></i> Pengaturan
                 </a>
-                <form hx-boost="false" class="border-top" method="post" asp-page="/Dashboard/Logout">
+                <form hx-boost="false" class="border-top" method="post" asp-page="/Identity/Logout">
                     <button type="submit" class="app-navbar-dropdown-item app-navbar-dropdown-item--danger" role="menuitem">
                         <i data-lucide="log-out"></i> Keluar
                     </button>

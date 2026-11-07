@@ -1,4 +1,5 @@
 using BeasiswaIn.Web.Common.Abstractions;
+using BeasiswaIn.Web.Common.Helpers;
 using BeasiswaIn.Web.Entities;
 using BeasiswaIn.Web.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -27,22 +28,33 @@ internal sealed class UserScholarshipPreferenceService : IUserScholarshipPrefere
         _imageStorageService = imageStorageService;
     }
 
-    public async Task SaveScholarshipPreferencesAsync(
-        string userId, 
-        IReadOnlyCollection<string> categoryIds, 
+    public async Task<bool> SaveScholarshipPreferencesAsync(
+        string userId,
+        List<RecommendedScholarship> recommendations,
         CancellationToken cancellationToken)
     {
-        var requested = categoryIds.Distinct().Take(15).ToList();
+        var requested = recommendations
+            .Select(r => r.ScholarshipId)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(5)
+            .ToList();
 
-        var valid = await _dbContext.ScholarshipCategories
+        if (requested.Count == 0)
+            return false;
+
+        var valid = await _dbContext.Scholarships
             .Where(x => requested.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync(cancellationToken);
 
+        if (valid.Count == 0)
+            return false;
+
         await using var tx = await _dbContext.BeginTransactionAsync(cancellationToken);
 
         await _dbContext.UserScholarshipPreferences
-            .Where(x => x.UserId == userId)
+            .Where(x => x.StudentId == userId)
             .ExecuteDeleteAsync(cancellationToken);
 
         _dbContext.UserScholarshipPreferences.AddRange(
@@ -50,5 +62,7 @@ internal sealed class UserScholarshipPreferenceService : IUserScholarshipPrefere
 
         await _dbContext.SaveChangesAsync(cancellationToken);
         await tx.CommitAsync(cancellationToken);
+
+        return true;
     }
 }

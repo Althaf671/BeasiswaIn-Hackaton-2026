@@ -12,17 +12,26 @@ public interface IScholarshipService
         string id,
         CancellationToken cancellationToken);
 
-    public Task<Result<ScholarshipResponse>> GetBySlugAsync(
-        string slug,
-        CancellationToken cancellationToken);
-
     public Task<Result<ScholarshipListResponse>> GetAllAsync(
         int page = 1,
         int pageSize = 20,
         CancellationToken cancellationToken = default);
 
+    public Task<Result<ScholarshipListResponse>> GetMyRecommendedAsync(
+        string appUserId,
+        int page = 1, 
+        int pageSize = 20, 
+        CancellationToken cancellationToken = default);
+
+    public Task<Result<ScholarshipListResponse>> GetLatestAsync(
+        int page = 1, 
+        int pageSize = 20, 
+        CancellationToken cancellationToken = default);
+
     public Task<Result<ScholarshipListResponse>> GetAllTrendingAsync(
-        CancellationToken cancellationToken);
+        int page = 1, 
+        int pageSize = 20, 
+        CancellationToken cancellationToken = default);
 
     public Task<Result<ScholarshipListResponse>> GetAllByCategoryId(
         string categoryId, 

@@ -1,0 +1,277 @@
+"filename", "language", "C#", "JSON", "XML", "ASP.NET Razor", "JavaScript", "Markdown", "SCSS", "PostCSS", "comment", "blank", "total"
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Abstractions/EntityBase.cs", "C#", 31, 0, 0, 0, 0, 0, 0, 0, 0, 9, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Abstractions/Error.cs", "C#", 33, 0, 0, 0, 0, 0, 0, 0, 4, 8, 45
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Abstractions/ExceptionBase.cs", "C#", 8, 0, 0, 0, 0, 0, 0, 0, 0, 5, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Abstractions/Result.cs", "C#", 37, 0, 0, 0, 0, 0, 0, 0, 0, 17, 54
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Behavior/GlobalExceptionHandler.cs", "C#", 51, 0, 0, 0, 0, 0, 0, 0, 0, 16, 67
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Constants/AuditActions.cs", "C#", 26, 0, 0, 0, 0, 0, 0, 0, 0, 7, 33
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Constants/EmailConstant.cs", "C#", 13, 0, 0, 0, 0, 0, 0, 0, 0, 5, 18
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Constants/FileStorageConstant.cs", "C#", 5, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Constants/FileValidatoConstant.cs", "C#", 20, 0, 0, 0, 0, 0, 0, 0, 0, 4, 24
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Constants/IdentityConstant.cs", "C#", 7, 0, 0, 0, 0, 0, 0, 0, 0, 3, 10
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Constants/OpenAiConstant.cs", "C#", 93, 0, 0, 0, 0, 0, 0, 0, 0, 17, 110
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Enums/ErrorType.cs", "C#", 15, 0, 0, 0, 0, 0, 0, 0, 0, 3, 18
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Enums/MetricTrend.cs", "C#", 7, 0, 0, 0, 0, 0, 0, 0, 0, 3, 10
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Enums/NotificationStatus.cs", "C#", 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Enums/NotificationType.cs", "C#", 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/AuthenticationErrors.cs", "C#", 155, 0, 0, 0, 0, 0, 0, 0, 0, 29, 184
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/AuthorizationErrors.cs", "C#", 37, 0, 0, 0, 0, 0, 0, 0, 0, 7, 44
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/FileValidatorError.cs", "C#", 68, 0, 0, 0, 0, 0, 0, 0, 0, 12, 80
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/ImageStorageServiceError.cs", "C#", 49, 0, 0, 0, 0, 0, 0, 0, 0, 9, 58
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/ScholarshipCategoryServiceError.cs", "C#", 25, 0, 0, 0, 0, 0, 0, 0, 0, 5, 30
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/ScholarshipServiceError.cs", "C#", 26, 0, 0, 0, 0, 0, 0, 0, 0, 5, 31
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/StudentServiceError.cs", "C#", 26, 0, 0, 0, 0, 0, 0, 0, 0, 6, 32
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Errors/SystemError.cs", "C#", 49, 0, 0, 0, 0, 0, 0, 0, 0, 9, 58
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Helpers/ErrorExtensions.cs", "C#", 21, 0, 0, 0, 0, 0, 0, 0, 0, 4, 25
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Helpers/FontResolver.cs", "C#", 19, 0, 0, 0, 0, 0, 0, 0, 1, 8, 28
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Helpers/NumberFormatter.cs", "C#", 44, 0, 0, 0, 0, 0, 0, 0, 5, 20, 69
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Helpers/ResultExtensions.cs", "C#", 43, 0, 0, 0, 0, 0, 0, 0, 0, 12, 55
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Helpers/StringHelpers.cs", "C#", 52, 0, 0, 0, 0, 0, 0, 0, 0, 15, 67
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Helpers/ToastExtensions.cs", "C#", 24, 0, 0, 0, 0, 0, 0, 0, 0, 9, 33
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Common/Validators/FileMimeValidator.cs", "C#", 101, 0, 0, 0, 0, 0, 0, 0, 0, 29, 130
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Controllers/ChatbotController.cs", "C#", 84, 0, 0, 0, 0, 0, 0, 0, 0, 11, 95
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Entities/Notification.cs", "C#", 32, 0, 0, 0, 0, 0, 0, 0, 0, 3, 35
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Entities/Scholarship.cs", "C#", 58, 0, 0, 0, 0, 0, 0, 0, 0, 6, 64
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Entities/ScholarshipCategory.cs", "C#", 20, 0, 0, 0, 0, 0, 0, 0, 0, 6, 26
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Entities/ScholarshipCategoryAssignments.cs", "C#", 11, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Entities/StudentProfile.cs", "C#", 35, 0, 0, 0, 0, 0, 0, 0, 0, 5, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Entities/UserScholarshipPreferences.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 3, 15
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/FeatureGateConstant.cs", "C#", 7, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/AntiForgeryRegistry.cs", "C#", 22, 0, 0, 0, 0, 0, 0, 0, 0, 4, 26
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/AuthenticationRegistry.cs", "C#", 90, 0, 0, 0, 0, 0, 0, 0, 11, 19, 120
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/AuthorizationRegistry.cs", "C#", 16, 0, 0, 0, 0, 0, 0, 0, 0, 5, 21
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/ChatbotRegistry.cs", "C#", 25, 0, 0, 0, 0, 0, 0, 0, 0, 5, 30
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/CookieRegistry.cs", "C#", 19, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/CorsRegistry.cs", "C#", 19, 0, 0, 0, 0, 0, 0, 0, 0, 5, 24
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/DatabaseRegistry.cs", "C#", 20, 0, 0, 0, 0, 0, 0, 0, 0, 6, 26
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/FileStorageRegistry.cs", "C#", 30, 0, 0, 0, 0, 0, 0, 0, 0, 7, 37
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/OpenAiRegistry.cs", "C#", 34, 0, 0, 0, 0, 0, 0, 0, 0, 6, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/DependencyInjection/RateLimitRegistry.cs", "C#", 101, 0, 0, 0, 0, 0, 0, 0, 3, 15, 119
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Identity/AppPolicy.cs", "C#", 5, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Identity/AppRoles.cs", "C#", 6, 0, 0, 0, 0, 0, 0, 0, 0, 3, 9
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Identity/IdentityService.cs", "C#", 490, 0, 0, 0, 0, 0, 0, 0, 5, 123, 618
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Options/CloudinaryOption.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 5, 17
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Options/OpenAiOptions.cs", "C#", 14, 0, 0, 0, 0, 0, 0, 0, 0, 6, 20
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Options/PythonApiOptions.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Services/ChatbotService.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 2, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Services/DatasetReader.cs", "C#", 193, 0, 0, 0, 0, 0, 0, 0, 4, 43, 240
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Services/ImageStorageService.cs", "C#", 129, 0, 0, 0, 0, 0, 0, 0, 0, 23, 152
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Services/OpenAiService.cs", "C#", 149, 0, 0, 0, 0, 0, 0, 0, 0, 25, 174
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Integrations/Services/PdfService.cs", "C#", 5, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Middleware/UserContext.cs", "C#", 27, 0, 0, 0, 0, 0, 0, 0, 0, 8, 35
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/ApplicationDbContext.cs", "C#", 57, 0, 0, 0, 0, 0, 0, 0, 0, 9, 66
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/ApplicationUser.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/AuditLog.cs", "C#", 34, 0, 0, 0, 0, 0, 0, 0, 0, 6, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/AuditLogger.cs", "C#", 28, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Configurations/NotificationConfiguration.cs", "C#", 50, 0, 0, 0, 0, 0, 0, 0, 0, 11, 61
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Configurations/ScholarshipCategoryAssignmentsConfiguration.cs", "C#", 33, 0, 0, 0, 0, 0, 0, 0, 0, 7, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Configurations/ScholarshipCategoryConfiguration.cs", "C#", 47, 0, 0, 0, 0, 0, 0, 0, 0, 12, 59
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Configurations/ScholarshipConfiguration.cs", "C#", 96, 0, 0, 0, 0, 0, 0, 0, 0, 24, 120
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Configurations/StudentProfileConfiguration.cs", "C#", 66, 0, 0, 0, 0, 0, 0, 0, 0, 15, 81
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Configurations/UserScholarPreferences.cs", "C#", 33, 0, 0, 0, 0, 0, 0, 0, 0, 7, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/CheckConstraintViolationException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/ConcurrencyConflictException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/DbExceptionBase.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/FieldTooLongException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/ForeignKeyViolationException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/NumericOverflowException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/PostgresExceptionTranslatorInterceptor.cs", "C#", 58, 0, 0, 0, 0, 0, 0, 0, 1, 16, 75
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/RequiredFieldMissingException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Exceptions/UniqueConstraintViolationException.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/ScholarshipDatasetRow.cs", "C#", 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 16
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Infrastructures/Persistance/Seeder/AppSeeder.cs", "C#", 86, 0, 0, 0, 0, 0, 0, 0, 0, 17, 103
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IApplicationDbContext.cs", "C#", 18, 0, 0, 0, 0, 0, 0, 0, 0, 2, 20
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IAuditLogger.cs", "C#", 5, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IAuditable.cs", "C#", 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IChatbotService.cs", "C#", 8, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IDashboardService.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 3, 15
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IDatasetReader.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IDeletable.cs", "C#", 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IEntity.cs", "C#", 5, 0, 0, 0, 0, 0, 0, 0, 0, 4, 9
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IIdentiyService.cs", "C#", 25, 0, 0, 0, 0, 0, 0, 0, 0, 4, 29
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IImageStorageService.cs", "C#", 13, 0, 0, 0, 0, 0, 0, 0, 0, 5, 18
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IOpenAiService.cs", "C#", 16, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IPdfService.cs", "C#", 4, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IScholarshipCategoryService.cs", "C#", 25, 0, 0, 0, 0, 0, 0, 0, 0, 7, 32
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IScholarshipService.cs", "C#", 38, 0, 0, 0, 0, 0, 0, 0, 0, 11, 49
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IStudentProfileService.cs", "C#", 16, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/ISubmitScholarshipService.cs", "C#", 8, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IUserContext.cs", "C#", 11, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Interfaces/IUserScholarshipPreferenceService.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Migrations/20261107082114_NotificationAndStudentProfileTable.Designer.cs", "C#", 527, 0, 0, 0, 0, 0, 0, 0, 2, 156, 685
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Migrations/20261107082114_NotificationAndStudentProfileTable.cs", "C#", 105, 0, 0, 0, 0, 0, 0, 0, 3, 20, 128
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Migrations/ApplicationDbContextModelSnapshot.cs", "C#", 525, 0, 0, 0, 0, 0, 0, 0, 1, 156, 682
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Auth/AccountResponse.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 2, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Auth/LoginRequest.cs", "C#", 23, 0, 0, 0, 0, 0, 0, 0, 0, 6, 29
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Auth/TwoFactorRequest.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Chatbot/ChatbotRequest.cs", "C#", 29, 0, 0, 0, 0, 0, 0, 0, 0, 8, 37
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Chatbot/ChatbotResponse.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Competitions/CompetitionCategoryRequest.cs", "C#", 20, 0, 0, 0, 0, 0, 0, 0, 0, 5, 25
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Competitions/CompetitionCategoryResponse.cs", "C#", 31, 0, 0, 0, 0, 0, 0, 0, 0, 6, 37
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Competitions/CompetitionRequest.cs", "C#", 105, 0, 0, 0, 0, 0, 0, 0, 0, 29, 134
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Competitions/CompetitionResponse.cs", "C#", 47, 0, 0, 0, 0, 0, 0, 0, 0, 7, 54
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Dashboard/DashboardResponse.cs", "C#", 51, 0, 0, 0, 0, 0, 0, 0, 3, 13, 67
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Dashboard/DataGridResponse.cs", "C#", 9, 0, 0, 0, 0, 0, 0, 0, 0, 4, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Dashboard/ImageUploadResponse.cs", "C#", 6, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Scholarships/ScholarshipCategoryRequest.cs", "C#", 20, 0, 0, 0, 0, 0, 0, 0, 0, 5, 25
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Scholarships/ScholarshipCategoryResponse.cs", "C#", 28, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Scholarships/ScholarshipRequest.cs", "C#", 95, 0, 0, 0, 0, 0, 0, 0, 0, 25, 120
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Scholarships/ScholarshipResponse.cs", "C#", 46, 0, 0, 0, 0, 0, 0, 0, 0, 7, 53
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Students/StudentProfileRequest.cs", "C#", 31, 0, 0, 0, 0, 0, 0, 0, 0, 8, 39
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/Students/StudentProfileResponse.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/User/ChatbotRequest.cs", "C#", 11, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/User/ChatbotResponse.cs", "C#", 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Models/User/UserOnboardingRequest.cs", "C#", 16, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/ChangePassword.cshtml", "ASP.NET Razor", 0, 0, 0, 4, 0, 0, 0, 0, 5, 2, 11
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/ChangePassword.cshtml.cs", "C#", 23, 0, 0, 0, 0, 0, 0, 0, 0, 6, 29
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/Disable2fa.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/Disable2fa.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/EnableAuthenticator.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/EnableAuthenticator.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/GenerateRecoveryCodes.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/GenerateRecoveryCodes.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/Index.cshtml", "ASP.NET Razor", 0, 0, 0, 408, 0, 0, 0, 0, 14, 39, 461
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/Index.cshtml.cs", "C#", 56, 0, 0, 0, 0, 0, 0, 0, 0, 12, 68
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/ResetAuthenticator.cshtml", "ASP.NET Razor", 0, 0, 0, 4, 0, 0, 0, 0, 5, 2, 11
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/ResetAuthenticator.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/ShowRecoveryCodes.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/ShowRecoveryCodes.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/TwoFactorAuthentication.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/AccountSettings/TwoFactorAuthentication.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 4, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/DashboardPageModel.cs", "C#", 41, 0, 0, 0, 0, 0, 0, 0, 0, 8, 49
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Index.cshtml", "ASP.NET Razor", 0, 0, 0, 23, 0, 0, 0, 0, 1, 5, 29
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Index.cshtml.cs", "C#", 112, 0, 0, 0, 0, 0, 0, 0, 9, 9, 130
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Logout.cshtml", "ASP.NET Razor", 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 4
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Logout.cshtml.cs", "C#", 18, 0, 0, 0, 0, 0, 0, 0, 9, 6, 33
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/ScholarshipCategoryDetail.cshtml", "ASP.NET Razor", 0, 0, 0, 233, 0, 0, 0, 0, 9, 42, 284
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/ScholarshipCategoryDetail.cshtml.cs", "C#", 114, 0, 0, 0, 0, 0, 0, 0, 0, 28, 142
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/ScholarshipDetail.cshtml", "ASP.NET Razor", 0, 0, 0, 579, 0, 0, 0, 0, 59, 83, 721
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/ScholarshipDetail.cshtml.cs", "C#", 121, 0, 0, 0, 0, 0, 0, 0, 0, 29, 150
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/ScholarshipPageModel.cs", "C#", 20, 0, 0, 0, 0, 0, 0, 0, 0, 3, 23
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/Scholarships.cshtml", "ASP.NET Razor", 0, 0, 0, 323, 0, 0, 0, 0, 9, 35, 367
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/ScholarshipManagement/Scholarships.cshtml.cs", "C#", 193, 0, 0, 0, 0, 0, 0, 0, 0, 39, 232
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/ChartViewModel.cs", "C#", 6, 0, 0, 0, 0, 0, 0, 0, 9, 2, 17
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/FormDrawerViewModel.cs", "C#", 16, 0, 0, 0, 0, 0, 0, 0, 8, 11, 35
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/MetricViewModel.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 4, 16
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_Breadcrumbs.cshtml", "ASP.NET Razor", 0, 0, 0, 50, 0, 0, 0, 0, 5, 8, 63
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_DataGrid.cshtml", "ASP.NET Razor", 0, 0, 0, 90, 0, 0, 0, 0, 19, 28, 137
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_DataTable.cshtml", "ASP.NET Razor", 0, 0, 0, 97, 0, 0, 0, 0, 25, 30, 152
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_Footer.cshtml", "ASP.NET Razor", 0, 0, 0, 23, 0, 0, 0, 0, 5, 3, 31
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_FormDrawer.cshtml", "ASP.NET Razor", 0, 0, 0, 189, 0, 0, 0, 0, 90, 31, 310
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_Layout.cshtml", "ASP.NET Razor", 0, 0, 0, 32, 0, 0, 0, 0, 0, 6, 38
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_MetricCard.cshtml", "ASP.NET Razor", 0, 0, 0, 70, 0, 0, 0, 0, 8, 11, 89
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_Navbar.cshtml", "ASP.NET Razor", 0, 0, 0, 124, 0, 0, 0, 0, 11, 21, 156
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_NotificationSidebar.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/Shared/_SettingSidebar.cshtml", "ASP.NET Razor", 0, 0, 0, 85, 0, 0, 0, 0, 5, 16, 106
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/SubmitManagement/SubmitManagementPageModel.cs", "C#", 11, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/SubmitManagement/SubmitScholarshipDetail.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/SubmitManagement/SubmitScholarshipDetail.cshtml.cs", "C#", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/SubmitManagement/SubmitScholarships.cshtml", "ASP.NET Razor", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/SubmitManagement/SubmitScholarships.cshtml.cs", "C#", 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Dashboard/_ViewStart.cshtml", "ASP.NET Razor", 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 3
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Error.cshtml", "ASP.NET Razor", 0, 0, 0, 23, 0, 0, 0, 0, 0, 4, 27
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Error.cshtml.cs", "C#", 15, 0, 0, 0, 0, 0, 0, 0, 0, 6, 21
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Home.cshtml", "ASP.NET Razor", 0, 0, 0, 41, 0, 0, 0, 0, 5, 6, 52
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Home.cshtml.cs", "C#", 23, 0, 0, 0, 0, 0, 0, 0, 0, 6, 29
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Identity/LoginAdmin.cshtml", "ASP.NET Razor", 0, 0, 0, 108, 0, 0, 0, 0, 0, 23, 131
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Identity/LoginAdmin.cshtml.cs", "C#", 67, 0, 0, 0, 0, 0, 0, 0, 9, 16, 92
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Identity/LoginStudent.cshtml", "ASP.NET Razor", 0, 0, 0, 50, 0, 0, 0, 0, 0, 11, 61
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Identity/LoginStudent.cshtml.cs", "C#", 49, 0, 0, 0, 0, 0, 0, 0, 0, 12, 61
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Index.cshtml", "ASP.NET Razor", 0, 0, 0, 16, 0, 0, 0, 0, 7, 5, 28
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Index.cshtml.cs", "C#", 29, 0, 0, 0, 0, 0, 0, 0, 0, 9, 38
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/OnBoarding.cshtml", "ASP.NET Razor", 0, 0, 0, 155, 0, 0, 0, 0, 1, 16, 172
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/OnBoarding.cshtml.cs", "C#", 154, 0, 0, 0, 0, 0, 0, 0, 2, 29, 185
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Shared/_Layout.cshtml", "ASP.NET Razor", 0, 0, 0, 32, 0, 0, 0, 0, 7, 11, 50
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Shared/_Layout.cshtml.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Shared/_LoginBrand.cshtml", "ASP.NET Razor", 0, 0, 0, 22, 0, 0, 0, 0, 0, 1, 23
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Shared/_ValidationScriptsPartial.cshtml", "ASP.NET Razor", 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 3
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Student/Chatbot.cshtml", "ASP.NET Razor", 0, 0, 0, 156, 0, 0, 0, 0, 1, 30, 187
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Student/Chatbot.cshtml.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 0, 0, 2, 12
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Student/StudentProfileDetail.cshtml", "ASP.NET Razor", 0, 0, 0, 192, 0, 0, 0, 0, 7, 34, 233
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/Student/StudentProfileDetail.cshtml.cs", "C#", 51, 0, 0, 0, 0, 0, 0, 0, 0, 10, 61
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/_ViewImports.cshtml", "ASP.NET Razor", 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Pages/_ViewStart.cshtml", "ASP.NET Razor", 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 4
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Program.cs", "C#", 74, 0, 0, 0, 0, 0, 0, 0, 15, 21, 110
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Properties/launchSettings.json", "JSON", 0, 23, 0, 0, 0, 0, 0, 0, 0, 1, 24
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Dashboard/DashboardService.cs", "C#", 103, 0, 0, 0, 0, 0, 0, 0, 9, 21, 133
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Personalizations/UserScholarshipPreferenceService.cs", "C#", 45, 0, 0, 0, 0, 0, 0, 0, 0, 9, 54
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Scholarships/ScholarshipCategoryCommandService.cs", "C#", 91, 0, 0, 0, 0, 0, 0, 0, 0, 19, 110
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Scholarships/ScholarshipCategoryQueryService.cs", "C#", 80, 0, 0, 0, 0, 0, 0, 0, 0, 9, 89
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Scholarships/ScholarshipCommandService.cs", "C#", 178, 0, 0, 0, 0, 0, 0, 0, 0, 33, 211
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Scholarships/ScholarshipQueryService.cs", "C#", 274, 0, 0, 0, 0, 0, 0, 0, 0, 32, 306
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Students/StudentCommandService.cs", "C#", 79, 0, 0, 0, 0, 0, 0, 0, 0, 17, 96
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/Students/StudentQueryService.cs", "C#", 33, 0, 0, 0, 0, 0, 0, 0, 0, 4, 37
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/SubmitScholarships/SubmitScholarshipCommandService.cs", "C#", 13, 0, 0, 0, 0, 0, 0, 0, 0, 3, 16
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Services/SubmitScholarships/SubmitScholarshipQueryService.cs", "C#", 12, 0, 0, 0, 0, 0, 0, 0, 0, 2, 14
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Auth/_auth-index.scss", "SCSS", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Auth/login.scss", "SCSS", 0, 0, 0, 0, 0, 0, 389, 0, 12, 77, 478
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Dashboard/_dashboard-index.scss", "SCSS", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 3
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Dashboard/_item-detail.scss", "SCSS", 0, 0, 0, 0, 0, 0, 209, 0, 0, 32, 241
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Dashboard/_navbar.scss", "SCSS", 0, 0, 0, 0, 0, 0, 232, 0, 7, 44, 283
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Dashboard/_settings.scss", "SCSS", 0, 0, 0, 0, 0, 0, 153, 0, 7, 27, 187
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Onboarding/onboarding.scss", "SCSS", 0, 0, 0, 0, 0, 0, 62, 0, 1, 2, 65
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Student/_student-detail.scss", "SCSS", 0, 0, 0, 0, 0, 0, 126, 0, 7, 20, 153
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/Student/_student-index.scss", "SCSS", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_data-grid.scss", "SCSS", 0, 0, 0, 0, 0, 0, 523, 0, 14, 88, 625
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_footer.scss", "SCSS", 0, 0, 0, 0, 0, 0, 295, 0, 42, 95, 432
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_form-drawer.scss", "SCSS", 0, 0, 0, 0, 0, 0, 126, 0, 9, 26, 161
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_table.scss", "SCSS", 0, 0, 0, 0, 0, 0, 698, 0, 52, 194, 944
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_tabs.scss", "SCSS", 0, 0, 0, 0, 0, 0, 50, 0, 0, 11, 61
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_toast.scss", "SCSS", 0, 0, 0, 0, 0, 0, 79, 0, 12, 21, 112
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/UiComponent/_ui-component-index.scss", "SCSS", 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/_bootstrap-override.scss", "SCSS", 0, 0, 0, 0, 0, 0, 185, 0, 9, 48, 242
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/_icons.scss", "SCSS", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/_main-override.scss", "SCSS", 0, 0, 0, 0, 0, 0, 76, 0, 0, 14, 90
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/_tokens.scss", "SCSS", 0, 0, 0, 0, 0, 0, 238, 0, 52, 84, 374
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Saas/app.scss", "SCSS", 0, 0, 0, 0, 0, 0, 9, 0, 9, 2, 20
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/Styles/Tailwind/landing.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 4, 12, 2, 18
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/WebApp.csproj", "XML", 0, 0, 43, 0, 0, 0, 0, 0, 0, 5, 48
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/appsettings.Development.json", "JSON", 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/appsettings.json", "JSON", 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 40
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/package.json", "JSON", 0, 18, 0, 0, 0, 0, 0, 0, 0, 1, 19
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/css/Saas/Auth/login.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 378, 1, 5, 384
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/css/Saas/Onboarding/onboarding.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 327, 2, 55, 384
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/css/Saas/Student/student-detail.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/css/Saas/app.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 3616, 92, 130, 3838
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/css/Tailwind/landing.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1241, 1, 1, 1243
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/css/site.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 25, 0, 6, 31
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/js/data-grid.js", "JavaScript", 0, 0, 0, 0, 510, 0, 0, 0, 18, 112, 640
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/js/data-table.js", "JavaScript", 0, 0, 0, 0, 839, 0, 0, 0, 57, 155, 1051
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/js/form-drawer.js", "JavaScript", 0, 0, 0, 0, 646, 0, 0, 0, 62, 167, 875
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/js/login.js", "JavaScript", 0, 0, 0, 0, 12, 0, 0, 0, 0, 1, 13
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/js/on-boarding.js", "JavaScript", 0, 0, 0, 0, 520, 0, 0, 0, 18, 88, 626
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/js/site.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 5
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 3886, 6, 193, 4085
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 3886, 6, 192, 4084
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 518, 14, 65, 597
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 524, 6, 64, 594
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 4891, 8, 503, 5402
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 4887, 6, 500, 5393
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 1, 5, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 11136, 24, 897, 12057
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 11138, 6, 886, 12030
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 6
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js", "JavaScript", 0, 0, 0, 0, 5064, 0, 0, 0, 655, 596, 6315
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js", "JavaScript", 0, 0, 0, 0, 3568, 0, 0, 0, 578, 302, 4448
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/js/bootstrap.js", "JavaScript", 0, 0, 0, 0, 3604, 0, 0, 0, 584, 307, 4495
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 7
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js", "JavaScript", 0, 0, 0, 0, 306, 0, 0, 0, 76, 54, 436
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 7, 0, 8
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation/LICENSE.md", "Markdown", 0, 0, 0, 0, 0, 18, 0, 0, 0, 5, 23
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation/dist/additional-methods.js", "JavaScript", 0, 0, 0, 0, 1106, 0, 0, 0, 258, 141, 1505
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation/dist/additional-methods.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 4
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation/dist/jquery.validate.js", "JavaScript", 0, 0, 0, 0, 1265, 0, 0, 0, 188, 250, 1703
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery-validation/dist/jquery.validate.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 3, 0, 4
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery/dist/jquery.js", "JavaScript", 0, 0, 0, 0, 6767, 0, 0, 0, 1887, 2063, 10717
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery/dist/jquery.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery/dist/jquery.slim.js", "JavaScript", 0, 0, 0, 0, 5381, 0, 0, 0, 1558, 1679, 8618
+"/Users/althaf/Desktop/BeasiswaIn-Hackaton-2026/src/WebApp/wwwroot/lib/jquery/dist/jquery.slim.min.js", "JavaScript", 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3
+"Total", "-", 7659, 121, 43, 3144, 29596, 18, 3466, 46473, 6868, 12533, 109921

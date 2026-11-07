@@ -1,5 +1,6 @@
 using BeasiswaIn.Web.Models.Chatbot;
 using BeasiswaIn.Web.Models.Scholarships;
+using OpenAI.Chat;
 
 namespace BeasiswaIn.Web.Interfaces;
 
@@ -16,5 +17,8 @@ public interface IOpenAiService
         IReadOnlyList<ScholarshipResponse> scholarships,
         CancellationToken cancellationToken);
 
-    public Task AnalyzeBesCompetitionChoices();
+    public Task<string> SendMessageAsync(
+        string message,
+        List<ChatMessage> conversation,
+        CancellationToken cancellationToken);
 }

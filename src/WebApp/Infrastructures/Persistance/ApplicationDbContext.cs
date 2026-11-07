@@ -11,6 +11,7 @@ namespace BeasiswaIn.Web.Infrastructures.Persistance;
 internal sealed class ApplicationDbContext 
     : IdentityDbContext<ApplicationUser>, IApplicationDbContext
 {
+    public DbSet<SubmittedScholarship> SubmittedScholarships => Set<SubmittedScholarship>();
     public DbSet<ApplicationUser> ApplicationUsers => Set<ApplicationUser>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Scholarship> Scholarships => Set<Scholarship>();

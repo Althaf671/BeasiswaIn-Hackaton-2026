@@ -1,6 +1,10 @@
+using AspNetCoreHero.ToastNotification.Abstractions;
+using AspNetCoreHero.ToastNotification.Notyf;
 using BeasiswaIn.Web.Common.Constants;
+using BeasiswaIn.Web.Common.Helpers;
 using BeasiswaIn.Web.Interfaces;
 using BeasiswaIn.Web.Models.Scholarships;
+using BeasiswaIn.Web.Models.Students;
 using BeasiswaIn.Web.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +19,16 @@ public sealed class OnBoardingModel : PageModel
 
     private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/webp"];
 
+    [BindProperty]
+    public CreateStudentProfileRequest CreateStudentProfileRequest { get; set; } = new();
+
     private readonly IScholarshipCategoryService _scholarshipCategoryService;
     private readonly IScholarshipService _scholarshipService;
     private readonly IOpenAiService _openAiService;
     private readonly IImageStorageService _imageStorageService;
+    private readonly IStudentProfileService _studentProfileService;
+    private readonly INotyfService _toast;
+    private readonly IUserScholarshipPreferenceService _userScholarshipPreferenceService;
 
     public IReadOnlyList<ScholarshipCategoryOptions> ScholarshipCategoryOptions { get; private set; } = [];
     public string ChatResult { get; private set; } = string.Empty;
@@ -27,12 +37,18 @@ public sealed class OnBoardingModel : PageModel
         IScholarshipCategoryService scholarshipCategoryService,
         IScholarshipService scholarshipService,
         IOpenAiService openAiService,
-        IImageStorageService imageStorageService)
+        IImageStorageService imageStorageService,
+        IStudentProfileService studentProfileService,
+        INotyfService notfyService,
+        IUserScholarshipPreferenceService userScholarshipPreferenceService)
     {
         _scholarshipCategoryService = scholarshipCategoryService;
         _scholarshipService = scholarshipService;
         _openAiService = openAiService;
         _imageStorageService = imageStorageService;
+        _studentProfileService = studentProfileService;
+        _toast = notfyService;
+        _userScholarshipPreferenceService = userScholarshipPreferenceService;
     }
 
     public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
@@ -67,6 +83,15 @@ public sealed class OnBoardingModel : PageModel
             return ValidationErrors();
         }
 
+        var studentProfileResult = await _studentProfileService.CreateAsync(
+            CreateStudentProfileRequest with { Description = request.Essay },
+            cancellationToken);
+        if (studentProfileResult.IsFailure)
+        {
+            _toast.ToastError("Gagal", studentProfileResult.Error.Description!);
+            return Page();
+        }
+
         var scholarshipsResult = await _scholarshipService
             .GetEligibleByCategoryIdsAsync(selectedIds, cancellationToken);
         if (scholarshipsResult.IsFailure)
@@ -89,6 +114,28 @@ public sealed class OnBoardingModel : PageModel
                 selected.Select(x => x.Name).ToList(),
                 scholarshipsResult.Value!,
                 cancellationToken);
+
+        var recommended = ChatBotParserHelper.Parse(ChatResult);
+
+        var validIds = scholarshipsResult.Value!
+            .Select(x => x.Id)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var toSave = recommended
+            .Where(r => validIds.Contains(r.ScholarshipId))
+            .Take(5)
+            .ToList();
+
+        var userId = studentProfileResult.Value!;
+        var isSaved = await _userScholarshipPreferenceService.SaveScholarshipPreferencesAsync(
+            userId,
+            toSave,
+            cancellationToken);
+            
+        if (!isSaved)
+        {
+            _toast.ToastError("Gagal", "Gagal menyimpan data preferensi beasiswa");
+        }
 
         return new JsonResult(new
         {

@@ -7,6 +7,10 @@ pakai set di sini.
 */
 @source "../../Pages/Index.cshtml";
 @source "../../Pages/Home.cshtml";
+@source "../../Pages/OnBoarding.cshtml";
+@source "../../Pages/Identity/Login.cshtml";
+@source "../../Pages/Students/**/*.cshtml";
+@source "../../Pages/Shared/**/*.cshtml"; 
 
 /*
 Alur langkah menjalankan tailwind:

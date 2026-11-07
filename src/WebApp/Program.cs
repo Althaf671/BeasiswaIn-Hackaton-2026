@@ -9,16 +9,21 @@ using BeasiswaIn.Web.Interfaces;
 using BeasiswaIn.Web.Services.Dashboard;
 using BeasiswaIn.Web.Services.Personalizations;
 using BeasiswaIn.Web.Services.Scholarships;
+using BeasiswaIn.Web.Services.Students;
 using BeasiswaIn.Web.Services.SubmitScholarships;
 using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddAppChatbot(builder.Configuration);
 
 // client app configuration
 builder.Services
     .AddRazorPages(options =>
     {
         options.Conventions.AuthorizeFolder("/dashboard", AuthorizationPolicies.AdminOnly);
+        options.Conventions.AuthorizeFolder("/students", AuthorizationPolicies.StudentOnly);
     })
     .AddJsonOptions(options =>
     {
@@ -32,6 +37,7 @@ builder.Services.AddScoped<IScholarshipService, ScholarshipService>();
 builder.Services.AddScoped<IScholarshipCategoryService, ScholarshipCategoryService>();
 builder.Services.AddScoped<IUserScholarshipPreferenceService, UserScholarshipPreferenceService>();
 builder.Services.AddScoped<ISubmitScholarshipService, SubmitScholarshipService>();
+builder.Services.AddScoped<IStudentProfileService, StudentProfileService>();
 builder.Services.AddTransient<AppSeeder>();
 
 // fondation infrastructure
@@ -66,10 +72,10 @@ if (app.Environment.IsDevelopment())
 {
     // Enable seeder dan disble kalau sudah selesai
 
-    using var scope = app.Services.CreateScope();
-    var seeder = scope.ServiceProvider.GetRequiredService<AppSeeder>();
+    // using var scope = app.Services.CreateScope();
+    // var seeder = scope.ServiceProvider.GetRequiredService<AppSeeder>();
 
-    await seeder.SeedRolesAsync();
+    // await seeder.SeedRolesAsync();
 
     // var adminResult = await seeder.SeedAdminAsync();
     // if(adminResult.IsFailure)
@@ -97,6 +103,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+app.MapControllers();
 app.MapRazorPages()
    .WithStaticAssets();
 

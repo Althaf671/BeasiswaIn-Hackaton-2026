@@ -102,11 +102,18 @@ internal static class AuthenticationRegistry
                 return Task.CompletedTask;
             }
 
-            options.Events.OnRedirectToLogin = ctx =>
-                HandleRedirect(ctx, StatusCodes.Status401Unauthorized);
-
             options.Events.OnRedirectToAccessDenied = ctx =>
-                HandleRedirect(ctx, StatusCodes.Status403Forbidden);
+            {
+                var user = ctx.HttpContext.User;
+
+                if (user.IsInRole(AppRoles.Admin))
+                    ctx.RedirectUri = "/dashboard";
+                    
+                else if (user.IsInRole(AppRoles.Student))
+                    ctx.RedirectUri = "/main-page";
+
+                return HandleRedirect(ctx, StatusCodes.Status403Forbidden);
+            };
 
             // later need OnValidatePrincipal
         });

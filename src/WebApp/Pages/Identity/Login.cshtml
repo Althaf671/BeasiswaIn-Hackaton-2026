@@ -1,0 +1,80 @@
+@page "/identity/login"
+
+@using BeasiswaIn.Web.Pages.Identity
+
+@model LoginModel
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<main class="flex min-h-dvh flex-col justify-between bg-white px-7 py-8">
+    <div class="flex w-full flex-col">
+        <section class="mb-6 mt-2 flex flex-col items-center text-center">
+            <div class="relative mb-5 flex h-28 w-28 items-center justify-center">
+                <div class="flex h-24 w-24 items-center justify-center rounded-full bg-[#E6F4EA] p-1.5 shadow-sm">
+                    <div class="flex h-full w-full items-center justify-center rounded-full border border-[#C2E7D1] bg-white shadow-inner">
+                        <svg aria-label="Beasiswa-in Mascot" class="h-[4.5rem] w-[4.5rem]" fill="none" viewBox="0 0 80 80"><path d="M22 28C22 28 29 23 40 23C51 23 58 28 58 28C58 28 54 18 40 18C26 18 22 28 22 28Z" fill="#00613a"></path><circle cx="28" cy="22" fill="#0F7D4E" r="3"></circle><circle cx="52" cy="22" fill="#0F7D4E" r="3"></circle><circle cx="40" cy="17" fill="#00472A" r="3.5"></circle><ellipse cx="40" cy="42" fill="#00613a" rx="20" ry="17"></ellipse><ellipse cx="40" cy="43.5" fill="#E6F4EA" rx="16" ry="14"></ellipse><circle cx="33" cy="38" fill="#FFFFFF" r="8" stroke="#00472A" stroke-width="2.5"></circle><circle cx="47" cy="38" fill="#FFFFFF" r="8" stroke="#00472A" stroke-width="2.5"></circle><circle cx="34" cy="38" fill="#1B2E24" r="4"></circle><circle cx="46" cy="38" fill="#1B2E24" r="4"></circle><polygon fill="#E58B12" points="40,41 37.5,45.5 42.5,45.5"></polygon></svg>
+                    </div>
+                </div>
+            </div>
+            <h1 class="mb-1.5 text-[22px] font-extrabold leading-none tracking-tight text-[#1D2B11]">Beasiswa-in</h1>
+            <p class="text-[13px] font-medium tracking-tight text-[#696B68]">Your Scholarship Journey Starts Here</p>
+        </section>
+
+        <section>
+            <h2 class="mb-4 text-center text-[34px] font-extrabold tracking-tight text-[#00613a]">Sign In</h2>
+            <form method="post" class="flex flex-col space-y-4">
+                <div class="flex flex-col">
+                    <label class="mb-1.5 ml-1 text-[13.5px] font-bold text-[#2A2E26]" for="username">Username or Email</label>
+                    <div class="relative flex items-center">
+                        <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#5C6156]">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                        <input id="username" name="username" type="text" placeholder="scholar@university.edu" class="h-[52px] w-full rounded-full border border-[#E3E4DC] bg-white pl-12 pr-4 text-[14px] text-[#2A2E26] shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#00613a]" />
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <div class="mb-1.5 flex items-center justify-between px-1">
+                        <label class="text-[13.5px] font-bold text-[#2A2E26]" for="password">Password</label>
+                        <a class="text-[13px] font-bold text-[#00613a] hover:underline" href="/masuk">Lupa password?</a>
+                    </div>
+                    <div class="relative flex items-center">
+                        <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-[#5C6156]">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 018 0v4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                        <input id="password" name="password" type="password" class="h-[52px] w-full rounded-full border border-[#E3E4DC] bg-white pl-12 pr-12 text-[15px] text-[#696D63] shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#00613a]" />
+                        <button type="button" data-toggle-password="password" aria-label="Toggle password visibility" class="absolute inset-y-0 right-4 flex items-center text-[#5C6156]">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <button class="flex h-[54px] w-full items-center justify-center space-x-2 rounded-full bg-[#00613a] text-[16px] font-bold text-white shadow-[0_10px_22px_-5px_rgba(0,97,58,0.42)] transition hover:bg-[#005231] active:scale-[0.99]" type="submit">
+                        <span>Sign In</span>
+                        <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.6" viewBox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                </div>
+            </form>
+            <div class="relative my-6 flex items-center justify-center">
+                <div class="w-full border-t border-[#E5E6DC]"></div>
+                <span class="absolute bg-white px-3 text-[11px] font-bold uppercase tracking-wider text-[#7A7F73]">OR CONTINUE WITH</span>
+            </div>
+            <form method="post" asp-page-handler="Google">
+                <button class="flex h-[52px] w-full items-center justify-center space-x-3 rounded-full border border-[#E5E6DE] bg-white shadow-sm transition hover:bg-gray-50 active:scale-[0.99]" type="submit">
+                    <svg class="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24"><path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" fill="#4285F4"></path><path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" fill="#34A853"></path><path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.02 0 12s.45 3.82 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path><path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path></svg>
+                    <span class="text-[14px] font-bold text-[#2A2E26]">Login with Google</span>
+                </button>
+            </form>
+        </section>
+    </div>
+    <footer class="mt-8 text-center">
+        <p class="text-[13.5px] text-[#63685E]">
+            belum punya akun?
+            <a class="ml-0.5 font-bold text-[#00613a] hover:underline" asp-page="/Mobile/Account/SignUp">Sign Up</a>
+        </p>
+    </footer>
+</main>
+
+@section Scripts {
+    <script src="~/js/mobile/auth.js" asp-append-version="true"></script>
+}

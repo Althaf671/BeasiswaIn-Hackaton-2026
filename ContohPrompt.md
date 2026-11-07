@@ -1,0 +1,1 @@
+Halo saya adalah seorang anak yang minta di bidang ekonomi dan mencari beasiswa sesuai bidang tersebut

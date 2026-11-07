@@ -1,0 +1,299 @@
+@page "/detail-beasiswa/{id}"
+@using System.Globalization
+@using System.Text.RegularExpressions
+@using BeasiswaIn.Web.Common.Helpers
+@model BeasiswaIn.Web.Pages.Students.Scholarships.DetailModel
+@{
+    ViewData["Title"] = "Detail Beasiswa";
+
+    var info = Model.ScholarshipInfo;
+    var id = new CultureInfo("id-ID");
+    var now = DateTimeOffset.UtcNow;
+
+    // Deskripsi: paragraf pertama tampil, sisanya masuk "Read more"
+    var descParts = (info.Description ?? string.Empty)
+        .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    var descMain = descParts.FirstOrDefault() ?? string.Empty;
+    var descMore = descParts.Skip(1).ToList();
+
+    // Persyaratan: 3 pertama tampil, sisanya masuk "Read more"
+    var requirements = StringHelper.ResolveList(info.Requirement);
+    var reqVisible = requirements.Take(3).ToList();
+    var reqMore = requirements.Skip(3).ToList();
+    var reqCardClass = info.IsEligible
+        ? "rounded-xl border border-emerald-200/80 bg-emerald-50/20 p-3"
+        : "rounded-xl border border-rose-200/80 bg-rose-50/20 p-3";
+
+    // Status pendaftaran
+    var isUpcoming = now < info.RegistrationStartAt;
+    var isClosed = now > info.RegistrationEndAt;
+    var isOpen = !isUpcoming && !isClosed;
+
+    var deadlineText = info.RegistrationEndAt.ToString("d MMMM yyyy", id);
+    var startText = info.RegistrationStartAt.ToString("d MMMM yyyy", id);
+
+    string daysLeft;
+    if (isClosed)
+    {
+        daysLeft = "Pendaftaran ditutup";
+    }
+    else
+    {
+        var days = (int)Math.Ceiling((info.RegistrationEndAt - now).TotalDays);
+        daysLeft = isUpcoming ? "Belum dibuka" : days <= 1 ? "Hari terakhir" : $"{days} hari lagi";
+    }
+
+    var contacts = info.ContactPerson
+        .SelectMany(c => ExtractContacts(c))
+        .DistinctBy(c => c.Href)
+        .ToList();
+
+    var hasGuide = !string.IsNullOrWhiteSpace(info.GuideUrl);
+    var hasExtras = hasGuide || contacts.Count > 0;
+}
+
+@functions {
+    private sealed record ContactLink(string Href, string Label, string Icon, string IconColor, string Display);
+
+    private static readonly Regex EmailRegex = new(
+        @"[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}",
+        RegexOptions.Compiled);
+
+    private static readonly Regex PhoneRegex = new(
+        @"\+?\d[\d\s\-.()]{6,}\d",
+        RegexOptions.Compiled);
+
+    private static IEnumerable<ContactLink> ExtractContacts(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            yield break;
+
+        // Email
+        foreach (Match m in EmailRegex.Matches(raw))
+            yield return new ContactLink($"mailto:{m.Value}", "Email", "mail", "text-blue-700", m.Value);
+
+        // Nomor telepon (email dibuang dulu supaya angka di dalam email tidak ikut terbaca)
+        var withoutEmail = EmailRegex.Replace(raw, " ");
+        foreach (Match m in PhoneRegex.Matches(withoutEmail))
+        {
+            var digits = new string(m.Value.Where(char.IsDigit).ToArray());
+            if (digits.Length is < 9 or > 15)
+                continue;
+
+            if (digits.StartsWith('0'))
+                digits = "62" + digits[1..];
+
+            yield return new ContactLink($"https://wa.me/{digits}", "WhatsApp", "chat", "text-[#00613a]", m.Value.Trim());
+        }
+    }
+}
+
+<div class="relative h-[300px] w-full overflow-hidden bg-gradient-to-br from-[#063d28] via-[#0b6b45] to-[#d7efe3]">
+    @if (!string.IsNullOrWhiteSpace(info.ContentImageUrl))
+    {
+        @* Layer 1: poster blur sebagai latar *@
+        <img alt="" aria-hidden="true" class="absolute inset-0 h-full w-full scale-125 object-cover opacity-0 blur-2xl transition-opacity duration-500" src="@info.ContentImageUrl" onload="this.classList.remove('opacity-0')" onerror="this.remove()" />
+        <div class="pointer-events-none absolute inset-0 bg-black/30"></div>
+
+        @* Layer 2: poster utuh di tengah *@
+        <div class="absolute inset-0 flex items-center justify-center px-16 pt-14 pb-12">
+            <img alt="Poster @info.Name" class="h-full w-auto max-w-full rounded-lg object-contain opacity-0 shadow-2xl ring-1 ring-white/20 transition-opacity duration-500" src="@info.ContentImageUrl" onload="this.classList.remove('opacity-0')" onerror="this.remove()" />
+        </div>
+    }
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30"></div>
+    <div class="absolute top-4 left-4 z-20">
+        <button id="btnBack" type="button" aria-label="Kembali" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-neutral-800 shadow-md backdrop-blur-md transition hover:bg-white active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        </button>
+    </div>
+    <div class="absolute top-4 right-4 z-20">
+        <button id="btnShare" type="button" aria-label="Bagikan" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-neutral-800 shadow-md backdrop-blur-md transition hover:bg-white active:scale-95">
+            <span class="material-symbols-outlined text-[18px]">share</span>
+        </button>
+    </div>
+</div>
+
+<main id="detailMain" class="relative z-10 -mt-8 flex-1 rounded-t-[32px] bg-white">
+    <div class="w-full overflow-hidden rounded-t-[32px] border-x border-t border-[#E2E8D8] bg-white">
+        <div class="space-y-2 p-5 pb-4">
+            <div class="mb-1 flex items-center gap-2">
+                <span class="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">@info.TotalPrizeText</span>
+                @if (info.IsEligible)
+                {
+                    <span class="rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-0.5 text-[11px] font-medium text-neutral-600">Memenuhi Syarat</span>
+                }
+                else
+                {
+                    <span class="rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-0.5 text-[11px] font-medium text-neutral-600">Belum Memenuhi Syarat</span>
+                }
+            </div>
+            <h1 class="text-[18px] leading-snug font-extrabold tracking-tight text-neutral-900">@info.Name</h1>
+            <div class="flex items-center gap-1.5 pt-1 text-xs text-neutral-600">
+                <span class="material-symbols-outlined text-[18px] text-[#00613a]">event</span>
+                <span class="font-medium text-neutral-700">@info.RegistrationPeriod</span>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(descMain))
+        {
+            <div class="mx-5 border-t border-neutral-100"></div>
+            <div class="space-y-2.5 p-5 pt-4 pb-4">
+                <h2 class="text-[15px] font-bold tracking-tight text-neutral-900">Deskripsi Program</h2>
+                <p class="text-justify text-xs leading-relaxed text-neutral-600">@descMain</p>
+                @if (descMore.Count > 0)
+                {
+                    <div class="expandable-grid" id="deskripsi-expanded">
+                        <div class="expandable-inner">
+                            @foreach (var para in descMore)
+                            {
+                                <p class="mt-1 border-t border-dashed border-emerald-100 pt-2 text-justify text-xs leading-relaxed text-neutral-600">@para</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="flex justify-center pt-1">
+                        <button type="button" data-accordion="deskripsi-expanded" class="inline-flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-[#00613a] transition-colors duration-200 hover:bg-emerald-50/70 hover:text-[#004d2e] active:scale-95">
+                            <span data-accordion-label class="transition-all duration-200">Read more</span>
+                            <span class="material-symbols-outlined text-[15px] transition-transform duration-300">expand_more</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (requirements.Count > 0)
+        {
+            <div class="mx-5 border-t border-neutral-100"></div>
+            <div class="space-y-3.5 p-5 pt-4 pb-5">
+                <div>
+                    <div class="mb-1.5 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[20px] text-[#00613a]">checklist_rtl</span>
+                        <h2 class="text-[15px] font-bold tracking-tight text-neutral-900">Persyaratan Seleksi</h2>
+                    </div>
+                    <p class="text-[11px] leading-relaxed text-neutral-500">
+                        @(info.IsEligible
+                            ? "Berdasarkan data profil dan dokumen di akun Anda, Anda memenuhi persyaratan beasiswa ini:"
+                            : "Berdasarkan data profil dan dokumen di akun Anda, Anda belum memenuhi seluruh persyaratan beasiswa ini:")
+                    </p>
+                </div>
+                <div class="space-y-2.5 pt-0.5">
+                    @foreach (var req in reqVisible)
+                    {
+                        <div class="@reqCardClass">
+                            <h3 class="text-xs font-bold text-neutral-900">@req</h3>
+                        </div>
+                    }
+                    @if (reqMore.Count > 0)
+                    {
+                        <div class="expandable-grid" id="persyaratan-expanded">
+                            <div class="expandable-inner space-y-2.5 pt-2.5">
+                                @foreach (var req in reqMore)
+                                {
+                                    <div class="@reqCardClass">
+                                        <h3 class="text-xs font-bold text-neutral-900">@req</h3>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="flex justify-center pt-1 text-center">
+                            <button type="button" data-accordion="persyaratan-expanded" class="inline-flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-xs font-bold text-[#00613a] transition-colors duration-200 hover:bg-emerald-50/70 hover:text-[#004d2e] active:scale-95">
+                                <span data-accordion-label class="transition-all duration-200">Read more</span>
+                                <span class="material-symbols-outlined text-[15px] transition-transform duration-300">expand_more</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="mx-5 border-t border-neutral-100"></div>
+        <div class="space-y-3 p-5 pt-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-[14px] font-bold text-neutral-900">Jadwal Pendaftaran</h3>
+                <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">2 Tahap</span>
+            </div>
+            <div class="space-y-2 pt-1">
+                @if (isOpen)
+                {
+                    <div class="flex items-center justify-between rounded-xl border border-emerald-300 bg-emerald-50/40 p-2.5 text-xs">
+                        <div class="flex items-center gap-2.5">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-[#00613a] text-[10px] font-bold text-white">1</span>
+                            <span class="font-bold text-neutral-900">Pendaftaran Dibuka</span>
+                        </div>
+                        <span class="rounded-md border border-emerald-200 bg-white px-2 py-0.5 text-[10px] font-semibold text-[#00613a]">Sedang Buka</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex items-center justify-between rounded-xl border border-neutral-200 bg-white p-2.5 text-xs">
+                        <div class="flex items-center gap-2.5">
+                            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-[10px] font-bold text-neutral-600">1</span>
+                            <span class="font-medium text-neutral-700">Pendaftaran Dibuka</span>
+                        </div>
+                        <span class="text-[10px] text-neutral-400">@startText</span>
+                    </div>
+                }
+                <div class="flex items-center justify-between rounded-xl border border-neutral-200 bg-white p-2.5 text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-[10px] font-bold text-neutral-600">2</span>
+                        <span class="font-medium text-neutral-700">Pendaftaran Ditutup</span>
+                    </div>
+                    <span class="text-[10px] text-neutral-400">@deadlineText</span>
+                </div>
+            </div>
+        </div>
+
+        @if (hasExtras)
+        {
+            <div class="mx-5 border-t border-neutral-100"></div>
+            <div class="space-y-3 p-5 pt-4">
+                @if (hasGuide)
+                {
+                    <div class="flex items-center justify-between rounded-xl border border-[#E2E8D8] bg-[#F8FAF6] p-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="material-symbols-outlined text-[22px] text-[#00613a]">description</span>
+                            <div>
+                                <p class="text-xs font-bold text-neutral-800">Booklet Resmi Program</p>
+                                <p class="text-[10px] text-neutral-500">Panduan Lengkap</p>
+                            </div>
+                        </div>
+                        <a class="rounded-lg border border-[#E2E8D8] bg-white px-3 py-1 text-xs font-semibold text-[#00613a] shadow-sm transition hover:bg-neutral-50" href="@info.GuideUrl" target="_blank" rel="noopener noreferrer">Unduh</a>
+                    </div>
+                }
+                @if (contacts.Count > 0)
+                {
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        @foreach (var c in contacts)
+                        {
+                            <a class="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white p-2.5 text-xs hover:bg-neutral-50" href="@c.Href" rel="noopener noreferrer" target="_blank">
+                                <span class="material-symbols-outlined shrink-0 text-[18px] @c.IconColor">@c.Icon</span>
+                                <div class="flex min-w-0 flex-col overflow-hidden leading-tight">
+                                    <p class="text-[10px] text-neutral-400">@c.Label</p>
+                                    <p class="truncate font-bold text-neutral-800">@c.Display</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+           </div>
+        }
+    </div>
+</main>
+
+<div class="m-detail-bar">
+    <div class="leading-tight">
+        <span class="block text-[10px] font-bold tracking-wider text-neutral-400 uppercase">Batas Akhir:</span>
+        <span class="text-xs font-extrabold text-neutral-900">@deadlineText</span>
+        @if (!string.IsNullOrWhiteSpace(daysLeft))
+        {
+            <span class="block text-[10px] font-semibold text-rose-600">(@daysLeft)</span>
+        }
+    </div>
+    <a class="flex max-w-[220px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#00613a] px-4 py-3 text-center text-xs font-bold text-white shadow-md shadow-emerald-900/20 transition hover:bg-[#004d2e] active:scale-[0.98]" href="@info.RegistrationUrl" rel="noopener noreferrer" target="_blank">
+        <span>Arahkan ke Portal Resmi</span>
+        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+    </a>
+</div>
+
+@section Scripts {
+    <script src="~/js/mobile/scholarship-detail.js" asp-append-version="true"></script>
+}
