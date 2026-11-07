@@ -1,0 +1,99 @@
+@page "/scholarbot"
+@using BeasiswaIn.Web.Pages
+@using BeasiswaIn.Web.Models.ScholarBot
+@model ScholarBotModel
+@{
+    ViewData["Title"] = "ScholarBot";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/scholarbot.css" asp-append-version="true" />
+}
+
+<div class="scholarbot" data-scholarbot lang="id"
+     data-max-message="@ScholarBotRequest.MaxMessageCharacters"
+     data-max-context="@ScholarBotRequest.MaxContextCharacters"
+     data-max-history="@ScholarBotRequest.MaxHistoryMessages">
+    <header class="sb-header">
+        <div class="sb-header-inner">
+            <a href="/" class="sb-brand" aria-label="BeasiswaIn — kembali ke beranda">BeasiswaIn<span>.</span></a>
+            <span class="sb-badge">Asisten baca-saja</span>
+        </div>
+    </header>
+
+    <div class="sb-shell">
+        <aside class="sb-intro" aria-labelledby="sb-title">
+            <p class="sb-eyebrow">KENALI PELUANGMU</p>
+            <h1 id="sb-title">Langkah kecil,<br />peluang besar.</h1>
+            <p class="sb-lead">Konsultasikan pilihan beasiswa dan siapkan esai pendaftaran berdasarkan data BeasiswaIn.</p>
+            <div class="sb-capabilities">
+                <h2>Apa yang bisa dibantu?</h2>
+                <ul>
+                    <li>Melihat preferensi kategori yang tersimpan.</li>
+                    <li>Mencari rekomendasi dari cerita dan kategori pilihanmu.</li>
+                    <li>Membaca detail, persyaratan, dan jadwal beasiswa.</li>
+                    <li>Mengkritik, mengoreksi, dan merevisi esai untuk beasiswa tujuan.</li>
+                </ul>
+            </div>
+            <div class="sb-notice">
+                <h2>Kamu tetap memegang kendali</h2>
+                <p>ScholarBot tidak menyimpan profil akademik, mengubah data, atau mendaftarkanmu. Sertifikat tidak diunggah atau dinilai di sini.</p>
+                <p>Rekomendasi bukan jaminan kelayakan. Tidak ada penelusuran web; cek tautan resmi dan persyaratan terbaru sebelum mendaftar.</p>
+            </div>
+            <p class="sb-privacy">Riwayat dan esai hanya ada di memori halaman dan dikirim ke provider AI sebagai konteks. Aplikasi tidak menyimpannya ke database. Memuat ulang halaman menghapus percakapan. Hindari data sensitif.</p>
+            <a href="/onboarding" class="sb-onboarding">Ke alur pencocokan dengan sertifikat <span aria-hidden="true">→</span></a>
+        </aside>
+
+        <section class="sb-chat" aria-labelledby="sb-chat-title">
+            <div class="sb-chat-header">
+                <div class="sb-chat-identity">
+                    <span class="sb-avatar" aria-hidden="true">S</span>
+                    <div>
+                        <h2 id="sb-chat-title">ScholarBot</h2>
+                        <p>Asisten eksplorasi beasiswamu</p>
+                    </div>
+                </div>
+                <button class="sb-reset" type="button" data-sb-reset title="Hapus percakapan dari halaman ini">Percakapan baru</button>
+            </div>
+
+            <div class="sb-conversation" data-sb-conversation>
+                <div class="sb-welcome" data-sb-welcome>
+                    <span class="sb-welcome-mark" aria-hidden="true">S</span>
+                    <h3>Mau mulai dari mana?</h3>
+                    <p>Ceritakan tujuan dan latar belakangmu sendiri. Aku bisa membantu membaca peluang, tanpa menebak profil akademikmu.</p>
+                    <div class="sb-prompts" aria-label="Contoh pertanyaan">
+                        <button type="button" data-sb-prompt="Apa preferensi kategori yang tersimpan di akun saya dan kategori apa yang tersedia?">Lihat preferensi dan kategori <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-sb-prompt="Bantu saya mencari rekomendasi beasiswa. Informasi tentang diri saya apa yang perlu saya ceritakan?">Mulai cari rekomendasi <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-sb-prompt="Saya ingin membaca detail beasiswa berdasarkan nama. Bagaimana cara mencarinya?">Tanyakan detail beasiswa <span aria-hidden="true">↗</span></button>
+                        <button type="button" data-sb-prompt="Bantu review esai pendaftaran beasiswa saya: kritik isinya, koreksi bahasa, sarankan alur, lalu bantu revisi sesuai beasiswa tujuan. Saya akan mengirim nama beasiswa, instruksi esai, dan drafnya di chat.">Review esai beasiswa <span aria-hidden="true">↗</span></button>
+                    </div>
+                </div>
+                <div class="sb-transcript" data-sb-transcript role="log" aria-label="Percakapan dengan ScholarBot" aria-live="polite" aria-relevant="additions" aria-atomic="false"></div>
+            </div>
+
+            <div class="sb-feedback">
+                <p class="sb-status" data-sb-status role="status" aria-live="polite">Siap membantu. Pilih contoh atau tulis pertanyaanmu.</p>
+                <div class="sb-error" data-sb-error role="alert" hidden>
+                    <p data-sb-error-text></p>
+                    <a href="/identity/login?returnUrl=%2Fscholarbot" target="_blank" rel="noopener noreferrer" data-sb-login hidden>Masuk lagi di tab baru</a>
+                </div>
+            </div>
+
+            <form class="sb-composer" method="post" asp-page-handler="Chat" data-sb-form>
+                @Html.AntiForgeryToken()
+                <label class="sb-composer-label" for="sb-message">Pesanmu</label>
+                <textarea id="sb-message" name="Message" rows="3" maxlength="@ScholarBotRequest.MaxMessageCharacters" required placeholder="Tanyakan beasiswa, atau tempel esai dan sebutkan beasiswa tujuannya…" aria-describedby="sb-input-help sb-context-note" data-sb-input></textarea>
+                <div class="sb-composer-footer">
+                    <span id="sb-input-help"><span data-sb-count>0</span>/@(ScholarBotRequest.MaxMessageCharacters.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("id-ID"))) <span class="sb-key-hint">· Enter kirim, Shift+Enter baris baru</span></span>
+                    <button type="submit" class="sb-send" data-sb-send disabled>Kirim <span aria-hidden="true">↑</span></button>
+                </div>
+                <p id="sb-context-note" class="sb-context-note">Konteks percakapan dibatasi; giliran terlama dilepas bila penuh. Percakapan baru atau memuat ulang halaman menghapus konteks, bukan data akun.</p>
+            </form>
+            <noscript><p class="sb-noscript">Aktifkan JavaScript untuk menggunakan chat ScholarBot.</p></noscript>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/scholarbot.js" asp-append-version="true" defer></script>
+}

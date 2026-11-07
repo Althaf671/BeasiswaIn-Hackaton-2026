@@ -4,6 +4,7 @@ using BeasiswaIn.Web.Common.Abstractions;
 using BeasiswaIn.Web.Interfaces;
 using BeasiswaIn.Web.Models.Chatbot;
 using BeasiswaIn.Web.Models.Scholarships;
+using BeasiswaIn.Web.Services.ScholarBot;
 using Microsoft.EntityFrameworkCore;
 using OpenAI.Chat;
 
@@ -14,15 +15,18 @@ internal sealed class OpenAiService : IOpenAiService
     private readonly IScholarshipService _scholarshipService;
     private readonly ChatClient _chatClient;
     private readonly ILogger<OpenAiService> _logger;
+    private readonly ScholarBotUsage _usage;
 
     public OpenAiService(
         ChatClient chatClient,
         ILogger<OpenAiService> logger,
-        IScholarshipService scholarshipService)
+        IScholarshipService scholarshipService,
+        ScholarBotUsage usage)
     {
         _chatClient = chatClient;
         _logger = logger;
         _scholarshipService = scholarshipService;
+        _usage = usage;
     }
 
     public Task AnalyzeBesCompetitionChoices()
@@ -84,15 +88,16 @@ internal sealed class OpenAiService : IOpenAiService
 
         var options = new ChatCompletionOptions
         {
-            ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat()
+            ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat(),
+            MaxOutputTokenCount = _usage.IsActive ? _usage.MaxOutputTokens : null
         };
 
-        Console.WriteLine("Mulai prompt personalisasi");
-        ChatCompletion response = await _chatClient.CompleteChatAsync(
+        var result = await _chatClient.CompleteChatAsync(
             [new UserChatMessage(prompt)],
             options,
             cancellationToken);
-        Console.WriteLine("Prompt selesai");
+        _usage.Record(result, "ScholarshipMatching");
+        ChatCompletion response = result.Value;
 
         return response.Content[0].Text;
     }
@@ -150,18 +155,17 @@ internal sealed class OpenAiService : IOpenAiService
 
         """;
 
-        Console.WriteLine("Mulai ngeprompt ekstraksi sertfikat");
+        _logger.LogInformation("Starting certificate extraction.");
         var message = new UserChatMessage(
             ChatMessageContentPart.CreateTextPart(prompt),
             ChatMessageContentPart.CreateImagePart(new Uri(certificateUrl))
         );
 
-        ChatCompletion response = await _chatClient.CompleteChatAsync(
+        var result = await _chatClient.CompleteChatAsync(
             [message],
             cancellationToken: cancellationToken);
-        Console.WriteLine("Selesai ngeprompt");
-
-        Console.WriteLine(response.Content[0].Text);
+        _usage.Record(result, "CertificateExtraction");
+        ChatCompletion response = result.Value;
         return response.Content[0].Text;
     }
 
