@@ -1,46 +1,53 @@
 using BeasiswaIn.Web.Common.Abstractions;
-using BeasiswaIn.Web.Interfaces;
 using BeasiswaIn.Web.Models.Students;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace BeasiswaIn.Web.Services.Students;
 
-internal sealed class LeaderboardService : ILeaderboardService
+internal sealed partial class LeaderboardService
 {
-    private readonly IApplicationDbContext _dbContext;
-    private readonly ILogger<LeaderboardService> _logger;
-
-    private const int LeaderboardStudentLimit = 5;
-
-    public LeaderboardService(
-        IApplicationDbContext dbContext,
-        ILogger<LeaderboardService> logger)
-    {
-        _dbContext = dbContext;
-        _logger = logger;
-    }
-
-    public async Task<Result<IReadOnlyList<StudentProfileResponse>>> GetBestStudent(
+    public async Task<Result<LeaderboardResponse>> GetAsync(
+        string appUserId,
         CancellationToken cancellationToken)
     {
-        var response = await (
+        var submissionCounts = _dbContext.SubmittedScholarships
+            .AsNoTracking()
+            .GroupBy(x => x.StudentId)
+            .Select(x => new { StudentId = x.Key, Count = (int?)x.Count() });
+
+        var profiles = await (
             from studentProfile in _dbContext.StudentProfiles.AsNoTracking()
-            orderby studentProfile.Points descending,
-                studentProfile.FullName,
-                studentProfile.Id
-            select new StudentProfileResponse
+            join submissions in submissionCounts on studentProfile.Id equals submissions.StudentId into counts
+            from submissions in counts.DefaultIfEmpty()
+            orderby studentProfile.Points descending, studentProfile.FullName, studentProfile.Id
+            select new
             {
-                FullName = studentProfile.FullName,
-                Institution = studentProfile.Institution,
-                FinalScore = studentProfile.FinalScore,
-                Description = studentProfile.Description,
-                Points = studentProfile.Points,
+                studentProfile.FullName,
+                studentProfile.Points,
+                SubmissionCount = submissions.Count ?? 0,
+                IsYou = studentProfile.AppUserId == appUserId
             })
-            .Take(LeaderboardStudentLimit)
             .ToListAsync(cancellationToken);
 
-        return Result<IReadOnlyList<StudentProfileResponse>>.Success(response);
-    }
+        var students = profiles.Select((profile, index) => new LeaderboardStudentResponse
+        {
+            Rank = index + 1,
+            FullName = profile.FullName,
+            Points = profile.Points,
+            SubmissionCount = profile.SubmissionCount,
+            IsYou = profile.IsYou
+        }).ToList();
 
+        var currentStudent = students.FirstOrDefault(x => x.IsYou);
+        var submissionsToTopThree = currentStudent is { Rank: > 3 }
+            ? (students[2].Points - currentStudent.Points) / SubmissionPoints + 1
+            : 0;
+
+        return Result<LeaderboardResponse>.Success(new LeaderboardResponse
+        {
+            Students = students,
+            CurrentStudent = currentStudent,
+            SubmissionsToTopThree = submissionsToTopThree
+        });
+    }
 }

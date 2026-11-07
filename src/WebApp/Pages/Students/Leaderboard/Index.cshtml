@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Leaderboard";
     ViewData["Nav"] = "peringkat";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("id-ID");
+    var first = Model.Leaderboard.Students.ElementAtOrDefault(0);
+    var second = Model.Leaderboard.Students.ElementAtOrDefault(1);
+    var third = Model.Leaderboard.Students.ElementAtOrDefault(2);
 }
 
 <header class="m-hero">
@@ -25,9 +29,9 @@
                     </div>
                     <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full border border-white bg-[#005f38] px-2 text-[9.5px] font-extrabold text-white">#2</span>
                 </div>
-                <h3 class="mt-1.5 text-xs font-bold text-[#1a2e21]">Alena D.</h3>
-                <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-[#005f38] px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm">1.469 pt</div>
-                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">27 link</span>
+                <h3 class="mt-1.5 text-xs font-bold text-[#1a2e21]">@(second?.FullName ?? "Belum ada kontributor")</h3>
+                <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-[#005f38] px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm">@((second?.Points ?? 0).ToString("N0", culture)) pt</div>
+                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">@(second?.SubmissionCount ?? 0) kontribusi</span>
                 <div class="flex w-full flex-col items-center justify-center rounded-t-xl bg-[#005f38] pb-3 pt-4 text-white shadow-sm">
                     <span class="text-2xl font-black leading-none">2</span>
                     <span class="mt-0.5 text-[9px] font-bold tracking-wider opacity-90">PERINGKAT</span>
@@ -43,9 +47,9 @@
                     </div>
                     <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white bg-[#ffdd6b] px-2.5 py-0.5 text-[9px] font-extrabold text-[#784f00] shadow-sm">#1 Juara</span>
                 </div>
-                <h3 class="mt-1 text-[13px] font-extrabold text-[#112419]">Davis C.</h3>
-                <div class="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[#004e2e] px-2.5 py-0.5 text-[11px] font-black text-white shadow-sm">2.569 pt</div>
-                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">48 link disetujui</span>
+                <h3 class="mt-1 text-[13px] font-extrabold text-[#112419]">@(first?.FullName ?? "Belum ada kontributor")</h3>
+                <div class="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[#004e2e] px-2.5 py-0.5 text-[11px] font-black text-white shadow-sm">@((first?.Points ?? 0).ToString("N0", culture)) pt</div>
+                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">@(first?.SubmissionCount ?? 0) kontribusi</span>
                 <div class="flex w-full flex-col items-center justify-center rounded-t-xl bg-[#004e2e] pb-4 pt-6 text-white shadow-md">
                     <span class="text-3xl font-black leading-none">1</span>
                     <span class="mt-0.5 text-[9.5px] font-bold tracking-wider opacity-90">TERATAS</span>
@@ -58,9 +62,9 @@
                     </div>
                     <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full border border-white bg-[#005f38] px-2 text-[9.5px] font-extrabold text-white">#3</span>
                 </div>
-                <h3 class="mt-1.5 text-xs font-bold text-[#1a2e21]">Craig G.</h3>
-                <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-[#005f38] px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm">1.053 pt</div>
-                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">19 link</span>
+                <h3 class="mt-1.5 text-xs font-bold text-[#1a2e21]">@(third?.FullName ?? "Belum ada kontributor")</h3>
+                <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-[#005f38] px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm">@((third?.Points ?? 0).ToString("N0", culture)) pt</div>
+                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">@(third?.SubmissionCount ?? 0) kontribusi</span>
                 <div class="flex w-full flex-col items-center justify-center rounded-t-xl bg-[#005f38] pb-3 pt-4 text-white shadow-sm">
                     <span class="text-2xl font-black leading-none">3</span>
                     <span class="mt-0.5 text-[9px] font-bold tracking-wider opacity-90">PERINGKAT</span>
@@ -70,13 +74,27 @@
     </section>
 
     <section class="flex items-center justify-between gap-2.5 rounded-2xl border border-[#cbe4d4] bg-[#eaf5ee] p-3.5 shadow-sm">
-        <div class="flex items-center gap-2.5">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#005f38] text-sm font-extrabold text-white shadow-sm">#4</div>
-            <div>
-                <span class="text-[12.5px] font-bold text-[#143221]">Kamu di peringkat #4</span>
-                <p class="mt-0.5 text-[10.5px] font-medium leading-tight text-[#4b6a57]">Kirim 2 link lagi untuk tembus Top 3</p>
+        @if (Model.Leaderboard.CurrentStudent is { } currentStudent)
+        {
+            <div class="flex items-center gap-2.5">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#005f38] text-sm font-extrabold text-white shadow-sm">#@currentStudent.Rank</div>
+                <div>
+                    <span class="text-[12.5px] font-bold text-[#143221]">Kamu di peringkat #@currentStudent.Rank</span>
+                    @if (currentStudent.Rank <= 3)
+                    {
+                        <p class="mt-0.5 text-[10.5px] font-medium leading-tight text-[#4b6a57]">Kamu masuk Top 3! Terus bagikan informasi beasiswa.</p>
+                    }
+                    else
+                    {
+                        <p class="mt-0.5 text-[10.5px] font-medium leading-tight text-[#4b6a57]">Kirim @Model.Leaderboard.SubmissionsToTopThree kontribusi lagi untuk tembus Top 3</p>
+                    }
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <p class="text-xs text-[#4b6a57]">Lengkapi profilmu untuk bergabung di papan peringkat.</p>
+        }
     </section>
 
     <section class="flex flex-col gap-3">
@@ -98,7 +116,7 @@
         <div id="rankScroll" class="rank-window no-scrollbar flex flex-col gap-2 overflow-y-auto">
             @foreach (var row in Model.Rows)
             {
-                <article data-rank-row data-rank="@row.Rank" data-name="@row.Name" class="@(row.IsYou ? "relative flex min-h-[3.25rem] shrink-0 items-center justify-between rounded-xl bg-[#004e2e] p-2.5 text-white shadow-md ring-2 ring-[#005f38]/30" : "flex min-h-[3.25rem] shrink-0 items-center justify-between rounded-xl border border-gray-100 bg-white p-2.5 transition-colors hover:bg-gray-50/70")">
+                <article data-rank-row data-rank="@row.Rank" data-name="@row.FullName" class="@(row.IsYou ? "relative flex min-h-[3.25rem] shrink-0 items-center justify-between rounded-xl bg-[#004e2e] p-2.5 text-white shadow-md ring-2 ring-[#005f38]/30" : "flex min-h-[3.25rem] shrink-0 items-center justify-between rounded-xl border border-gray-100 bg-white p-2.5 transition-colors hover:bg-gray-50/70")">
                     <div class="flex items-center gap-2.5">
                         @if (row.IsYou)
                         {
@@ -108,27 +126,28 @@
                         {
                             <span class="w-5 text-center text-xs font-bold text-gray-500">#@row.Rank</span>
                         }
-                        <div class="flex h-8 w-8 items-center justify-center rounded-full" style="background:@row.Color">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full" style="background:#587c3b">
                             <svg class="h-6 w-6" viewBox="0 0 40 40"><circle cx="15" cy="18" fill="#ffffff" r="4"></circle><circle cx="25" cy="18" fill="#ffffff" r="4"></circle><circle cx="15" cy="18" fill="#10271c" r="1.8"></circle><circle cx="25" cy="18" fill="#10271c" r="1.8"></circle><polygon fill="#f59e0b" points="20,21 18,25 22,25"></polygon></svg>
                         </div>
                         <div>
                             <div class="flex items-center gap-1.5">
-                                <span class="text-xs font-bold @(row.IsYou ? "text-white" : "text-[#1c2921]")">@row.Name</span>
+                                <span class="text-xs font-bold @(row.IsYou ? "text-white" : "text-[#1c2921]")">@row.FullName</span>
                                 @if (row.IsYou)
                                 {
                                     <span class="rounded bg-[#ffdd6b] px-1.5 py-0.5 text-[8px] font-extrabold leading-none text-[#784f00]">KAMU</span>
                                 }
                             </div>
-                            <p class="text-[10px] font-medium @(row.IsYou ? "text-[#dcf4e7]/80" : "text-gray-500")">@row.Detail</p>
+                            <p class="text-[10px] font-medium @(row.IsYou ? "text-[#dcf4e7]/80" : "text-gray-500")">@row.SubmissionCount kontribusi dikirim</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="text-xs font-extrabold @(row.IsYou ? "text-white" : "text-[#1c2921]")">@row.Points pt</span>
+                        <span class="text-xs font-extrabold @(row.IsYou ? "text-white" : "text-[#1c2921]")">@(row.Points.ToString("N0", culture)) pt</span>
                         <p class="text-[9px] @(row.IsYou ? "text-[#dcf4e7]/80" : "text-gray-400")">Total poin</p>
                     </div>
                 </article>
             }
         </div>
+        <p id="rankEmpty" class="hidden py-4 text-center text-xs text-gray-500">Tidak ada kontributor yang cocok.</p>
         <div id="rankFade" class="rank-fade pointer-events-none absolute inset-x-0 bottom-0"></div>
         </div>
     </section>
@@ -141,22 +160,22 @@
         <div class="flex items-start gap-3 rounded-2xl border border-emerald-50 bg-[#f7fbf9] p-3">
             <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#ddf4e7] text-[#005f38]">1</div>
             <div>
-                <h4 class="text-[11.5px] font-bold text-[#143221]">Kirim link beasiswa</h4>
-                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Tempel URL resmi yang kamu temukan dari portal kampus atau instansi.</p>
+                <h4 class="text-[11.5px] font-bold text-[#143221]">Kirim informasi beasiswa</h4>
+                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Tempel URL resmi atau unggah gambar brosur beasiswa yang kamu temukan.</p>
             </div>
         </div>
         <div class="flex items-start gap-3 rounded-2xl border border-emerald-50 bg-[#f7fbf9] p-3">
             <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#ddf4e7] text-[#005f38]">2</div>
             <div>
-                <h4 class="text-[11.5px] font-bold text-[#143221]">Admin memeriksa</h4>
-                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Divalidasi keabsahannya dengan tenggat waktu dan sumber resmi.</p>
+                <h4 class="text-[11.5px] font-bold text-[#143221]">Informasi berhasil tersimpan</h4>
+                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Kontribusimu tersimpan dan membantu sesama pencari beasiswa.</p>
             </div>
         </div>
         <div class="flex items-start gap-3 rounded-2xl border border-emerald-50 bg-[#f7fbf9] p-3">
             <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#ddf4e7] text-[#005f38]">3</div>
             <div>
                 <h4 class="text-[11.5px] font-bold text-[#143221]">Raih poin kontribusi</h4>
-                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Poin langsung bertambah setelah disetujui, menaikkan rankingmu.</p>
+                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Setiap kontribusi yang berhasil dikirim langsung menambah 10 poin dan memperbarui peringkatmu.</p>
             </div>
         </div>
     </section>

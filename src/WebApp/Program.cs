@@ -38,6 +38,7 @@ builder.Services.AddScoped<IScholarshipCategoryService, ScholarshipCategoryServi
 builder.Services.AddScoped<IUserScholarshipPreferenceService, UserScholarshipPreferenceService>();
 builder.Services.AddScoped<ISubmitScholarshipService, SubmitScholarshipService>();
 builder.Services.AddScoped<IStudentProfileService, StudentProfileService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddTransient<AppSeeder>();
 
 // fondation infrastructure

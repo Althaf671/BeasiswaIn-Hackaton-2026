@@ -4,6 +4,15 @@
   const empty = document.getElementById("scholarshipEmpty");
   const addModal = document.getElementById("input-modal");
   const successModal = document.getElementById("success-modal");
+  const form = document.getElementById("submission-form");
+  const errors = document.getElementById("submission-errors");
+  const submitButton = document.getElementById("submitAdd");
+  const cancelButton = document.getElementById("cancelAdd");
+  const urlInput = document.getElementById("input-beasiswa-url");
+  const fileInput = document.getElementById("file-upload-input");
+  const fileLabel = document.getElementById("file-label");
+  const defaultFileLabel = fileLabel.textContent;
+  let submitting = false;
   const filterModal = document.getElementById("filter-modal");
 
   function show(el) {
@@ -32,16 +41,71 @@
   search.addEventListener("input", applySearch);
 
   document.getElementById("openAdd").addEventListener("click", () => show(addModal));
-  document.getElementById("cancelAdd").addEventListener("click", () => hide(addModal));
-  document.getElementById("submitAdd").addEventListener("click", () => {
-    hide(addModal);
-    show(successModal);
+  cancelButton.addEventListener("click", () => {
+    if (!submitting) hide(addModal);
   });
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (submitting) return;
+    errors.textContent = "";
+    const hasUrl = urlInput.value.trim().length > 0;
+    const file = fileInput.files[0];
+    if (hasUrl === Boolean(file)) {
+      errors.textContent = "Pilih salah satu: tautan beasiswa atau gambar brosur.";
+      return;
+    }
+    if (file && (file.size === 0 || file.size > 10 * 1024 * 1024)) {
+      errors.textContent = "Gambar harus berisi data dan maksimal berukuran 10MB.";
+      return;
+    }
+    submitting = true;
+    submitButton.disabled = true;
+    cancelButton.disabled = true;
+    submitButton.textContent = "Mengirim...";
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: new FormData(form)
+      });
+      if (response.redirected || response.status === 401 || response.status === 403) {
+        throw new Error("Sesi login berakhir. Muat ulang halaman dan masuk kembali.");
+      }
+      if (response.status === 429) {
+        throw new Error("Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.");
+      }
+      const result = await response.json();
+      if (!response.ok || result.success !== true) {
+        const messages = result.errors ? Object.values(result.errors).flat() : [];
+        throw new Error(messages.join(" ") || "Informasi beasiswa gagal dikirim.");
+      }
+      form.reset();
+      fileLabel.textContent = defaultFileLabel;
+      hide(addModal);
+      show(successModal);
+    } catch (error) {
+      errors.textContent = error.message || "Informasi beasiswa gagal dikirim. Silakan coba lagi.";
+    } finally {
+      submitting = false;
+      submitButton.disabled = false;
+      cancelButton.disabled = false;
+      submitButton.textContent = "Kirimkan";
+    }
+  });
+  if (addModal.dataset.open === "true") show(addModal);
+  if (successModal.dataset.open === "true") show(successModal);
   document.getElementById("closeSuccess").addEventListener("click", () => hide(successModal));
 
-  document.getElementById("file-upload-input").addEventListener("change", (event) => {
-    const file = event.target.files && event.target.files[0];
-    if (file) document.getElementById("file-label").textContent = file.name;
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    fileLabel.textContent = file ? file.name : defaultFileLabel;
+    if (file) urlInput.value = "";
+  });
+  urlInput.addEventListener("input", () => {
+    if (urlInput.value.trim()) {
+      fileInput.value = "";
+      fileLabel.textContent = defaultFileLabel;
+    }
   });
 
   document.getElementById("openFilter").addEventListener("click", () => show(filterModal));

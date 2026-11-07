@@ -5,6 +5,12 @@ namespace BeasiswaIn.Web.Interfaces;
 
 public interface ILeaderboardService
 {
-    public Task<Result<IReadOnlyList<StudentProfileResponse>>> GetBestStudent(
+    public Task<Result<LeaderboardResponse>> GetAsync(
+        string appUserId,
+        CancellationToken cancellationToken);
+
+    public Task<Result<string>> SubmitAsync(
+        string appUserId,
+        StudentSubmissionRequest request,
         CancellationToken cancellationToken);
 }
