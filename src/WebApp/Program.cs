@@ -93,6 +93,8 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapAppScholarBot();
+
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();

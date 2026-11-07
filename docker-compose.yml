@@ -16,18 +16,42 @@ services:
       timeout: 3s
       retries: 10
 
+  ai-service:
+    build: ./src/AiService
+    restart: unless-stopped
+    expose:
+      - "8001"
+    environment:
+      SCHOLARBOT_SERVICE_TOKEN: ${SCHOLARBOT_SERVICE_TOKEN:?Set a shared service token of at least 32 characters}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?Set OPENROUTER_API_KEY}
+      OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      DOTNET_BASE_URL: http://web:8080
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=3).close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   web:
     build: .
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+      ai-service:
+        condition: service_healthy
     ports:
       - "${WEB_PORT:-8080}:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-      ConnectionStrings__DatabaseConnection: Host=db;Port=5431;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
-      # all api vars and keys
+      ConnectionStrings__Default: Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      ScholarBot__ServiceUrl: http://ai-service:8001
+      ScholarBot__ServiceToken: ${SCHOLARBOT_SERVICE_TOKEN}
+      OpenAi__ApiKey: ${OPENROUTER_API_KEY}
+      OpenAi__Endpoint: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      Cloudinary__CloudName: ${CLOUDINARY_CLOUD_NAME:?Set CLOUDINARY_CLOUD_NAME}
+      Cloudinary__ApiKey: ${CLOUDINARY_API_KEY:?Set CLOUDINARY_API_KEY}
+      Cloudinary__ApiSecret: ${CLOUDINARY_API_SECRET:?Set CLOUDINARY_API_SECRET}
 
 volumes:
   pgdata:

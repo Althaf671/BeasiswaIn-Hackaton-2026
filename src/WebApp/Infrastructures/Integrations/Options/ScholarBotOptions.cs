@@ -5,26 +5,21 @@ namespace BeasiswaIn.Web.Infrastructures.Integrations.Options;
 internal sealed class ScholarBotOptions
 {
     public const string SectionName = "ScholarBot";
-    public const string ClientKey = "ScholarBot";
 
     [Required]
-    public string Model { get; init; } = "openai/gpt-6-luna";
+    public string ServiceUrl { get; init; } = "http://127.0.0.1:8001";
 
-    [Range(2, 10)]
-    public int MaxIterations { get; init; } = 6;
-
-    [Range(1, 12)]
-    public int MaxToolCalls { get; init; } = 8;
+    // Required: ScholarBot:ServiceToken (environment: ScholarBot__ServiceToken).
+    // Must match Python's SCHOLARBOT_SERVICE_TOKEN; keep it in secrets, never browser configuration.
+    [Required, MinLength(32)]
+    public string ServiceToken { get; init; } = string.Empty;
 
     [Range(10, 180)]
-    public int TimeoutSeconds { get; init; } = 90;
+    public int TimeoutSeconds { get; init; } = 100;
 
     [Range(256, 10000)]
-    public int MaxOutputTokens { get; init; } = 6000;
+    public int MaxMatchingOutputTokens { get; init; } = 6000;
 
     [Range(4000, 64000)]
-    public int MaxTotalTokens { get; init; } = 48000;
-
-    [Range(2000, 24000)]
-    public int MaxToolResultCharacters { get; init; } = 16000;
+    public int MaxMatchingTotalTokens { get; init; } = 48000;
 }

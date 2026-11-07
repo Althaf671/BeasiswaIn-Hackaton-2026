@@ -25,35 +25,93 @@ ScholarBot memakai `GetScholarshipDetails` untuk konteks program. Fokus leadersh
 Pengalaman/prestasi tidak boleh dikarang; esai tidak disimpan ke database. Batas kata merupakan arahan kepada model, bukan validasi hitungan kata otomatis. Penulis tetap perlu memeriksa fakta, persyaratan resmi, dan jumlah kata sebelum memakai revisi.
 
 
+### Arsitektur dan kontrak internal
+
+Runtime agent, prompt, dan native tool calling berada di `src/AiService` (Python/FastAPI). .NET mempertahankan halaman chat, autentikasi, akses data, dan pipeline matching/onboarding existing; tidak ada fallback runtime agent C#.
+
+```mermaid
+flowchart LR
+    Browser --> NET[Backend .NET]
+    NET -->|POST /scholarbot/chat| Python[AI service Python]
+    Python --> OpenRouter
+    Python -->|POST /internal/scholarbot/tools| NET
+```
+
+- .NET → Python: `Authorization: Bearer <shared-token>`, JSON `{message, history, contextToken}`.
+- Python → .NET: bearer yang sama ditambah `X-ScholarBot-Context: <contextToken>`, JSON `{name, arguments, remainingTokens, maxOutputTokens}`. `arguments` adalah string JSON, bukan object.
+- Callback mengembalikan `{content, success, sources, usage}`; response chat tetap `{answer, sources, toolCalls, usage}`. Error Python berbentuk `{error: {code, message}}` dengan kode aman yang dipetakan .NET.
+- `contextToken` adalah delegasi pengguna yang dilindungi ASP.NET DataProtection dan kedaluwarsa setelah timeout proxy + 5 detik. Python tidak menerima cookie browser, tidak menentukan `userId`, dan tidak mengirim delegasi ke model/browser. Callback memerlukan bearer **dan** delegasi valid; cookie login tidak dapat menggantikannya.
+- Python hanya memanggil URL callback dari konfigurasi startup. Tidak ada koneksi database Python. Jika .NET direplikasi, keyring DataProtection dan application discriminator harus konsisten antar-replika.
+
 ### Menjalankan lokal
 
-Gunakan .NET 10 dan database PostgreSQL existing. Untuk database VPS melalui tunnel lokal, arahkan connection string ke `127.0.0.1:15432`; jangan memakai host/port internal Docker VPS sebagai alamat lokal.
+Gunakan Python 3.11+, .NET 10, dan PostgreSQL existing. Untuk database VPS melalui tunnel lokal, connection string memakai `127.0.0.1:15432`; tunnel harus tetap aktif.
 
-Konfigurasi rahasia menggunakan user-secrets atau environment variables, bukan file yang di-commit:
+Terminal pertama, dari root repository (PowerShell):
 
 ```powershell
-dotnet user-secrets set "OpenAi:ApiKey" "<OPENROUTER_API_KEY>" --project src/WebApp/WebApp.csproj
+python -m venv src/AiService/.venv
+& ./src/AiService/.venv/Scripts/python.exe -m pip install -e "./src/AiService[test]"
+$sharedToken = & ./src/AiService/.venv/Scripts/python.exe -c "import secrets; print(secrets.token_urlsafe(36))"
+$env:SCHOLARBOT_SERVICE_TOKEN = $sharedToken
+$env:OPENROUTER_API_KEY = "<OPENROUTER_API_KEY>"
+$env:DOTNET_BASE_URL = "http://127.0.0.1:5009"
+dotnet user-secrets set "ScholarBot:ServiceToken" $sharedToken --project src/WebApp/WebApp.csproj
+dotnet user-secrets set "ScholarBot:ServiceUrl" "http://127.0.0.1:8001" --project src/WebApp/WebApp.csproj
+dotnet user-secrets set "OpenAi:ApiKey" $env:OPENROUTER_API_KEY --project src/WebApp/WebApp.csproj
+dotnet user-secrets set "OpenAi:Endpoint" "https://openrouter.ai/api/v1" --project src/WebApp/WebApp.csproj
+& ./src/AiService/.venv/Scripts/python.exe -m app
+```
+
+Token bersama wajib minimal 32 karakter ASCII URL-safe; jangan taruh di browser atau file yang di-commit. Simpan lewat secret manager untuk pemakaian berikutnya. Jika token dibuat ulang, perbarui kedua service dan restart .NET. `src/AiService/.env.example` hanya referensi: service tidak memuat `.env` otomatis; export variabel atau berikan melalui process/container environment.
+
+Terminal kedua, dari root repository:
+
+```powershell
 dotnet user-secrets set "ConnectionStrings:Default" "Host=127.0.0.1;Port=15432;Database=<DATABASE>;Username=<USER>;Password=<PASSWORD>" --project src/WebApp/WebApp.csproj
 dotnet run --project src/WebApp/WebApp.csproj --launch-profile http
 ```
 
-Konfigurasi Cloudinary existing tetap diperlukan saat startup aplikasi, walaupun ScholarBot tidak melakukan upload. Masuk dengan akun existing, lalu buka `/scholarbot`.
+Connection string dan Cloudinary existing tetap diperlukan saat startup .NET, walaupun ScholarBot tidak melakukan upload. Masuk dengan akun existing, lalu buka `http://localhost:5009/scholarbot`. Health endpoint Python: `http://127.0.0.1:8001/health` (liveness saja, bukan tes koneksi provider/database).
 
-ScholarBot memakai client terpisah dengan model default `openai/gpt-6-luna`. API key dan endpoint mengikuti `OpenAi:ApiKey` / `OpenAi:Endpoint` (OpenRouter: `https://openrouter.ai/api/v1`). `OpenAi:Model` tetap digunakan pipeline matching/onboarding existing dan tidak diganti oleh registrasi ScholarBot.
+Python memakai model default `openai/gpt-6-luna`. `OpenAi:Model` tetap milik matching/onboarding .NET dan tidak diganti. Konfigurasi runtime Python:
 
-Opsi berikut dapat diatur lewat konfigurasi `ScholarBot` atau environment variables, misalnya `ScholarBot__Model`:
+| Environment variable | Default |
+|---|---:|
+| `OPENROUTER_BASE_URL` | `https://openrouter.ai/api/v1` |
+| `SCHOLARBOT_MODEL` | `openai/gpt-6-luna` |
+| `DOTNET_BASE_URL` | `http://127.0.0.1:5009` |
+| `SCHOLARBOT_MAX_ITERATIONS` | 6 |
+| `SCHOLARBOT_MAX_TOOL_CALLS` | 8 |
+| `SCHOLARBOT_TIMEOUT_SECONDS` | 90 |
+| `SCHOLARBOT_MAX_OUTPUT_TOKENS` | 6000 |
+| `SCHOLARBOT_MAX_TOTAL_TOKENS` | 48000 |
+| `SCHOLARBOT_MAX_TOOL_RESULT_CHARACTERS` | 16000 |
+
+Opsi bridge .NET memakai section `ScholarBot` atau environment `ScholarBot__<Opsi>`:
 
 | Opsi | Default |
 |---|---:|
-| `Model` | `openai/gpt-6-luna` |
-| `MaxIterations` | 6 |
-| `MaxToolCalls` | 8 |
-| `TimeoutSeconds` | 90 |
-| `MaxOutputTokens` | 6000 |
-| `MaxTotalTokens` | 48000 |
-| `MaxToolResultCharacters` | 16000 |
+| `ServiceUrl` | `http://127.0.0.1:8001` |
+| `ServiceToken` | wajib, sama dengan Python |
+| `TimeoutSeconds` | 100 |
+| `MaxMatchingOutputTokens` | 6000 |
+| `MaxMatchingTotalTokens` | 48000 |
 
-Pemanggilan matching bersarang ikut dicatat dalam penggunaan token/biaya. Batas token kumulatif diperiksa setelah usage diterima; ini batas penghentian eksekusi, bukan hard billing limit dari provider. Retry otomatis client ScholarBot dimatikan. Error layanan tidak diganti dengan rekomendasi buatan.
+Pertahankan timeout Python lebih pendek dari proxy .NET dan timeout browser (105 detik). Disconnect membatalkan pekerjaan provider/callback yang sedang ditunggu, tetapi tidak menjamin provider membatalkan tagihan.
+
+Pemanggilan matching bersarang ikut dicatat dalam usage token/biaya. Batas token kumulatif diperiksa setelah usage diterima; ini batas penghentian eksekusi, bukan hard billing limit provider. Retry otomatis client agent Python dan proxy .NET dimatikan; error tidak diganti rekomendasi buatan. Biaya hanya diisi jika seluruh panggilan melaporkannya.
+
+### Docker dan verifikasi
+
+`docker-compose.yml` menjalankan `web`, `ai-service`, dan database lokal Compose. Siapkan environment `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `ASPNETCORE_ENVIRONMENT`, `SCHOLARBOT_SERVICE_TOKEN`, `OPENROUTER_API_KEY`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, dan `CLOUDINARY_API_SECRET`; lalu `docker compose up --build`. Ini bukan cara menghubungkan database VPS melalui tunnel lokal. AI service hanya diekspos ke jaringan internal Compose; jangan publikasikan port-nya ke internet. Gunakan HTTPS untuk komunikasi antar-host.
+
+```powershell
+dotnet build src/WebApp/WebApp.csproj
+& ./src/AiService/.venv/Scripts/python.exe -m pytest -q src/AiService/tests
+```
+
+Regresi Python mencakup batas UTF-16/konteks, validasi native tool calls, budget/usage bersarang, autentikasi sebelum pembacaan body, request chunked, dan cancellation. Smoke end-to-end tetap memerlukan kedua service, kredensial provider valid, dan database existing.
 
 ### Keamanan dan konteks
 
