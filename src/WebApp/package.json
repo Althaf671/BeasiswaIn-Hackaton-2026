@@ -1,0 +1,18 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tw:landing": "tailwindcss -i ./Styles/Tailwind/landing.css -o ./wwwroot/css/tailwind/landing.css --minify",
+    "tw:landing:watch": "tailwindcss -i ./Styles/Tailwind/landing.css -o ./wwwroot/css/tailwind/landing.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.4",
+    "tailwindcss": "^4.3.4"
+  }
+}

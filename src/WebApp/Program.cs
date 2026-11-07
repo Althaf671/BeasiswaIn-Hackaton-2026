@@ -29,7 +29,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IScholarshipService, ScholarshipService>();
 builder.Services.AddScoped<IScholarshipCategoryService, ScholarshipCategoryService>();
 builder.Services.AddScoped<IUserScholarshipPreferenceService, UserScholarshipPreferenceService>();
-builder.Services.AddTransient<AppSeeder>();
+// builder.Services.AddTransient<AppSeeder>();
 
 // fondation infrastructure
 builder.Services.AddAppAntiForgery(builder.Environment);
@@ -62,8 +62,8 @@ if (app.Environment.IsDevelopment())
 {
     // Enable seeder dan disble kalau sudah selesai
 
-    using var scope = app.Services.CreateScope();
-    var seeder = scope.ServiceProvider.GetRequiredService<AppSeeder>();
+    // using var scope = app.Services.CreateScope();
+    // var seeder = scope.ServiceProvider.GetRequiredService<AppSeeder>();
 
     // await seeder.SeedRolesAsync();
 
