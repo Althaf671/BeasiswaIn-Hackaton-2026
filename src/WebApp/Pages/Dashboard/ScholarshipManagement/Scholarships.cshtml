@@ -1,0 +1,367 @@
+@page "/dashboard/scholarship-management"
+@using System.Globalization
+@using System.Text.Json
+@using BeasiswaIn.Web.Pages.Dashboard.ScholarshipManagement
+@using Microsoft.AspNetCore.Html
+@using PhotographyStudio.Web.Pages.Dashboard.Shared
+
+@model ScholarshipModel
+
+@{
+    var idCulture = new CultureInfo("id-ID");
+    
+    @* form create beasiswa *@
+    Func<object?, IHtmlContent> createBody = @<div class="d-flex flex-column gap-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+
+        @* ---- Section 1: informasi beasiswa ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="trophy"></i></span>
+                <div>
+                    <h6 class="form-section__title">Informasi beasiswa</h6>
+                    <p class="form-section__desc">Nama, tema, dan deskripsi beasiswa.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="CreateScholarshipRequest.Name" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="CreateScholarshipRequest.Name" placeholder="Masukan nama beasiswa" class="form-control" />
+                    </div>
+                    <span asp-validation-for="CreateScholarshipRequest.Name" class="text-danger small"></span>
+                </div>
+
+                <div>
+                    <label asp-for="CreateScholarshipRequest.Description" class="form-label required"></label>
+                    <textarea asp-for="CreateScholarshipRequest.Description" placeholder="Tulis deskripsi beasiswa" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="CreateScholarshipRequest.Description" class="text-danger small"></span>
+                </div>
+
+                <div 
+                    data-list-field
+                    data-name="CreateScholarshipRequest.CategoryIds"
+                    data-placeholder="Ketik untuk mencari kategori"
+                    data-options="@JsonSerializer.Serialize(Model.ScholarshipCategoryOptions)"
+                    data-values="@JsonSerializer.Serialize(Model.CreateScholarshipRequest.CategoryIds)">
+                    <label asp-for="CreateScholarshipRequest.CategoryIds" class="form-label required"></label>
+                    <div class="d-flex flex-column gap-2" data-list-items></div>
+                    <span asp-validation-for="CreateScholarshipRequest.CategoryIds" class="text-danger small"></span>
+                </div>
+            </div>
+        </section>
+
+        @* ---- Section 2: hadiah dan jadwal ---- *@
+        <section class="form-section form-section--warm">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="calendar-range"></i></span>
+                <div>
+                    <h6 class="form-section__title">Hadiah dan jadwal</h6>
+                    <p class="form-section__desc">Total hadiah serta periode pendaftaran.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="CreateScholarshipRequest.TotalPrize" class="form-label required"></label>
+                    <input asp-for="CreateScholarshipRequest.TotalPrize" type="hidden" />
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="text"
+                            id="prizeDisplay"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            class="form-control"
+                            placeholder="0"
+                            data-money-target="#CreateScholarshipRequest_TotalPrize"
+                            value="@(Model.CreateScholarshipRequest.TotalPrize > 0
+                                    ? Model.CreateScholarshipRequest.TotalPrize.ToString("N0", idCulture)
+                                    : "")" />
+                    </div>
+                    <span asp-validation-for="CreateScholarshipRequest.TotalPrize" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="CreateScholarshipRequest.RegistrationStartAt" class="form-label required"></label>
+                        <input asp-for="CreateScholarshipRequest.RegistrationStartAt" type="datetime-local" class="form-control"
+                            value="@(Model.CreateScholarshipRequest.RegistrationStartAt == default
+                                    ? ""
+                                    : Model.CreateScholarshipRequest.RegistrationStartAt.ToString("yyyy-MM-ddTHH:mm"))" />
+                        <span asp-validation-for="CreateScholarshipRequest.RegistrationStartAt" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CreateScholarshipRequest.RegistrationEndAt" class="form-label required"></label>
+                        <input asp-for="CreateScholarshipRequest.RegistrationEndAt" type="datetime-local" class="form-control"
+                            value="@(Model.CreateScholarshipRequest.RegistrationEndAt == default
+                                    ? ""
+                                    : Model.CreateScholarshipRequest.RegistrationEndAt.ToString("yyyy-MM-ddTHH:mm"))" />
+                        <span asp-validation-for="CreateScholarshipRequest.RegistrationEndAt" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input asp-for="CreateScholarshipRequest.IsEligible" class="form-check-input" role="switch" />
+                    <label asp-for="CreateScholarshipRequest.IsEligible" class="form-check-label"></label>
+                </div>
+            </div>
+        </section>
+
+        @* ---- Section 3: persyaratan dan kontak ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="list-checks"></i></span>
+                <div>
+                    <h6 class="form-section__title">Persyaratan dan kontak</h6>
+                    <p class="form-section__desc">Tambahkan satu atau lebih persyaratan dan contact person.</p>
+                </div>
+            </header>
+
+            <div class="flex flex-column px-3 py-4">
+                <div data-list-field
+                    data-name="CreateScholarshipRequest.Requirement"
+                    data-placeholder="Tulis persyaratan"
+                    data-add-label="Tambah persyaratan">
+                    <label asp-for="CreateScholarshipRequest.Requirement" class="form-label required"></label>
+                    <div class="d-flex flex-column gap-2" data-list-items></div>
+                    <span asp-validation-for="CreateScholarshipRequest.Requirement" class="text-danger small"></span>
+                </div>
+
+                <div data-list-field
+                    data-name="CreateScholarshipRequest.ContactPerson"
+                    data-placeholder="cth: Budi - 0812xxxxxxx"
+                    data-add-label="Tambah contact person"
+                    class="mt-4">
+                    <label asp-for="CreateScholarshipRequest.ContactPerson" class="form-label required"></label>
+                    <div class="d-flex flex-column gap-2" data-list-items></div>
+                    <span asp-validation-for="CreateScholarshipRequest.ContactPerson" class="text-danger small"></span>
+                </div>
+            </div>
+        </section>
+
+        @* ---- Section 4: poster dan tautan ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="link"></i></span>
+                <div>
+                    <h6 class="form-section__title">Poster dan tautan</h6>
+                    <p class="form-section__desc">Unggah poster serta link panduan dan registrasi.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="CreateScholarshipRequest.ContentImageFile" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="CreateScholarshipRequest.ContentImageFile" type="file" accept="image/*" class="form-control" />
+                    </div>
+                    <span asp-validation-for="CreateScholarshipRequest.ContentImageFile" class="text-danger small"></span>
+                </div>
+
+                <div>
+                    <label asp-for="CreateScholarshipRequest.GuideUrl" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="CreateScholarshipRequest.GuideUrl" type="url" placeholder="https://..." class="form-control" />
+                    </div>
+                    <span asp-validation-for="CreateScholarshipRequest.GuideUrl" class="text-danger small"></span>
+                </div>
+
+                <div>
+                    <label asp-for="CreateScholarshipRequest.RegistrationUrl" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="CreateScholarshipRequest.RegistrationUrl" type="url" placeholder="https://..." class="form-control" />
+                    </div>
+                    <span asp-validation-for="CreateScholarshipRequest.RegistrationUrl" class="text-danger small"></span>
+                </div>
+            </div>
+        </section>
+    </div>;
+
+    @* form create category *@
+    Func<object?, IHtmlContent> createCategoryBody = @<div class="d-flex flex-column gap-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+
+        @* ---- Section : informasi kategori ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="trophy"></i></span>
+                <div>
+                    <h6 class="form-section__title">Informasi beasiswa</h6>
+                    <p class="form-section__desc">Kategori yang ingin kamu buat.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="CreateScholarshipCategoryRequest.Name" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="CreateScholarshipCategoryRequest.Name" placeholder="Masukan nama kategori beasiswa" class="form-control" />
+                    </div>
+                    <span asp-validation-for="CreateScholarshipCategoryRequest.Name" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input asp-for="CreateScholarshipCategoryRequest.IsActive" class="form-check-input" role="switch" />
+                    <label asp-for="CreateScholarshipCategoryRequest.IsActive" class="form-check-label"></label>
+                </div>
+            </div>
+        </section>
+    </div>;
+}
+
+<div class="item-detail p-4 p-md-5 pt-5 d-flex flex-column gap-4">
+
+    @* metric *@
+    <div class="row g-4">
+        @foreach (var item in Model.MetricItem)
+        {
+            <div class="col-12 col-sm-6 col-lg-3">
+                @await Html.PartialAsync(
+                    "~/Pages/Dashboard/Shared/_MetricCard.cshtml",
+                    item)
+            </div>
+        }
+    </div>
+
+    <ul class="nav page-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="page-tabs__btn active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tabCategories"
+                    type="button"
+                    role="tab">
+                <i data-lucide="images"></i>
+                Kategori
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="page-tabs__btn"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tabItems"
+                    type="button"
+                    role="tab">
+                <i data-lucide="tags"></i>
+                Beasiswa
+            </button>
+        </li>
+    </ul>
+
+    @* data table *@
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="tabCategories">
+            @await Html.PartialAsync(
+                "~/Pages/Dashboard/Shared/_DataTable.cshtml",
+                Model.TableScholarshipCategoryItems,
+                new ViewDataDictionary(ViewData)
+            {
+                ["DataTable"] = new
+                {
+                    columns = new[]
+                    {
+                        "name",
+                        "isActive",
+                        "relatedScholarshipText",
+                        "updatedAt",
+                        "createdAt"
+                    },
+                    widths = new Dictionary<string, object>
+                    {
+                        ["name"] = 250,
+                        ["isActive"] = "9rem",
+                        ["relatedScholarshipText"] = 140,
+                        ["updatedAt"] = 300,
+                        ["createdAt"] = 130
+                    },
+                    actionsWidth = 260,
+                    
+                    actions = new object[]
+                    {
+                        new { name = "detail", label = "Detail", icon = "eye", href = "/dashboard/scholarship-management/category/{id}" }
+                    },
+
+                    toolbar = new object[]
+                    {
+                        new { name = "export-csv", label = "Ekspor", icon = "download",  variant = "secondary" },
+                        new { label = "Tambah Kategori", icon = "circle-plus", toggle = "offcanvas", target = "#createScholarshipCategoryDrawer" },
+                    }
+                }
+            })
+        </div>
+
+        <div class="tab-pane fade show" id="tabItems">
+            @await Html.PartialAsync(
+                partialViewName: "~/Pages/Dashboard/Shared/_DataTable.cshtml",
+                Model.TableScholarshipItems,
+                new ViewDataDictionary(ViewData)
+            {
+                ["DataTable"] = new
+                {
+                    columns = new[]
+                    {
+                        "name",
+                        "description",
+                        "totalPrizeText",
+                        "isEligible",
+                        "registrationPeriod",
+                        "createdAt"
+                    },
+                    widths = new Dictionary<string, object>
+                    {
+                        ["name"] = 250,
+                        ["description"] = 200,
+                        ["totalPrizeText"] = 140,
+                        ["isEligible"] = 300,
+                        ["createdAt"] = 130
+                    },
+                    actionsWidth = 260,
+                    
+                    actions = new object[]
+                    {
+                        new { name = "detail", label = "Detail", icon = "eye", href = "/dashboard/scholarship-management/scholarship/{id}" }
+                    },
+
+                    toolbar = new object[]
+                    {
+                        new { name = "export-csv", label = "Ekspor", icon = "download",  variant = "secondary" },
+                        new { label = "Tambah Beasiswa", icon = "circle-plus", toggle = "offcanvas", target = "#createScholarshipDrawer" },
+                    }
+                }
+            })
+        </div>
+    </div>
+
+    @await Html.PartialAsync(
+        "~/Pages/Dashboard/Shared/_FormDrawer.cshtml",
+        new FormDrawerViewModel
+        {
+            Id = "createScholarshipDrawer",
+            Title = "Tambah Beasiswa",
+            Handler = "CreateScholarship",
+            Multipart = true,
+            Width = "480px",
+            OpenOnLoad = !ModelState.IsValid,
+            Body = createBody
+        })
+
+    @await Html.PartialAsync(
+        "~/Pages/Dashboard/Shared/_FormDrawer.cshtml",
+        new FormDrawerViewModel
+        {
+            Id = "createScholarshipCategoryDrawer",
+            Title = "Tambah Kategori Beasiswa",
+            Handler = "CreateScholarshipCategory",
+            Multipart = true,
+            Width = "480px",
+            OpenOnLoad = !ModelState.IsValid,
+            Body = createCategoryBody
+        })
+
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+}

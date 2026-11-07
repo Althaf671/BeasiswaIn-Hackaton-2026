@@ -1,0 +1,38 @@
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+
+    ViewData["NotyfInMain"] = true;
+}
+
+<div hx-boost="true"
+     hx-target="#main"
+     hx-select="#main"
+     hx-select-oob="#app-navbar-slot"
+     hx-swap="outerHTML transition:true show:window:top">
+
+    <div id="app-navbar-slot">
+        @if (ViewData["HideDashboardNav"] as bool? != true)
+        {
+            @await Html.PartialAsync("/Pages/Dashboard/Shared/_Navbar.cshtml")
+        }
+    </div>
+
+    <main id="main">
+        @RenderBody()
+        @await Component.InvokeAsync("Notyf")
+        @await RenderSectionAsync("Styles", required: false)
+        @await RenderSectionAsync("Scripts", required: false)
+    </main>
+
+    @if (ViewData["HideOrgFooter"] as bool? != true)
+    {
+        @await Html.PartialAsync("/Pages/Dashboard/Shared/_Footer.cshtml")
+    }
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+}

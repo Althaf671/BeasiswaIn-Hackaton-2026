@@ -1,0 +1,63 @@
+@*
+    BeasiswaIn
+    Copyright (c) 2026
+    Modification, redistribution, and commercial use are prohibited.
+*@
+
+@{
+    var segments = Context.Request.Path.Value!
+        .Trim('/')
+        .Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+    var labels = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["dashboard"] = "Dashboard",
+        ["scholarship-management"] = "Beasiswa",
+        ["competition-management"] = "Perlombaan",
+    };
+
+    var crumbs = new List<(string Label, string? Url)>();
+    var url = "";
+
+    foreach (var seg in segments)
+    {
+        url += "/" + seg;
+        if (labels.TryGetValue(seg, out var label))
+            crumbs.Add((label, url));
+    }
+
+    // segmen terakhir bukan segmen dikenal (berarti id): tambahkan halaman saat ini
+    var lastIsId = segments.Length > 0 && !labels.ContainsKey(segments[^1]);
+    if (lastIsId)
+    {
+        var current = ViewData["BreadcrumbLast"] as string ?? "Detail";
+        crumbs.Add((current, null));
+    }
+}
+
+<nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small mb-0 align-items-center">
+        @for (var i = 0; i < crumbs.Count; i++)
+        {
+            var isLast = i == crumbs.Count - 1;
+            var crumb = crumbs[i];
+
+            <li class="breadcrumb-item d-flex align-items-center gap-2 @(isLast ? "active" : "")"
+                aria-current="@(isLast ? "page" : null)">
+                @if (i > 0)
+                {
+                    <i data-lucide="chevron-right" class="breadcrumb__separator"></i>
+                }
+
+                @if (isLast)
+                {
+                    <span>@crumb.Label</span>
+                }
+                else
+                {
+                    <a href="@crumb.Url" class="text-dark text-decoration-none">@crumb.Label</a>
+                }
+            </li>
+        }
+    </ol>
+</nav>

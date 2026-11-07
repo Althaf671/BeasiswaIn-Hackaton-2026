@@ -1,0 +1,29 @@
+@page "/dashboard"
+@using BeasiswaIn.Web.Pages.Dashboard
+
+@model IndexModel
+
+<div class="item-detail p-4 p-md-5 pt-5 d-flex flex-column gap-4">
+
+    @* metric *@
+    <div class="row g-4">
+        @foreach (var item in Model.MetricItem)
+        {
+            <div class="col-12 col-sm-6 col-lg-3">
+                @await Html.PartialAsync(
+                    "~/Pages/Dashboard/Shared/_MetricCard.cshtml",
+                    item)
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script src="~/js/dashboard/dashboard.js" asp-append-version="true"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+}

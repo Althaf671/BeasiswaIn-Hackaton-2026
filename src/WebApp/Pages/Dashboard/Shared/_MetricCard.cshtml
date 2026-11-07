@@ -1,0 +1,89 @@
+@*
+    BeasiswaIn
+    Copyright (c) 2026
+    Modification, redistribution, and commercial use are prohibited.
+*@
+
+@using BeasiswaIn.Web.Common.Enums
+@using BeasiswaIn.Web.Common.Helpers
+@using BeasiswaIn.Web.Pages.Dashboard.Shared
+
+@model MetricViewModel
+
+@{
+    var renderValueLimit = Model.ValueLimit is not null
+        ? "/" + Model.ValueLimit
+        : "";
+
+    var isEmpty = Model.Value.Digits == "0";
+
+    var uid = Guid.NewGuid().ToString("N")[..8];
+    var modalId = $"metricDetailModal-{uid}";
+    var labelId = $"metricDetailLabel-{uid}";
+}
+
+<article class="card d-flex flex-column flex-grow-1 w-100 px-3 py-3">
+
+    @* upper *@
+    <header class="d-flex justify-content-between py-0" style="height: 35px;">
+        <p class="text-lg text-muted">@Model.Title</p>
+        <button type="button"
+                class="btn-none"
+                data-bs-toggle="modal"
+                data-bs-target="#@modalId"
+                aria-label="Detail @Model.Title">
+            <i class="text-muted mt-1" data-lucide="chevron-right"></i>
+        </button>
+    </header>
+
+    @* center *@
+    <div>
+        @if (isEmpty)
+        {
+            <span class="text-heading-lg py-0">0</span>
+        }
+        else
+        {
+            <span class="text-heading-lg py-0">@Model.Value@renderValueLimit</span>
+        }
+    </div>
+
+    @* footer *@
+    <footer class="d-flex justify-content-between text-xs align-items-center">
+        @if (isEmpty)
+        {
+            <span>Data belum tersedia</span>
+        }
+        else if (Model.Trend == MetricTrend.Positive)
+        {
+            <div><span class="text-success">+@Model.TrendValue</span> <span class="text-muted">vs kemaren</span></div>
+        }
+        else if (Model.Trend == MetricTrend.Negative)
+        {
+            <div><span class="text-error">-@Model.TrendValue</span> <span class="text-muted">vs kemaren</span></div>
+        }
+        else
+        {
+            <span>Tidak ada perubahan</span>
+        }
+        <i class="text-muted" data-lucide="@Model.Icon"></i>
+    </footer>
+
+</article>
+
+<div class="modal fade" id="@modalId" tabindex="-1" aria-labelledby="@labelId" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-2">
+      <div class="modal-header">
+        <div class="d-flex gap-2 align-items-center">
+            <i class="text-muted" data-lucide="@Model.Icon"></i>
+            <h5 class="modal-title" id="@labelId">@Model.Title</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column gap-1">
+        <p class="text-muted">@Model.Description</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ using BeasiswaIn.Web.Interfaces;
 using BeasiswaIn.Web.Services.Dashboard;
 using BeasiswaIn.Web.Services.Personalizations;
 using BeasiswaIn.Web.Services.Scholarships;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.AddAppCors();
 builder.Services.AddAppDatabase(builder.Configuration);
 builder.Services.AddAppFileStorage(builder.Configuration);
 builder.Services.AddAppOpenApi(builder.Configuration);
+builder.Services.AddFeatureManagement();
 builder.Services.AddNotyf(config =>
 {
     config.DurationInSeconds = 7;

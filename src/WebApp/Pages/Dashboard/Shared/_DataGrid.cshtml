@@ -1,0 +1,137 @@
+@*
+    BeasiswaIn
+    Copyright (c) 2026
+    Modification, redistribution, and commercial use are prohibited.
+
+    Reusable data grid (kartu). Pasangan _DataTable untuk konten visual.
+    Model  : list apa saja (IReadOnlyList<T>) atau response paged ({ Items, Page, PageSize, TotalCount }).
+    Config : opsional, lewat ViewData["DataGrid"]. Id opsional: ViewData["DataGridId"].
+
+    @await Html.PartialAsync("_DataGrid", Model.Items, new ViewDataDictionary(ViewData)
+    {
+        ["DataGrid"] = new
+        {
+            card = new { image = "imageUrl", title = "title", subtitle = "categoryName", badge = "isActive" },
+            filters = new[] { "categoryName", "isActive", "createdAt" },
+            pageSize = 12
+        }
+    })
+*@
+
+@using System.Collections
+@using System.Reflection
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using Microsoft.Extensions.Options
+
+@inject IOptions<JsonOptions> JsonOptions
+
+@model object
+
+@functions {
+    private static Type? ElementOf(Type type)
+    {
+        if (type.IsArray) return type.GetElementType();
+
+        var enumerable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+            ? type
+            : type.GetInterfaces().FirstOrDefault(i =>
+                i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
+        return enumerable?.GetGenericArguments()[0];
+    }
+
+    private static Type? RowTypeOf(Type modelType)
+    {
+        if (typeof(IEnumerable).IsAssignableFrom(modelType) && modelType != typeof(string))
+            return ElementOf(modelType);
+
+        var items = modelType.GetProperty("Items");
+        return items is null ? null : ElementOf(items.PropertyType);
+    }
+
+    private static string KindOf(Type type)
+    {
+        type = Nullable.GetUnderlyingType(type) ?? type;
+
+        if (type.IsEnum) return "enum";
+        if (type == typeof(bool)) return "boolean";
+        if (type == typeof(string) || type == typeof(char) || type == typeof(Guid)) return "text";
+        if (type == typeof(DateTime) || type == typeof(DateTimeOffset) || type == typeof(DateOnly)) return "date";
+        if (type.IsPrimitive || type == typeof(decimal)) return "number";
+        if (typeof(IEnumerable).IsAssignableFrom(type)) return "list";
+        return "object";
+    }
+
+    private static string EnumValue(Type enumType, object value, JsonSerializerOptions options) =>
+        JsonSerializer.Serialize(value, enumType, options).Trim('"');
+
+    private static List<object> BuildSchema(Type? rowType, JsonSerializerOptions options)
+    {
+        var schema = new List<object>();
+        if (rowType is null) return schema;
+
+        foreach (var prop in rowType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (prop.GetIndexParameters().Length > 0) continue;
+            if (prop.GetCustomAttribute<JsonIgnoreAttribute>() is { Condition: JsonIgnoreCondition.Always }) continue;
+
+            var name = prop.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name
+                ?? options.PropertyNamingPolicy?.ConvertName(prop.Name)
+                ?? prop.Name;
+
+            var kind = KindOf(prop.PropertyType);
+
+            var enumOptions = new List<object>();
+            if (kind == "enum")
+            {
+                var enumType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                foreach (var value in Enum.GetValues(enumType))
+                {
+                    enumOptions.Add(new
+                    {
+                        value = EnumValue(enumType, value, options),
+                        label = value.ToString()
+                    });
+                }
+            }
+
+            schema.Add(new { key = name, type = kind, options = enumOptions });
+        }
+
+        return schema;
+    }
+
+    private static string ToJson(object value, JsonSerializerOptions options) =>
+        JsonSerializer.Serialize(value, value.GetType(), options).Replace("</", "<\\/");
+}
+
+@{
+    var jsonOptions = JsonOptions.Value.JsonSerializerOptions;
+
+    object payload = Model ?? Array.Empty<object>();
+    var dataJson = ToJson(payload, jsonOptions);
+
+    var config = ViewData["DataGrid"];
+    var configJson = config is null ? "{}" : ToJson(config, jsonOptions);
+
+    var schemaJson = ToJson(BuildSchema(RowTypeOf(payload.GetType()), jsonOptions), jsonOptions);
+
+    var gridId = ViewData["DataGridId"] as string
+        ?? $"dg-{Guid.NewGuid().ToString("N")[..8]}";
+}
+
+@if (Context.Items["__DataGridAssets"] is null)
+{
+    Context.Items["__DataGridAssets"] = true;
+
+    <script src="~/js/data-grid.js" asp-append-version="true"></script>
+}
+
+<div class="data-grid" id="@gridId-root" data-grid-root>
+    <div data-grid-mount></div>
+
+    <script type="application/json" data-grid-data>@Html.Raw(dataJson)</script>
+    <script type="application/json" data-grid-config>@Html.Raw(configJson)</script>
+    <script type="application/json" data-grid-schema>@Html.Raw(schemaJson)</script>
+</div>

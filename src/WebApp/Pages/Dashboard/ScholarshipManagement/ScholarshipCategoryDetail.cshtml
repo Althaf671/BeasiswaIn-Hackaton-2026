@@ -1,0 +1,284 @@
+@page "/dashboard/scholarship-management/category/{id}"
+@using System.Globalization
+@using BeasiswaIn.Web.Pages.Dashboard.ScholarshipManagement
+@using Microsoft.AspNetCore.Html
+@using PhotographyStudio.Web.Pages.Dashboard.Shared
+
+@model ScholarshipCategoryDetailModel
+
+@{
+    var category = Model.ScholarshipCategoryInfo;
+    var idCulture = CultureInfo.GetCultureInfo("id-ID");
+
+    ViewData["Title"] = $"Detail Kategori Beasiswa: {category.Name}";
+    ViewData["HideDashboardNav"] = true;
+    ViewData["BreadcrumbLast"] = $"Detail {category.Name}";
+
+    @* form update kategori *@
+    Func<object?, IHtmlContent> updateBody = @<div class="d-flex flex-column gap-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="tag"></i></span>
+                <div>
+                    <h6 class="form-section__title">Informasi kategori</h6>
+                    <p class="form-section__desc">Nama dan status kategori beasiswa.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="UpdateScholarshipCategoryRequest.Name" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="UpdateScholarshipCategoryRequest.Name" placeholder="Masukan nama kategori beasiswa" class="form-control" />
+                    </div>
+                    <span asp-validation-for="UpdateScholarshipCategoryRequest.Name" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input asp-for="UpdateScholarshipCategoryRequest.IsActive" class="form-check-input" role="switch" />
+                    <label asp-for="UpdateScholarshipCategoryRequest.IsActive" class="form-check-label"></label>
+                </div>
+            </div>
+        </section>
+    </div>;
+}
+
+@* main content *@
+<div class="item-detail p-4 p-md-5 pt-5 d-flex flex-column gap-4">
+
+    @* Page heading *@
+    <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+
+        @await Html.PartialAsync("~/Pages/Dashboard/Shared/_Breadcrumbs.cshtml")
+
+        <div class="d-flex gap-2">
+            <button type="button"
+                    class="btn btn-danger edit-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteScholarshipCategoryModal">
+                <i data-lucide="trash-2"></i>
+                Hapus
+            </button>
+
+            <button type="button"
+                    class="btn btn-primary edit-btn"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#updateScholarshipCategoryDrawer">
+                <i data-lucide="pencil"></i>
+                Edit Kategori
+            </button>
+        </div>
+
+    </header>
+
+    <div class="row g-4">
+
+        @* Main column *@
+        <div class="col-12 col-xl-8 d-flex flex-column gap-4">
+
+            @* Category information *@
+            <section class="card flex-grow-1">
+                <header class="card-header bg-transparent p-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="item-detail__section-icon">
+                            <i data-lucide="tag"></i>
+                        </span>
+
+                        <div>
+                            <h2 class="h5 fw-semibold mb-1">Informasi kategori</h2>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                Nama dan status kategori beasiswa.
+                            </p>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="card-body p-4 d-flex flex-column gap-4">
+                    <div>
+                        <div class="small text-muted mb-2">Nama kategori</div>
+                        <div class="fw-medium">@category.Name</div>
+                    </div>
+
+                    <div>
+                        <div class="small text-muted mb-2">Status</div>
+                        @if (category.IsActive)
+                        {
+                            <span class="badge fw-medium text-bg-success">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge fw-medium text-bg-secondary">Nonaktif</span>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        @* Sidebar *@
+        <aside class="col-12 col-xl-4 d-flex flex-column gap-4">
+
+            @* Metadata *@
+            <section class="card">
+                <header class="card-header bg-transparent p-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="item-detail__section-icon">
+                            <i data-lucide="info"></i>
+                        </span>
+
+                        <div>
+                            <h2 class="h5 fw-semibold mb-1">Informasi lainnya</h2>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                Metadata kategori.
+                            </p>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="card-body p-4 d-flex flex-column gap-3">
+                    <div>
+                        <div class="small text-muted mb-2">ID kategori</div>
+                        <code class="item-detail__id">@category.Id</code>
+                    </div>
+
+                    <hr class="my-0" />
+
+                    <div>
+                        <div class="small text-muted mb-2">Dibuat pada</div>
+                        <div>
+                            @category.CreatedAt.ToLocalTime().ToString(
+                                "dd MMMM yyyy, HH:mm",
+                                idCulture)
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="small text-muted mb-2">Terakhir diperbarui</div>
+                        <div>
+                            @(category.UpdatedAt.HasValue
+                                ? category.UpdatedAt.Value.ToLocalTime().ToString(
+                                    "dd MMMM yyyy, HH:mm",
+                                    idCulture)
+                                : "Belum pernah diperbarui")
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </aside>
+
+    </div>
+
+    @* modal delete *@
+    <div class="modal fade"
+         id="deleteScholarshipCategoryModal"
+         tabindex="-1"
+         aria-labelledby="deleteScholarshipCategoryModalLabel"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-semibold" id="deleteScholarshipCategoryModalLabel">
+                        Hapus Kategori?
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Tutup">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    Kategori <strong>@category.Name</strong> akan dihapus.
+                    Kategori yang masih dipakai tidak dapat dihapus, dan tindakan ini
+                    mungkin tidak dapat dibatalkan.
+                    Apakah anda yakin ingin melanjutkan?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-light"
+                            data-bs-dismiss="modal">
+                        Batal
+                    </button>
+
+                    <form id="deleteScholarshipCategoryForm"
+                          method="post"
+                          hx-boost="false"
+                          asp-page-handler="DeleteCategory"
+                          asp-route-id="@category.Id">
+                        <button type="submit" class="btn btn-danger">
+                            Ya, hapus
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync(
+        "~/Pages/Dashboard/Shared/_DataTable.cshtml",
+        Model.TableScholarshipItems,
+        new ViewDataDictionary(ViewData)
+    {
+        ["DataTable"] = new
+        {
+            columns = new[]
+            {
+                "name",
+                "theme",
+                "description",
+                "totalPrizeText",
+                "isEligible",
+                "registrationPeriod",
+                "createdAt"
+            },
+            widths = new Dictionary<string, object>
+            {
+                ["name"] = 250,
+                ["theme"] = "9rem",
+                ["description"] = 200,
+                ["totalPrizeText"] = 140,
+                ["isEligible"] = 300,
+                ["createdAt"] = 130
+            },
+            actionsWidth = 260,
+                    
+            actions = new object[]
+            {
+                new { name = "detail", label = "Detail", icon = "eye", href = "/dashboard/scholarship-management/scholarship/{id}" }
+            },
+
+            toolbar = new object[]
+            {
+                new { name = "export-csv", label = "Ekspor", icon = "download",  variant = "secondary" }
+            }
+        }
+    })
+
+    @* form drawer *@
+    @await Html.PartialAsync(
+        "~/Pages/Dashboard/Shared/_FormDrawer.cshtml",
+        new FormDrawerViewModel
+        {
+            Id = "updateScholarshipCategoryDrawer",
+            Title = "Edit Kategori Beasiswa",
+            Handler = "UpdateScholarshipCategory",
+            Width = "480px",
+            OpenOnLoad = !ModelState.IsValid,
+            Body = updateBody
+        })
+
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+}

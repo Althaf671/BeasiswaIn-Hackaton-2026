@@ -1,0 +1,721 @@
+@page "/dashboard/scholarship-management/scholarship/{id}"
+@using System.Globalization
+@using System.Text.Json
+@using BeasiswaIn.Web.Common.Helpers
+@using BeasiswaIn.Web.Pages.Dashboard.ScholarshipManagement
+@using Microsoft.AspNetCore.Html
+@using PhotographyStudio.Web.Pages.Dashboard.Shared
+
+@model ScholarshipDetailModel
+
+@{
+    var scholarship = Model.ScholarshipInfo;
+    var idCulture = CultureInfo.GetCultureInfo("id-ID");
+
+    ViewData["Title"] = $"Detail Kompetisi: {scholarship.Name}";
+    ViewData["HideDashboardNav"] = true;
+    ViewData["BreadcrumbLast"] = $"Detail {scholarship.Name}";
+
+    var now = DateTimeOffset.Now;
+
+    var (registrationLabel, registrationClass) =
+        now < scholarship.RegistrationStartAt ? ("Belum dibuka", "text-bg-secondary")
+        : now <= scholarship.RegistrationEndAt ? ("Pendaftaran dibuka", "text-bg-success")
+        : ("Pendaftaran ditutup", "text-bg-danger");
+
+    @* form update beasiswa *@
+    Func<object?, IHtmlContent> updateBody = @<div class="d-flex flex-column gap-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+
+        @* ---- Section 1: informasi beasiswa ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="trophy"></i></span>
+                <div>
+                    <h6 class="form-section__title">Informasi beasiswa</h6>
+                    <p class="form-section__desc">Nama, tema, dan deskripsi beasiswa.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="UpdateScholarshipRequest.Name" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="UpdateScholarshipRequest.Name" placeholder="Masukan nama beasiswa" class="form-control" />
+                    </div>
+                    <span asp-validation-for="UpdateScholarshipRequest.Name" class="text-danger small"></span>
+                </div>
+
+                <div>
+                    <label asp-for="UpdateScholarshipRequest.Description" class="form-label required"></label>
+                    <textarea asp-for="UpdateScholarshipRequest.Description" placeholder="Tulis deskripsi beasiswa" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="UpdateScholarshipRequest.Description" class="text-danger small"></span>
+                </div>
+
+                <div 
+                    data-list-field
+                    data-name="UpdateScholarshipRequest.CategoryIds"
+                    data-placeholder="Ketik untuk mencari kategori"
+                    data-options="@JsonSerializer.Serialize(Model.ScholarshipCategoryOptions)"
+                    data-values="@JsonSerializer.Serialize(Model.UpdateScholarshipRequest.CategoryIds)">
+                    <label asp-for="UpdateScholarshipRequest.CategoryIds" class="form-label required"></label>
+                    <div class="d-flex flex-column gap-2" data-list-items></div>
+                    <span asp-validation-for="UpdateScholarshipRequest.CategoryIds" class="text-danger small"></span>
+                </div>
+            </div>
+        </section>
+
+        @* ---- Section 2: hadiah dan jadwal ---- *@
+        <section class="form-section form-section--warm">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="calendar-range"></i></span>
+                <div>
+                    <h6 class="form-section__title">Hadiah dan jadwal</h6>
+                    <p class="form-section__desc">Total hadiah serta periode pendaftaran.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="UpdateScholarshipRequest.TotalPrize" class="form-label required"></label>
+                    <input asp-for="UpdateScholarshipRequest.TotalPrize" type="hidden" />
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="text"
+                            id="prizeDisplay"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            class="form-control"
+                            placeholder="0"
+                            data-money-target="#UpdateScholarshipRequest_TotalPrize"
+                            value="@(Model.UpdateScholarshipRequest.TotalPrize > 0
+                                    ? Model.UpdateScholarshipRequest.TotalPrize.ToString("N0", idCulture)
+                                    : "")" />
+                    </div>
+                    <span asp-validation-for="UpdateScholarshipRequest.TotalPrize" class="text-danger small"></span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="UpdateScholarshipRequest.RegistrationStartAt" class="form-label required"></label>
+                        <input asp-for="UpdateScholarshipRequest.RegistrationStartAt" type="datetime-local" class="form-control"
+                            value="@(Model.UpdateScholarshipRequest.RegistrationStartAt == default
+                                        ? ""
+                                        : Model.UpdateScholarshipRequest.RegistrationStartAt.ToString("yyyy-MM-dd'T'HH:mm", CultureInfo.InvariantCulture))" />
+                        <span asp-validation-for="UpdateScholarshipRequest.RegistrationStartAt" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="UpdateScholarshipRequest.RegistrationEndAt" class="form-label required"></label>
+                        <input asp-for="UpdateScholarshipRequest.RegistrationEndAt" type="datetime-local" class="form-control"
+                            value="@(Model.UpdateScholarshipRequest.RegistrationEndAt == default
+                                        ? ""
+                                        : Model.UpdateScholarshipRequest.RegistrationEndAt.ToString("yyyy-MM-dd'T'HH:mm", CultureInfo.InvariantCulture))" />
+                        <span asp-validation-for="UpdateScholarshipRequest.RegistrationEndAt" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input asp-for="UpdateScholarshipRequest.IsEligible" class="form-check-input" role="switch" />
+                    <label asp-for="UpdateScholarshipRequest.IsEligible" class="form-check-label"></label>
+                </div>
+            </div>
+        </section>
+
+        @* ---- Section 3: persyaratan dan kontak ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="list-checks"></i></span>
+                <div>
+                    <h6 class="form-section__title">Persyaratan dan kontak</h6>
+                    <p class="form-section__desc">Tambahkan satu atau lebih persyaratan dan contact person.</p>
+                </div>
+            </header>
+
+            <div class="flex flex-column px-3 py-4">
+                <div data-list-field
+                    data-name="UpdateScholarshipRequest.Requirement"
+                    data-placeholder="Tulis persyaratan"
+                    data-add-label="Tambah persyaratan"
+                    data-values="@JsonSerializer.Serialize(Model.UpdateScholarshipRequest.Requirement)">
+                    <label asp-for="UpdateScholarshipRequest.Requirement" class="form-label required"></label>
+                    <div class="d-flex flex-column gap-2" data-list-items></div>
+                    <span asp-validation-for="UpdateScholarshipRequest.Requirement" class="text-danger small"></span>
+                </div>
+
+                <div data-list-field
+                    data-name="UpdateScholarshipRequest.ContactPerson"
+                    data-placeholder="cth: Budi - 0812xxxxxxx"
+                    data-add-label="Tambah contact person"
+                    data-values="@JsonSerializer.Serialize(Model.UpdateScholarshipRequest.ContactPerson)"
+                    class="mt-4">
+                    <label asp-for="UpdateScholarshipRequest.ContactPerson" class="form-label required"></label>
+                    <div class="d-flex flex-column gap-2" data-list-items></div>
+                    <span asp-validation-for="UpdateScholarshipRequest.ContactPerson" class="text-danger small"></span>
+                </div>
+            </div>
+        </section>
+
+        @* ---- Section 4: poster dan tautan ---- *@
+        <section class="form-section">
+            <header class="form-section__header">
+                <span class="form-section__icon"><i data-lucide="link"></i></span>
+                <div>
+                    <h6 class="form-section__title">Poster dan tautan</h6>
+                    <p class="form-section__desc">Unggah poster serta link panduan dan registrasi.</p>
+                </div>
+            </header>
+
+            <div class="form-section__body">
+                <div>
+                    <label asp-for="UpdateScholarshipRequest.ContentImageFile" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="UpdateScholarshipRequest.ContentImageFile" type="file" accept="image/*" class="form-control" />
+                    </div>
+                    <span asp-validation-for="UpdateScholarshipRequest.ContentImageFile" class="text-danger small"></span>
+                </div>
+
+                <div>
+                    <label asp-for="UpdateScholarshipRequest.GuideUrl" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="UpdateScholarshipRequest.GuideUrl" type="url" placeholder="https://..." class="form-control" />
+                    </div>
+                    <span asp-validation-for="UpdateScholarshipRequest.GuideUrl" class="text-danger small"></span>
+                </div>
+
+                <div>
+                    <label asp-for="UpdateScholarshipRequest.RegistrationUrl" class="form-label required"></label>
+                    <div class="input-group">
+                        <input asp-for="UpdateScholarshipRequest.RegistrationUrl" type="url" placeholder="https://..." class="form-control" />
+                    </div>
+                    <span asp-validation-for="UpdateScholarshipRequest.RegistrationUrl" class="text-danger small"></span>
+                </div>
+            </div>
+        </section>
+    </div>;
+}
+
+@* main content *@
+<div class="item-detail p-4 p-md-5 pt-5 d-flex flex-column gap-4">
+
+        @* Page heading *@
+        <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+
+            @await Html.PartialAsync("~/Pages/Dashboard/Shared/_Breadcrumbs.cshtml")
+
+            <div class="d-flex gap-2">
+                <button type="button"
+                        class="btn btn-danger edit-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteScholarshipModal">
+                    <i data-lucide="trash-2"></i>
+                    Hapus
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary edit-btn"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#updateScholarshipDrawer">
+                    <i data-lucide="pencil"></i>
+                    Edit
+                </button>
+            </div>
+
+        </header>
+
+        <div class="row g-4">
+
+            @* Main column *@
+            <div class="col-12 col-xl-8 d-flex flex-column gap-4">
+
+                @* Scholarship information *@
+                <section class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="trophy"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Informasi lomba</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Nama dan tema lomba.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4 d-flex flex-column gap-4">
+                        <div>
+                            <div class="small text-muted mb-2">Nama lomba</div>
+                            <div class="fw-medium">@scholarship.Name</div>
+                        </div>
+
+                        <div>
+                            <div class="small text-muted mb-2">Tag Kategori</div>
+                            @if (@scholarship.CategoryIds.Count > 0)
+                            {
+                                @foreach(var item in @scholarship.CategoryIds)
+                                {
+                                    <div class="list-chip-non-actionable">@item</div>
+                                }
+                            }
+                            else
+                            {
+                                <div>-</div>
+                            }
+                        </div>
+                    </div>
+                </section>
+
+                @* scholarship description *@
+                <section class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="file-text"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Deskripsi</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Deskripsi yang ditampilkan pada halaman lomba.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4">
+                        @if (!string.IsNullOrWhiteSpace(scholarship.Description))
+                        {
+                            <p class="mb-0 item-detail__long-text">@scholarship.Description</p>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-muted">Tidak ada deskripsi.</p>
+                        }
+                    </div>
+                </section>
+
+                @* Requirements *@
+                <section class="card flex-grow-1">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="list-checks"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Persyaratan</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Syarat yang harus dipenuhi peserta.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4">
+                        @if (scholarship.Requirement.Count > 0)
+                        {
+                            <ol class="mb-0 ps-3 d-flex flex-column gap-2 item-detail__long-text">
+                                @foreach (var requirement in scholarship.Requirement)
+                                {
+                                    <li>@requirement</li>
+                                }
+                            </ol>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-muted">Belum ada persyaratan.</p>
+                        }
+                    </div>
+                </section>
+
+                @* Contact person *@
+                <section class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="contact"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Contact person</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Kontak yang dapat dihubungi peserta.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4">
+                        @if (scholarship.ContactPerson.Count > 0)
+                        {
+                            <ul class="mb-0 ps-3 d-flex flex-column gap-2 item-detail__long-text">
+                                @foreach (var contact in scholarship.ContactPerson)
+                                {
+                                    <li>@contact</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-muted">Belum ada contact person.</p>
+                        }
+                    </div>
+                </section>
+
+            </div>
+
+            @* Sidebar *@
+            <aside class="col-12 col-xl-4 d-flex flex-column gap-4">
+
+                @* Poster *@
+                <div class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="image"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Poster lomba</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Gambar ditampilkan di halaman publik
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div>
+                        @if (!string.IsNullOrWhiteSpace(scholarship.ContentImageUrl))
+                        {
+                            <button type="button"
+                                    class="item-detail__image-thumb"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#scholarshipImageModal"
+                                    aria-label="Lihat poster lomba">
+                                <img src="@scholarship.ContentImageUrl"
+                                    alt="Poster @scholarship.Name"
+                                    loading="lazy" />
+
+                                <span class="item-detail__image-thumb-overlay">
+                                    <i data-lucide="maximize-2" style="width: 18px; height: 18px;"></i>
+                                    Perbesar
+                                </span>
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="text-muted small d-flex align-items-center gap-2 p-4">
+                                <i data-lucide="image-off" style="width: 18px; height: 18px;"></i>
+                                Belum ada poster lomba.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @* Prize and status *@
+                <section class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="wallet"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Hadiah dan status</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Total hadiah, kelayakan, dan periode pendaftaran.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4 d-flex flex-column gap-3">
+                        <div>
+                            <div class="small text-muted mb-2">Total hadiah</div>
+                            <div class="fw-semibold">Rp @scholarship.TotalPrize.ToString("N0", idCulture)</div>
+                        </div>
+
+                        <hr class="my-0" />
+
+                        <div>
+                            <div class="small text-muted mb-2">Status kelayakan</div>
+                            @if (scholarship.IsEligible)
+                            {
+                                <span class="badge fw-medium text-bg-success">Layak</span>
+                            }
+                            else
+                            {
+                                <span class="badge fw-medium text-bg-secondary">Tidak layak</span>
+                            }
+                        </div>
+
+                        <div>
+                            <div class="small text-muted mb-2">Status pendaftaran</div>
+                            <span class="badge fw-medium @registrationClass">@registrationLabel</span>
+                        </div>
+
+                        <div>
+                            <div class="small text-muted mb-2">Periode pendaftaran</div>
+                            <div>@scholarship.RegistrationPeriod</div>
+                        </div>
+                    </div>
+                </section>
+
+                @* Links *@
+                <section class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="link"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Tautan</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Link panduan dan registrasi.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4 d-flex flex-column gap-3">
+                        <div>
+                            <div class="small text-muted mb-2">Link panduan</div>
+                            @if (StringHelper.IsSafeUrl(scholarship.GuideUrl))
+                            {
+                                <a href="@scholarship.GuideUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="d-inline-flex align-items-center gap-2 text-break">
+                                    <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                                    @scholarship.GuideUrl
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Belum ada link panduan.</span>
+                            }
+                        </div>
+
+                        <div>
+                            <div class="small text-muted mb-2">Link registrasi</div>
+                            @if (StringHelper.IsSafeUrl(scholarship.RegistrationUrl))
+                            {
+                                <a href="@scholarship.RegistrationUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="d-inline-flex align-items-center gap-2 text-break">
+                                    <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                                    @scholarship.RegistrationUrl
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Belum ada link registrasi.</span>
+                            }
+                        </div>
+                    </div>
+                </section>
+
+                @* Metadata *@
+                <section class="card">
+                    <header class="card-header bg-transparent p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="item-detail__section-icon">
+                                <i data-lucide="info"></i>
+                            </span>
+
+                            <div>
+                                <h2 class="h5 fw-semibold mb-1">Informasi lainnya</h2>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Metadata lomba.
+                                </p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-4 d-flex flex-column gap-3">
+                        <div>
+                            <div class="small text-muted mb-2">ID lomba</div>
+                            <code class="item-detail__id">@scholarship.Id</code>
+                        </div>
+
+                        <hr class="my-0" />
+
+                        <div>
+                            <div class="small text-muted mb-2">Dibuat pada</div>
+                            <div>
+                                @scholarship.CreatedAt.ToLocalTime().ToString(
+                                    "dd MMMM yyyy, HH:mm",
+                                    idCulture)
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="small text-muted mb-2">Terakhir diperbarui</div>
+                            <div>
+                                @(scholarship.UpdatedAt.HasValue
+                                    ? scholarship.UpdatedAt.Value.ToLocalTime().ToString(
+                                        "dd MMMM yyyy, HH:mm",
+                                        idCulture)
+                                    : "Belum pernah diperbarui")
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </aside>
+
+        @* Poster modal *@
+        @if (!string.IsNullOrWhiteSpace(scholarship.ContentImageUrl))
+        {
+            <div class="modal fade" id="scholarshipImageModal" style="margin-top: -2rem;" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered item-detail__image-dialog">
+                    <div class="modal-content item-detail__image-modal">
+                        <header class="modal-header bg-transparent p-3 gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon">
+                                    <i data-lucide="image"></i>
+                                </span>
+
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Gambar beasiswa</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        @scholarship.Name
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button type="button"
+                                    class="btn-close ms-auto"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Tutup"></button>
+                        </header>
+
+                        <div class="modal-body p-3">
+                            <img src="@scholarship.ContentImageUrl"
+                                alt="Gambar kategori @scholarship.Name"
+                                class="item-detail__image-full" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+            @* <div class="col-12">
+                @await Html.PartialAsync(
+                    "~/Pages/Dashboard/Shared/_DataTable.cshtml",
+                    Model.GalleryItemTableItems,
+                    new ViewDataDictionary(ViewData)
+                {
+                    ["DataTable"] = new
+                    {
+                        hide = new[] { "imageUrl", "description", "photographyPackageName", "galleryCategoryName" },
+                        columns = new[]
+                        {
+                            "title",
+                            "isPublished",
+                            "displayOrder",
+                            "slug",
+                            "createdAt"
+                        },
+                        widths = new Dictionary<string, object>
+                        {
+                            ["title"] = 250,
+                            ["isPublished"] = 140,
+                            ["displayOrder"] = 120,
+                            ["slug"] = 200,
+                            ["createdAt"] = 130
+                        },
+                        actionsWidth = 320,
+
+                        actions = new object[]
+                        {
+                            new { name = "detail", label = "Detail", icon = "eye", href = "/dashboard/gallery/portfolios/{id}" },
+                        },
+
+                        toolbar = new[]
+                        {
+                            new { name = "export-csv", label = "Ekspor", icon = "download",   variant = "secondary" },
+                        }
+                    }
+                })
+            </div> *@
+
+    </div>
+
+    @* modal delete *@
+    <div class="modal fade"
+        id="deleteScholarshipModal"
+        tabindex="-1"
+        aria-labelledby="deleteScholarshipModalLabel"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-semibold" id="deleteScholarshipModalLabel">
+                        Hapus Lomba?
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Tutup">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    Lomba <strong>@scholarship.Name</strong> akan dihapus.
+                    Tindakan ini mungkin tidak dapat dibatalkan.
+                    Apakah anda yakin ingin melanjutkan?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-light"
+                            data-bs-dismiss="modal">
+                        Batal
+                    </button>
+
+                    <form id="deleteScholarshipForm"
+                        method="post"
+                        hx-boost="false"
+                        asp-page-handler="Delete"
+                        asp-route-id="@scholarship.Id">
+                        <button type="submit" class="btn btn-danger">
+                            Ya, hapus
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @* form drawer *@
+    @await Html.PartialAsync(
+        "~/Pages/Dashboard/Shared/_FormDrawer.cshtml",
+        new FormDrawerViewModel
+        {
+            Id = "updateScholarshipDrawer",
+            Title = "Edit Lomba",
+            Handler = "UpdateScholarship",
+            Multipart = true,
+            Width = "480px",
+            OpenOnLoad = !ModelState.IsValid,
+            Body = updateBody
+        })
+        
+</div>
+
+@section Scripts {
+    <script src="~/js/dashboard/gallery-item-detail.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+}

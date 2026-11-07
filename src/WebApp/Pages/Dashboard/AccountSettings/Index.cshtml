@@ -1,0 +1,461 @@
+@page "/dashboard/settings"
+@using System.Reflection
+@using BeasiswaIn.Web.Common.Helpers
+@using BeasiswaIn.Web.Pages.Dashboard.AccountSettings
+
+@model SettingModel
+
+@{
+    ViewData["Title"] = "Pengaturan";
+    ViewData["HideDashboardNav"] = true;
+    ViewData["BreadcrumbLast"] = "Pengaturan";
+
+    var myAccountInfo = Model.MyAccountInfo;
+
+    var appVersion = Assembly.GetEntryAssembly()?
+        .GetName().Version?.ToString(3) ?? "-";
+
+    var phonePhoneNumber = @NumberFormatter.PhoneNumberFormatter(myAccountInfo.Phone);
+    var formattedPhonePhoneNumber = @StringHelper.Elipsis(phonePhoneNumber, 30);
+}
+
+<div class="item-detail p-4 p-md-5 pt-5 d-flex flex-column gap-4" style="margin-top: -0.75rem;">
+
+    <header class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h2 mb-1">Pengaturan</h1>
+            <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                Kelola akun, preferensi, dan informasi aplikasi.
+            </p>
+        </div>
+
+        <a href="/dashboard"
+        class="btn btn-ghost btn-sm"
+        aria-label="Kembali ke dashboard"
+        title="Kembali ke dashboard">
+            <i data-lucide="x"></i>
+        </a>
+    </header>
+
+    <div class="settings-layout">
+
+        @* ---------- sidebar ---------- *@
+        @await Html.PartialAsync("~/Pages/Dashboard/Shared/_SettingSidebar.cshtml")
+
+        @* ---------- konten ---------- *@
+        <div class="settings-content">
+            <div class="tab-content h-100">
+
+                @* ===== Profil Saya ===== *@
+                <section class="tab-pane fade show active h-100" id="profil" role="tabpanel">
+                    <div class="card h-100">
+                        <header class="card-header bg-transparent p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon"><i data-lucide="user-round"></i></span>
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Profil Saya</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        Identitas yang tampil di dashboard.
+                                    </p>
+                                </div>
+
+                                <a asp-page="/Dashboard/AccountSettings/MyProfile"
+                                class="btn btn-primary edit-btn ms-auto">
+                                    <i data-lucide="pencil"></i>
+                                    Edit profil
+                                </a>
+                            </div>
+                        </header>
+
+                        <div class="card m-3">
+                            <ul class="list-group list-group-flush">
+
+                                @* username *@
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text d-flex align-items-center gap-3">
+                                        <i data-lucide="user-round" class="settings-row__icon"></i>
+                                        <div>
+                                            <div class="fw-medium">Nama pengguna</div>
+                                            <div class="text-muted small">Nama yang tampil di dashboard.</div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-row__value">@StringHelper.Elipsis(@myAccountInfo.UserName, 30)</div>
+                                </li>
+
+                                @* email *@
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text d-flex align-items-center gap-3">
+                                        <i data-lucide="mail" class="settings-row__icon"></i>
+                                        <div>
+                                            <div class="fw-medium">Email</div>
+                                            <div class="text-muted small">Dipakai untuk masuk dan menerima pemberitahuan.</div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-row__value d-flex align-items-center justify-content-end gap-2 flex-wrap">
+                                        <span>@StringHelper.Elipsis(myAccountInfo.Email, 30)</span>
+                                        @if (myAccountInfo.IsEmailConfirmed)
+                                        {
+                                            <span class="badge fw-medium bg-success-subtle text-success-emphasis">Terverifikasi</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge fw-medium bg-warning-subtle text-warning-emphasis">Belum diverifikasi</span>
+                                        }
+                                    </div>
+                                </li>
+
+                                @* telepon *@
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text d-flex align-items-center gap-3">
+                                        <i data-lucide="phone" class="settings-row__icon"></i>
+                                        <div>
+                                            <div class="fw-medium">Nomor telepon</div>
+                                            <div class="text-muted small">Kontak yang bisa dihubungi.</div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-row__value d-flex align-items-center justify-content-end gap-2 flex-wrap">
+                                        @if (string.IsNullOrWhiteSpace(myAccountInfo.Phone))
+                                        {
+                                            <span class="text-muted">Belum diisi</span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                @formattedPhonePhoneNumber
+                                            </span>
+                                            @if (myAccountInfo.IsPhoneConfirmed)
+                                            {
+                                                <span class="badge fw-medium bg-success-subtle text-success-emphasis">Terverifikasi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge fw-medium bg-warning-subtle text-warning-emphasis">Belum diverifikasi</span>
+                                            }
+                                        }
+                                    </div>
+                                </li>
+
+                                @* peran *@
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text d-flex align-items-center gap-3">
+                                        <i data-lucide="shield" class="settings-row__icon"></i>
+                                        <div>
+                                            <div class="fw-medium">Peran</div>
+                                            <div class="text-muted small">Hak akses akun di dashboard.</div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-row__value d-flex align-items-center justify-content-end gap-2 flex-wrap">
+                                        @if (myAccountInfo.Role.Count == 0)
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var role in myAccountInfo.Role)
+                                            {
+                                                <span class="badge fw-medium bg-secondary-subtle text-secondary-emphasis">@role</span>
+                                            }
+                                        }
+                                    </div>
+                                </li>
+
+                                @* 2FA *@
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text d-flex align-items-center gap-3">
+                                        <i data-lucide="shield-check" class="settings-row__icon"></i>
+                                        <div>
+                                            <div class="fw-medium">Verifikasi dua langkah</div>
+                                            <div class="text-muted small">Lapisan keamanan tambahan saat masuk.</div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-row__value">
+                                        @if (myAccountInfo.IsTwoFactorEnabled)
+                                        {
+                                            <span class="badge fw-medium bg-success-subtle text-success-emphasis">Aktif</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge fw-medium bg-secondary-subtle text-secondary-emphasis">Nonaktif</span>
+                                        }
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                @* ===== Login & Keamanan ===== *@
+                <section class="tab-pane fade h-100" id="keamanan" role="tabpanel">
+                    <div class="card h-100">
+                        <header class="card-header bg-transparent p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon"><i data-lucide="lock"></i></span>
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Login &amp; Keamanan</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        Lindungi akses ke dashboard.
+                                    </p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="card m-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <div class="fw-medium">Kata sandi</div>
+                                        <div class="text-muted small">Ganti kata sandi secara berkala agar akun tetap aman.</div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
+                                        Ubah
+                                    </button>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <div class="fw-medium">Sesi aktif</div>
+                                        <div class="text-muted small">Keluar dari perangkat lain yang sedang masuk.</div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
+                                        Kelola sesi
+                                    </button>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <div class="fw-medium">Verifikasi Dua Langkah</div>
+                                        <div class="text-muted small">Lapisan keamanan tambahan saat masuk.</div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>
+                                        Aktifkan
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                @* ===== Notifikasi ===== *@
+                <section class="tab-pane fade h-100" id="notifikasi" role="tabpanel">
+                    <div class="card h-100">
+                        <header class="card-header bg-transparent p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon"><i data-lucide="bell"></i></span>
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Notifikasi</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        Pilih kabar yang ingin kamu terima.
+                                    </p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="card m-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <label class="fw-medium" for="notifInquiry">Pesanan baru</label>
+                                        <div class="text-muted small">Beri tahu saat ada pesanan masuk dari pelanggan.</div>
+                                    </div>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="notifInquiry" checked />
+                                    </div>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <label class="fw-medium" for="notifEmail">Ringkasan lewat email</label>
+                                        <div class="text-muted small">Kirim rangkuman aktivitas ke email admin.</div>
+                                    </div>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="notifEmail" />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                @* ===== Bahasa ===== *@
+                <section class="tab-pane fade h-100" id="bahasa" role="tabpanel">
+                    <div class="card h-100">
+                        <header class="card-header bg-transparent p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon"><i data-lucide="globe"></i></span>
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Bahasa</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        Bahasa dan format tampilan dashboard.
+                                    </p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="card m-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <label class="fw-medium" for="language">Bahasa tampilan</label>
+                                        <div class="text-muted small">Bahasa yang dipakai di seluruh dashboard.</div>
+                                    </div>
+                                    <select id="language" class="form-select form-select-sm settings-row__control">
+                                        <option value="id" selected>Bahasa Indonesia</option>
+                                        <option value="en">English</option>
+                                    </select>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                @* ===== Log Aktivitas ===== *@
+                <section class="tab-pane fade h-100" id="log-aktivitas" role="tabpanel">
+                    <div class="card h-100 audit-log-container">
+                        <header class="card-header bg-transparent p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon"><i data-lucide="scroll-text"></i></span>
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Log Aktivitas</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        Riwayat aktivitas dashboard (dihapus otomatis setiap awal bulan).
+                                    </p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="card-body p-3 audit-log-container__body">
+                            @if (Model.TableAuditLogItems.TotalCount == 0)
+                            {
+                                <div class="item-detail__image-placeholder_for_log text-muted small">
+                                    <i data-lucide="history"></i>
+                                    <span>Belum ada aktivitas yang tercatat.</span>
+                                </div>
+                            }
+                            else
+                            {
+                                @* data table *@
+                                @await Html.PartialAsync(
+                                    "~/Pages/Dashboard/Shared/_DataTable.cshtml",
+                                    Model.TableAuditLogItems,
+                                    new ViewDataDictionary(ViewData)
+                                    {
+                                        ["DataTable"] = new
+                                        {
+                                            columns = new[]
+                                            {
+                                                "action",
+                                                "description",
+                                                "entityType",
+                                                "actorUserName",
+                                                "ipAdress",
+                                                "occuredOn",
+                                                "id"
+                                            },
+
+                                            widths = new Dictionary<string, object>
+                                            {
+                                                ["action"] = 220,
+                                                ["description"] = 300,
+                                                ["entityType"] = 160,
+                                                ["actorUserName"] = 200,
+                                                ["ipAdress"] = 150,
+                                                ["occuredOn"] = 190,
+                                                ["id"] = 240
+                                            },
+
+                                            toolbar = new object[]
+                                            {
+                                                new
+                                                {
+                                                    name = "export-csv",
+                                                    label = "Ekspor",
+                                                    icon = "download",
+                                                    variant = "secondary"
+                                                }
+                                            }
+                                        }
+                                    })
+                            }
+                        </div>
+
+                    </div>
+                </section>
+
+                @* ===== Tentang Aplikasi ===== *@
+                <section class="tab-pane fade h-100" id="tentang" role="tabpanel">
+                    <div class="card h-100">
+                        <header class="card-header bg-transparent p-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="item-detail__section-icon"><i data-lucide="info"></i></span>
+                                <div>
+                                    <h2 class="h5 fw-semibold mb-1">Tentang Aplikasi</h2>
+                                    <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                        Informasi versi dan lisensi.
+                                    </p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="card m-3">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item settings-row">
+                                    <div class="fw-medium">Nama aplikasi</div>
+                                    <div class="text-muted">BeasiswaIn</div>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="fw-medium">Tipe aplikasi</div>
+                                    <div class="text-muted">Content & Customer Management System</div>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="fw-medium">Versi</div>
+                                    <code class="item-detail__id">@appVersion</code>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="fw-medium">Hak cipta</div>
+                                    <div class="text-muted">&copy; @DateTime.Now.Year BeasiswaIn</div>
+                                </li>
+                                <li class="list-group-item settings-row">
+                                    <div class="settings-row__text">
+                                        <div class="fw-medium">Panduan penggunaan</div>
+                                        <div class="text-muted small">Pelajari cara memakai fitur dashboard.</div>
+                                    </div>
+                                    <a asp-page="/Dashboard/Panduan" class="btn btn-outline-secondary btn-sm">
+                                        Buka panduan
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+    <script src="~/js/dashboard/dashboard.js" asp-append-version="true"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <script>
+        (() => {
+            const tabs = document.querySelectorAll('#settingsTabs [data-bs-toggle="pill"]');
+
+            // buka tab sesuai #hash di URL (mis. /dashboard/settings#notifikasi)
+            if (location.hash) {
+                const target = document.querySelector(
+                    `#settingsTabs [data-bs-target="${CSS.escape(location.hash)}"]`);
+                if (target) bootstrap.Tab.getOrCreateInstance(target).show();
+            }
+
+            // simpan tab aktif ke URL
+            tabs.forEach(tab => {
+                tab.addEventListener("shown.bs.tab", e => {
+                    history.replaceState(null, "", e.target.dataset.bsTarget);
+                });
+            });
+        })();
+    </script>
+}

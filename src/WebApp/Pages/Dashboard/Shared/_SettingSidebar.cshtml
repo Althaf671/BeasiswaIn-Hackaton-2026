@@ -1,0 +1,106 @@
+@*
+    BeasiswaIn
+    Copyright (c) 2026
+    Modification, redistribution, and commercial use are prohibited.
+*@
+
+@{
+    const string CookieName = "settings_sidebar_collapsed";
+    var collapsed = Context.Request.Cookies[CookieName] == "1";
+    var toggleLabel = collapsed ? "Perluas sidebar" : "Ciutkan sidebar";
+}
+
+<aside id="settingsSidebar"
+       class="settings-sidebar @(collapsed ? "is-collapsed" : "")"
+       data-cookie="@CookieName">
+    <div class="card h-100" style="min-height: 75vh;">
+        <div class="card-body p-3">
+
+            <div class="settings-sidebar__head">
+                <h1 class="settings-sidebar__title">Kelola Akun</h1>
+
+                <button type="button"
+                        id="settingsSidebarToggle"
+                        class="settings-sidebar__toggle d-none d-lg-inline-flex"
+                        aria-controls="settingsTabs"
+                        aria-expanded="@(collapsed ? "false" : "true")"
+                        aria-label="@toggleLabel"
+                        title="@toggleLabel">
+                    <i data-lucide="panel-left-close" class="icon-collapse"></i>
+                    <i data-lucide="panel-left-open" class="icon-expand"></i>
+                </button>
+            </div>
+
+            <div class="nav nav-pills settings-nav flex-column gap-1"
+                 id="settingsTabs" role="tablist" aria-orientation="vertical">
+
+                <div class="settings-nav__group">Akun</div>
+
+                <button class="nav-link active" type="button" role="tab"
+                        data-bs-toggle="pill" data-bs-target="#profil"
+                        title="Profil Saya">
+                    <i data-lucide="user-round"></i>
+                    <span class="settings-nav__label">Profil Saya</span>
+                </button>
+                <button class="nav-link" type="button" role="tab"
+                        data-bs-toggle="pill" data-bs-target="#keamanan"
+                        title="Login &amp; Keamanan">
+                    <i data-lucide="lock"></i>
+                    <span class="settings-nav__label">Login &amp; Keamanan</span>
+                </button>
+
+                <div class="settings-nav__group">Preferensi</div>
+
+                <button class="nav-link" type="button" role="tab"
+                        data-bs-toggle="pill" data-bs-target="#notifikasi"
+                        title="Notifikasi">
+                    <i data-lucide="bell"></i>
+                    <span class="settings-nav__label">Notifikasi</span>
+                </button>
+                <button class="nav-link" type="button" role="tab"
+                        data-bs-toggle="pill" data-bs-target="#bahasa"
+                        title="Bahasa">
+                    <i data-lucide="globe"></i>
+                    <span class="settings-nav__label">Bahasa</span>
+                </button>
+
+                <div class="settings-nav__group">Lainnya</div>
+
+                <button class="nav-link" type="button" role="tab"
+                        data-bs-toggle="pill" data-bs-target="#log-aktivitas"
+                        title="Log Aktivitas">
+                    <i data-lucide="scroll-text"></i>
+                    <span class="settings-nav__label">Log Aktivitas</span>
+                </button>
+                <button class="nav-link" type="button" role="tab"
+                        data-bs-toggle="pill" data-bs-target="#tentang"
+                        title="Tentang Aplikasi">
+                    <i data-lucide="info"></i>
+                    <span class="settings-nav__label">Tentang Aplikasi</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<script>
+    (() => {
+        const sidebar = document.getElementById("settingsSidebar");
+        const toggle = document.getElementById("settingsSidebarToggle");
+        if (!sidebar || !toggle) return;
+
+        const cookieName = sidebar.dataset.cookie;
+
+        toggle.addEventListener("click", () => {
+            const collapsed = sidebar.classList.toggle("is-collapsed");
+            const label = collapsed ? "Perluas sidebar" : "Ciutkan sidebar";
+
+            toggle.setAttribute("aria-expanded", String(!collapsed));
+            toggle.setAttribute("aria-label", label);
+            toggle.title = label;
+
+            document.cookie =
+                `${cookieName}=${collapsed ? 1 : 0}; path=/; max-age=31536000; SameSite=Lax`;
+        });
+    })();
+</script>

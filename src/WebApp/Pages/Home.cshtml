@@ -1,0 +1,22 @@
+@page
+@using BeasiswaIn.Web.Pages
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@*
+    Section ini akan otomatis di render di tag head pada _Layout.cshtml
+    nanti kode tailwind yang ditulis di HTML ini akan jadi class tailwind.
+    PASTIKAN section ini selalu ada pada halaman yang mau menggunakan tailwind
+*@
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/tailwind/landing.css"
+          asp-append-version="true" />
+}
+
+<div class="text-center">
+    <h1 class="display-4 text-red">Welcome</h1>
+</div>
+

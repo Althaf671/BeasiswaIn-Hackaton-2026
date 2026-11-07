@@ -1,0 +1,156 @@
+@*
+    BeasiswaIn
+    Copyright (c) 2026
+    Modification, redistribution, and commercial use are prohibited.
+*@
+
+@{
+    var path = Context.Request.Path;
+
+    string Active(string href) =>
+        path.StartsWithSegments(href, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+
+<header class="app-navbar mx-4 mt-4 mx-md-5 mt-md-5 py-2 px-3">
+
+    @* logo *@
+    <a href="/" class="app-navbar-brand" aria-label="Saranin">
+        <img 
+            width="30" 
+            height="30" 
+            src="https://res.cloudinary.com/dyxqjq1yp/image/upload/v1793208021/Studio-Logo_srqa3r.webp" 
+            alt="logo BeasiswaIn" 
+            style="border-radius: 100%;"
+            />
+        <span class="app-navbar-brand-name">BeasiswaIn Admin</span>
+    </a>
+
+    @* nav items *@
+    <nav class="app-navbar-menu" id="app-navbar-menu" aria-label="Navigasi utama">
+        <ul class="app-navbar-list">
+            <li>
+                <a asp-page="/Dashboard/Index"
+                    class="app-navbar-link @(path.Equals("/dashboard", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a asp-page="/Dashboard/ScholarshipManagement/Scholarships"
+                class="app-navbar-link @Active("/dashboard/scholarship-management")">
+                    Beasiswa
+                </a>
+            </li>
+            <li>
+                <a asp-page="/Dashboard/CompetitionManagement/Competitions"
+                class="app-navbar-link @Active("/dashboard/competition-management")">
+                    Perlombaan
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="app-navbar-right">
+
+        @* notifikasi *@
+        <button 
+            class="app-navbar-icon-btn" 
+            type="button" 
+            data-bs-toggle="offcanvas" 
+            data-bs-target="#offcanvasRight" 
+            aria-controls="offcanvasRight">
+            <i data-lucide="bell"></i>
+        </button>
+
+        @* sidebar notifikasi *@
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header border-bottom">
+                <h5 id="offcanvasRightLabel">Notifikasi</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                ...
+            </div>
+        </div>
+
+        @* profile menu *@
+        <div class="app-navbar-profile">
+            <button type="button"
+                    class="app-navbar-profile-btn"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    aria-controls="app-navbar-profile-menu">
+                <span class="app-navbar-avatar">
+                    <i data-lucide="compass"></i>
+                </span>
+                <span class="app-navbar-profile-name">Lainnya</span>
+                <i data-lucide="chevron-down" class="app-navbar-chevron"></i>
+            </button>
+
+            <div class="app-navbar-dropdown" id="app-navbar-profile-menu" role="menu" hidden>
+                <a asp-page="/Dashboard/AccountSettings/MyProfile" class="app-navbar-dropdown-item" role="menuitem">
+                    <i data-lucide="user-round"></i> Profil Saya
+                </a>
+                <a href="/" class="app-navbar-dropdown-item" role="menuitem">
+                    <i data-lucide="globe"></i> Lihat Website
+                </a>
+                <a asp-page="/Dashboard/Panduan" class="app-navbar-dropdown-item" role="menuitem">
+                    <i data-lucide="info"></i> Panduan
+                </a>
+                <a asp-page="/Dashboard/AccountSettings/Index" class="app-navbar-dropdown-item border-top" role="menuitem">
+                    <i data-lucide="settings"></i> Pengaturan
+                </a>
+                <form hx-boost="false" class="border-top" method="post" asp-page="/Dashboard/Logout">
+                    <button type="submit" class="app-navbar-dropdown-item app-navbar-dropdown-item--danger" role="menuitem">
+                        <i data-lucide="log-out"></i> Keluar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        @* hamburger (mobile) *@
+        <button type="button"
+                class="app-navbar-toggle"
+                aria-label="Buka navigasi"
+                aria-expanded="false"
+                aria-controls="app-navbar-menu">
+            <i data-lucide="menu"></i>
+        </button>
+
+    </div>
+
+</header>
+
+<script>
+  (function () {
+    var navbar = document.querySelector('.app-navbar');
+    if (!navbar) return;
+
+    var profileBtn = navbar.querySelector('.app-navbar-profile-btn');
+    var dropdown = navbar.querySelector('.app-navbar-dropdown');
+    var toggleBtn = navbar.querySelector('.app-navbar-toggle');
+
+    function setProfile(open) {
+      profileBtn.setAttribute('aria-expanded', open);
+      dropdown.hidden = !open;
+    }
+
+    profileBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setProfile(dropdown.hidden);
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!dropdown.contains(e.target)) setProfile(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setProfile(false);
+    });
+
+    toggleBtn.addEventListener('click', function () {
+      var open = navbar.classList.toggle('is-open');
+      toggleBtn.setAttribute('aria-expanded', open);
+    });
+  })();
+  
+</script>
