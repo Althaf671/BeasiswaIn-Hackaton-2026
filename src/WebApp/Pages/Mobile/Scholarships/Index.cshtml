@@ -1,0 +1,175 @@
+﻿@page "/list-beasiswa"
+@model BeasiswaIn.Web.Pages.Mobile.Scholarships.IndexModel
+@{
+    ViewData["Title"] = "Beasiswaku";
+    ViewData["Nav"] = "beasiswa";
+}
+
+<header class="m-hero">
+    <div class="flex w-full items-center justify-between gap-3">
+        <div class="min-w-0">
+            <h1 class="text-2xl font-bold leading-snug tracking-tight">Beasiswaku</h1>
+        </div>
+        <partial name="_HeroBell" />
+    </div>
+</header>
+
+<main class="m-content m-nav-space px-4 pt-4">
+    <div class="sticky top-[var(--m-header-height)] z-20 -mx-4 flex items-center gap-2 bg-white/95 px-4 py-3 backdrop-blur-md">
+        <div class="relative flex flex-1 items-center">
+            <svg class="pointer-events-none absolute left-3.5 h-4 w-4 text-stone-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <input id="scholarshipSearch" class="h-11 w-full rounded-xl border border-stone-200 bg-white pl-10 pr-3.5 text-[13px] text-stone-900 shadow-sm placeholder:text-stone-400 focus:border-forest-light focus:ring-1 focus:ring-forest-light focus:outline-none" placeholder="Cari beasiswa tersimpan..." type="search" />
+        </div>
+        <button id="openFilter" type="button" aria-label="Filter beasiswa" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forest-light text-white shadow-sm transition hover:bg-forest active:scale-95">
+            <svg class="h-4 w-4 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V19l-4 2v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+    </div>
+
+    <div id="scholarshipGrid" class="grid grid-cols-2 gap-3 pt-1">
+        @{
+            ViewData["CardGrid"] = true;
+        }
+        @foreach (var item in Model.Items)
+        {
+            <partial name="_ExploreCard" model="item" />
+        }
+    </div>
+    <p id="scholarshipEmpty" class="hidden px-1 py-8 text-center text-xs text-stone-500">Tidak ada beasiswa yang cocok.</p>
+</main>
+
+<button id="openAdd" type="button" aria-label="Tambah beasiswa" class="m-fab">
+    <svg class="h-7 w-7 stroke-current" fill="none" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</button>
+
+@await Html.PartialAsync("_BottomNav")
+
+<div id="input-modal" class="m-overlay hidden items-center justify-center p-4">
+    <div class="flex max-h-[90dvh] w-full max-w-[380px] flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-2xl">
+        <div class="border-b border-stone-100 bg-white p-4 pb-3">
+            <h2 class="text-base font-bold tracking-tight text-stone-900">Tambah Info Beasiswa</h2>
+            <p class="mt-0.5 text-[11px] leading-snug text-stone-500">Bantu teman-teman lain jika kamu memiliki informasi beasiswa baru</p>
+        </div>
+        <div class="no-scrollbar space-y-3.5 overflow-y-auto p-4 text-xs">
+            <div class="flex justify-center">
+                <div class="inline-block rounded bg-lime-100/70 px-2 py-0.5 text-center text-[10px] font-semibold text-[#00613a]">Pilih salah satu metode:</div>
+            </div>
+            <div class="space-y-1.5">
+                <label class="flex items-center gap-1.5 text-xs font-semibold text-stone-800" for="input-beasiswa-url">
+                    <span class="h-2 w-2 rounded-full bg-[#00613a]"></span>
+                    Opsi 1: Tautan / Website Beasiswa
+                </label>
+                <div class="relative flex items-center">
+                    <span class="absolute left-3 text-xs text-stone-400">🔗</span>
+                    <input id="input-beasiswa-url" type="url" placeholder="https://website-beasiswa.com/..." class="h-10 w-full rounded-lg border border-stone-200 bg-white pl-8 pr-3 text-xs text-stone-800 placeholder:text-stone-400 focus:border-[#00613a] focus:outline-none" />
+                </div>
+            </div>
+            <div class="my-2 flex items-center gap-2">
+                <div class="h-px flex-1 bg-stone-200"></div>
+                <span class="px-1 text-[10px] font-bold uppercase tracking-wider text-stone-400">ATAU</span>
+                <div class="h-px flex-1 bg-stone-200"></div>
+            </div>
+            <div class="space-y-1.5">
+                <label class="flex items-center gap-1.5 text-xs font-semibold text-stone-800">
+                    <span class="h-2 w-2 rounded-full bg-[#00613a]"></span>
+                    Opsi 2: Berkas Dokumen / Brosur (PDF)
+                </label>
+                <label for="file-upload-input" class="group flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-200 bg-stone-50/50 p-3.5 text-center transition hover:border-[#00613a] hover:bg-[#EBF4E5]/30">
+                    <div class="mb-1.5 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#00613a] shadow-sm transition group-hover:scale-105">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </div>
+                    <p id="file-label" class="text-xs font-medium text-stone-700">Unggah Dokumen / Flyer (PDF)</p>
+                    <p class="mt-0.5 text-[10px] text-stone-400">Maksimal ukuran berkas 10MB</p>
+                    <input id="file-upload-input" type="file" accept=".pdf,application/pdf" class="hidden" />
+                </label>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 border-t border-stone-100 bg-stone-50/80 p-3.5">
+            <button id="cancelAdd" type="button" class="h-10 flex-1 rounded-lg border border-stone-200 bg-stone-200 text-xs font-semibold text-stone-700 transition hover:bg-stone-100 active:scale-95">Batal</button>
+            <button id="submitAdd" type="button" class="h-10 flex-1 rounded-lg bg-[#00613a] text-xs font-semibold text-white shadow-sm transition hover:bg-[#004f2e] active:scale-95">Kirimkan</button>
+        </div>
+    </div>
+</div>
+
+<div id="success-modal" class="m-overlay hidden items-center justify-center p-5">
+    <div class="flex w-full max-w-[380px] flex-col items-center rounded-2xl border border-stone-200/80 bg-white p-5 text-center shadow-2xl">
+        <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#E0F2E9] text-[#00613a] shadow-sm">
+            <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <h3 class="text-base font-bold leading-snug text-stone-900">Data Sedang Diverifikasi</h3>
+        <p class="mt-2 px-1 text-xs leading-relaxed text-stone-600">Input data beasiswa Anda berhasil dikirim dan sedang menunggu diverifikasi oleh tim kami sebelum diterbitkan. Informasi status beasiswa yang Anda berikan nantinya akan kami infokan melalui notifikasi.</p>
+        <button id="closeSuccess" type="button" class="mt-5 h-10 w-full rounded-lg bg-[#00613a] text-xs font-semibold text-white shadow-sm transition hover:bg-[#004f2e] active:scale-95">Mengerti</button>
+    </div>
+</div>
+
+<div id="filter-modal" class="m-overlay hidden flex-col justify-end">
+    <div id="filterBackdrop" class="absolute inset-0"></div>
+    <div class="relative flex max-h-[85dvh] w-full max-w-[420px] flex-col self-center overflow-hidden rounded-t-3xl border-t border-stone-200/80 bg-white pb-[env(safe-area-inset-bottom)] shadow-2xl">
+        <div class="flex justify-center pb-1 pt-3"><div class="h-1 w-10 rounded-full bg-stone-300"></div></div>
+        <div class="flex items-center justify-between border-b border-stone-100 bg-white px-5 py-3">
+            <div class="flex items-center gap-2">
+                <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#E0F2E9] text-[#00613a]">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"></path></svg>
+                </div>
+                <h2 class="text-base font-bold tracking-tight text-stone-900">Filter Beasiswa</h2>
+            </div>
+            <button id="closeFilter" type="button" aria-label="Tutup filter" class="flex h-8 w-8 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-200">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+        </div>
+        <div class="no-scrollbar space-y-5 overflow-y-auto p-5 text-xs">
+            <div class="space-y-3">
+                <label class="block text-xs font-bold text-stone-900">Urutkan Berdasarkan</label>
+                <div class="flex flex-wrap gap-2 pt-0.5">
+                    @foreach (var label in new[] { "Terbaru", "Terpopuler", "Terlama", "Batas Waktu Terdekat" })
+                    {
+                        <label class="cursor-pointer">
+                            <input type="checkbox" class="peer hidden" />
+                            <span class="inline-flex items-center gap-1.5 rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs font-medium text-stone-700 shadow-sm transition hover:border-[#00613a] peer-checked:border-[#00613a] peer-checked:bg-[#00613a] peer-checked:text-white">@label</span>
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-stone-900">Jenjang Pendidikan</label>
+                <div class="flex flex-wrap gap-2">
+                    @foreach (var label in new[] { "SMP", "SMA / SMK", "D3 / D4", "S1 / Sarjana", "S2 / Magister" })
+                    {
+                        <label class="cursor-pointer">
+                            <input type="checkbox" class="peer hidden" />
+                            <span class="inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-700 shadow-sm transition hover:border-[#00613a] peer-checked:border-[#00613a] peer-checked:bg-[#00613a] peer-checked:text-white">@label</span>
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-stone-900">Tipe Beasiswa</label>
+                <div class="grid grid-cols-3 gap-2">
+                    @foreach (var label in new[] { "Fully Funded", "Partially Funded", "Bantuan UKT" })
+                    {
+                        <label class="cursor-pointer text-center">
+                            <input type="checkbox" class="peer hidden" />
+                            <span class="block rounded-lg border border-stone-200 px-2 py-2 text-[11px] font-medium text-stone-700 transition peer-checked:border-[#00613a] peer-checked:bg-[#00613a] peer-checked:text-white">@label</span>
+                        </label>
+                    }
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-stone-900">Batas Pendaftaran (Tanggal)</label>
+                <div id="deadlineChips" class="grid grid-cols-4 gap-1.5">
+                    @foreach (var label in new[] { "Semua", "Minggu Ini", "Bulan Ini", "Tahun Ini" })
+                    {
+                        <button type="button" data-deadline class="rounded-lg border border-stone-200 px-1 py-2 text-[11px] font-medium text-stone-600 transition hover:border-[#00613a]">@label</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 border-t border-stone-100 bg-stone-50/80 p-4">
+            <button id="resetFilter" type="button" class="h-11 flex-1 rounded-lg border border-stone-300 bg-white text-xs font-semibold text-stone-700 transition hover:bg-stone-100 active:scale-95">Reset</button>
+            <button id="applyFilter" type="button" class="h-11 flex-[2] rounded-lg bg-[#00613a] text-xs font-semibold text-white shadow-sm transition hover:bg-[#004f2e] active:scale-95">Terapkan Filter</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/mobile/scholarships.js" asp-append-version="true"></script>
+}

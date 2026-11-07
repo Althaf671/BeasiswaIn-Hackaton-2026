@@ -1,0 +1,169 @@
+@page "/peringkat"
+@model BeasiswaIn.Web.Pages.Mobile.Leaderboard.IndexModel
+@{
+    ViewData["Title"] = "Leaderboard";
+    ViewData["Nav"] = "peringkat";
+}
+
+<header class="m-hero">
+    <div class="flex w-full items-center justify-between gap-3">
+        <div class="min-w-0">
+            <h1 class="text-2xl font-black leading-tight tracking-tight">Leaderboard</h1>
+        </div>
+        <partial name="_HeroBell" />
+    </div>
+</header>
+
+<main id="rankList" class="m-content m-nav-space gap-5 bg-[#f4f9f6] px-4 pt-5">
+    <section class="relative pb-1 pt-2">
+        <div aria-hidden="true" class="arch-line"></div>
+        <div class="relative z-10 grid grid-cols-3 items-end gap-2">
+            <div class="flex flex-col items-center text-center">
+                <div class="relative mb-1">
+                    <div class="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#dcf1e5] shadow-sm">
+                        <svg class="h-11 w-11" fill="none" viewBox="0 0 64 64"><circle cx="32" cy="32" fill="#7d9b4b" r="28"></circle><ellipse cx="32" cy="36" fill="#eaf2df" rx="20" ry="18"></ellipse><ellipse cx="23" cy="27" fill="#ffffff" rx="9" ry="9" stroke="#364d1f" stroke-width="2"></ellipse><ellipse cx="41" cy="27" fill="#ffffff" rx="9" ry="9" stroke="#364d1f" stroke-width="2"></ellipse><circle cx="23" cy="27" fill="#203310" r="4.5"></circle><circle cx="41" cy="27" fill="#203310" r="4.5"></circle><polygon fill="#e69c24" points="32,32 29,38 35,38"></polygon></svg>
+                    </div>
+                    <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full border border-white bg-[#005f38] px-2 text-[9.5px] font-extrabold text-white">#2</span>
+                </div>
+                <h3 class="mt-1.5 text-xs font-bold text-[#1a2e21]">Alena D.</h3>
+                <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-[#005f38] px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm">1.469 pt</div>
+                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">27 link</span>
+                <div class="flex w-full flex-col items-center justify-center rounded-t-xl bg-[#005f38] pb-3 pt-4 text-white shadow-sm">
+                    <span class="text-2xl font-black leading-none">2</span>
+                    <span class="mt-0.5 text-[9px] font-bold tracking-wider opacity-90">PERINGKAT</span>
+                </div>
+            </div>
+            <div class="-mt-5 flex flex-col items-center text-center">
+                <div class="mb-1 text-[#e2991e]">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.4 4.8 5.3.8-3.8 3.7.9 5.3L12 14.1l-4.8 2.5.9-5.3L4.3 7.6l5.3-.8L12 2z"></path></svg>
+                </div>
+                <div class="relative mb-2.5">
+                    <div class="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white bg-[#d3ede0] shadow-md">
+                        <svg class="h-16 w-16" fill="none" viewBox="0 0 70 70"><polygon fill="#1b4332" points="35,11 15,21 35,26 55,21"></polygon><circle cx="35" cy="44" fill="#006038" r="23"></circle><ellipse cx="35" cy="48" fill="#eaf6f0" rx="16" ry="14"></ellipse><circle cx="28" cy="42" fill="#ffffff" r="7" stroke="#102b1f" stroke-width="1.8"></circle><circle cx="42" cy="42" fill="#ffffff" r="7" stroke="#102b1f" stroke-width="1.8"></circle><circle cx="28" cy="42" fill="#12271c" r="3.5"></circle><circle cx="42" cy="42" fill="#12271c" r="3.5"></circle><polygon fill="#f59e0b" points="35,46 32,52 38,52"></polygon></svg>
+                    </div>
+                    <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white bg-[#ffdd6b] px-2.5 py-0.5 text-[9px] font-extrabold text-[#784f00] shadow-sm">#1 Juara</span>
+                </div>
+                <h3 class="mt-1 text-[13px] font-extrabold text-[#112419]">Davis C.</h3>
+                <div class="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[#004e2e] px-2.5 py-0.5 text-[11px] font-black text-white shadow-sm">2.569 pt</div>
+                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">48 link disetujui</span>
+                <div class="flex w-full flex-col items-center justify-center rounded-t-xl bg-[#004e2e] pb-4 pt-6 text-white shadow-md">
+                    <span class="text-3xl font-black leading-none">1</span>
+                    <span class="mt-0.5 text-[9.5px] font-bold tracking-wider opacity-90">TERATAS</span>
+                </div>
+            </div>
+            <div class="flex flex-col items-center text-center">
+                <div class="relative mb-1">
+                    <div class="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#dcf1e5] shadow-sm">
+                        <svg class="h-11 w-11" fill="none" viewBox="0 0 64 64"><circle cx="32" cy="32" fill="#789650" r="28"></circle><ellipse cx="32" cy="36" fill="#fdfcf7" rx="20" ry="18"></ellipse><ellipse cx="23" cy="27" fill="#ffffff" rx="9" ry="9" stroke="#364d1f" stroke-width="2"></ellipse><circle cx="23" cy="27" fill="#203310" r="4.5"></circle><polygon fill="#e69c24" points="32,32 29,38 35,38"></polygon></svg>
+                    </div>
+                    <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full border border-white bg-[#005f38] px-2 text-[9.5px] font-extrabold text-white">#3</span>
+                </div>
+                <h3 class="mt-1.5 text-xs font-bold text-[#1a2e21]">Craig G.</h3>
+                <div class="mt-1 inline-flex items-center gap-1 rounded-full bg-[#005f38] px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm">1.053 pt</div>
+                <span class="mb-2 mt-0.5 text-[9.5px] font-medium text-gray-400">19 link</span>
+                <div class="flex w-full flex-col items-center justify-center rounded-t-xl bg-[#005f38] pb-3 pt-4 text-white shadow-sm">
+                    <span class="text-2xl font-black leading-none">3</span>
+                    <span class="mt-0.5 text-[9px] font-bold tracking-wider opacity-90">PERINGKAT</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="flex items-center justify-between gap-2.5 rounded-2xl border border-[#cbe4d4] bg-[#eaf5ee] p-3.5 shadow-sm">
+        <div class="flex items-center gap-2.5">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#005f38] text-sm font-extrabold text-white shadow-sm">#4</div>
+            <div>
+                <span class="text-[12.5px] font-bold text-[#143221]">Kamu di peringkat #4</span>
+                <p class="mt-0.5 text-[10.5px] font-medium leading-tight text-[#4b6a57]">Kirim 2 link lagi untuk tembus Top 3</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-3">
+        <div class="flex w-full flex-wrap items-center justify-between gap-2">
+            <h2 class="text-sm font-extrabold text-[#112419]">Daftar Peringkat</h2>
+            <div id="rankTabs" class="flex shrink-0 items-center gap-1 rounded-lg bg-gray-100/80 p-0.5">
+                <button type="button" data-rank-tab="all" class="rounded-md border border-[#005f38] bg-[#005f38] px-3 py-1 text-[11px] font-bold text-white shadow-sm">Semua</button>
+                <button type="button" data-rank-tab="10" class="rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-gray-600 shadow-sm">Top 10</button>
+                <button type="button" data-rank-tab="50" class="rounded-md border border-gray-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-gray-600 shadow-sm">Top 50</button>
+            </div>
+        </div>
+        <div class="relative">
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            </div>
+            <input id="rankSearch" class="h-11 w-full rounded-xl border border-gray-200 bg-white py-3 pl-9 pr-3 text-[13px] placeholder:text-gray-400 focus:border-[#005f38] focus:outline-none focus:ring-1 focus:ring-[#005f38]" placeholder="Cari nama kontributor..." type="search" />
+        </div>
+        <div class="relative">
+        <div id="rankScroll" class="rank-window no-scrollbar flex flex-col gap-2 overflow-y-auto">
+            @foreach (var row in Model.Rows)
+            {
+                <article data-rank-row data-rank="@row.Rank" data-name="@row.Name" class="@(row.IsYou ? "relative flex min-h-[3.25rem] shrink-0 items-center justify-between rounded-xl bg-[#004e2e] p-2.5 text-white shadow-md ring-2 ring-[#005f38]/30" : "flex min-h-[3.25rem] shrink-0 items-center justify-between rounded-xl border border-gray-100 bg-white p-2.5 transition-colors hover:bg-gray-50/70")">
+                    <div class="flex items-center gap-2.5">
+                        @if (row.IsYou)
+                        {
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 text-xs font-extrabold text-white">#@row.Rank</div>
+                        }
+                        else
+                        {
+                            <span class="w-5 text-center text-xs font-bold text-gray-500">#@row.Rank</span>
+                        }
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full" style="background:@row.Color">
+                            <svg class="h-6 w-6" viewBox="0 0 40 40"><circle cx="15" cy="18" fill="#ffffff" r="4"></circle><circle cx="25" cy="18" fill="#ffffff" r="4"></circle><circle cx="15" cy="18" fill="#10271c" r="1.8"></circle><circle cx="25" cy="18" fill="#10271c" r="1.8"></circle><polygon fill="#f59e0b" points="20,21 18,25 22,25"></polygon></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-xs font-bold @(row.IsYou ? "text-white" : "text-[#1c2921]")">@row.Name</span>
+                                @if (row.IsYou)
+                                {
+                                    <span class="rounded bg-[#ffdd6b] px-1.5 py-0.5 text-[8px] font-extrabold leading-none text-[#784f00]">KAMU</span>
+                                }
+                            </div>
+                            <p class="text-[10px] font-medium @(row.IsYou ? "text-[#dcf4e7]/80" : "text-gray-500")">@row.Detail</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-extrabold @(row.IsYou ? "text-white" : "text-[#1c2921]")">@row.Points pt</span>
+                        <p class="text-[9px] @(row.IsYou ? "text-[#dcf4e7]/80" : "text-gray-400")">Total poin</p>
+                    </div>
+                </article>
+            }
+        </div>
+        <div id="rankFade" class="rank-fade pointer-events-none absolute inset-x-0 bottom-0"></div>
+        </div>
+    </section>
+
+    <section class="mt-8 flex flex-col gap-3.5 pb-4">
+        <div class="px-2 text-center">
+            <h3 class="text-xs font-extrabold text-[#112419]">Cara Mendapat Poin</h3>
+            <p class="mt-0.5 text-[10.5px] font-medium text-gray-500">Langkah mudah berkontribusi untuk sesama pencari beasiswa</p>
+        </div>
+        <div class="flex items-start gap-3 rounded-2xl border border-emerald-50 bg-[#f7fbf9] p-3">
+            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#ddf4e7] text-[#005f38]">1</div>
+            <div>
+                <h4 class="text-[11.5px] font-bold text-[#143221]">Kirim link beasiswa</h4>
+                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Tempel URL resmi yang kamu temukan dari portal kampus atau instansi.</p>
+            </div>
+        </div>
+        <div class="flex items-start gap-3 rounded-2xl border border-emerald-50 bg-[#f7fbf9] p-3">
+            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#ddf4e7] text-[#005f38]">2</div>
+            <div>
+                <h4 class="text-[11.5px] font-bold text-[#143221]">Admin memeriksa</h4>
+                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Divalidasi keabsahannya dengan tenggat waktu dan sumber resmi.</p>
+            </div>
+        </div>
+        <div class="flex items-start gap-3 rounded-2xl border border-emerald-50 bg-[#f7fbf9] p-3">
+            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#ddf4e7] text-[#005f38]">3</div>
+            <div>
+                <h4 class="text-[11.5px] font-bold text-[#143221]">Raih poin kontribusi</h4>
+                <p class="mt-0.5 text-[10px] font-medium leading-relaxed text-gray-500">Poin langsung bertambah setelah disetujui, menaikkan rankingmu.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+@await Html.PartialAsync("_BottomNav")
+
+@section Scripts {
+    <script src="~/js/mobile/leaderboard.js" asp-append-version="true"></script>
+}

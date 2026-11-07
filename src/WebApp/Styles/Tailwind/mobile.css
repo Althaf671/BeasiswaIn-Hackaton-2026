@@ -1,0 +1,286 @@
+@import "tailwindcss" source(none);
+
+/*
+Stylesheet untuk halaman mahasiswa (layout _MobileLayout).
+Build: npm run tw:mobile  |  watch: npm run tw:mobile:watch
+*/
+@source "../../Pages/Index.cshtml";
+@source "../../Pages/Shared/_MobileLayout.cshtml";
+@source "../../Pages/Shared/_BottomNav.cshtml";
+@source "../../Pages/Shared/_ExploreCard.cshtml";
+@source "../../Pages/Shared/_HeroBell.cshtml";
+@source "../../Pages/Mobile";
+@source "../../wwwroot/js/mobile";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", Inter, system-ui, sans-serif;
+
+  --color-forest: #004e2e;
+  --color-forest-dark: #003a22;
+  --color-forest-light: #00613a;
+  --color-forest-soft: #e9f5ee;
+  --color-forest-border: #cce6d7;
+  --color-mint: #f2f8f5;
+  --color-sand: #fdfcf9;
+
+  --color-brand-50: #f2f8f5;
+  --color-brand-100: #e1efe8;
+  --color-brand-200: #c0dec9;
+  --color-brand-500: #007a48;
+  --color-brand-600: #00623a;
+  --color-brand-700: #004e2e;
+  --color-brand-800: #003a22;
+
+  --shadow-subtle: 0 2px 10px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 8px 30px rgba(0, 78, 46, 0.08);
+}
+
+:root {
+  --m-column: 420px;
+  --m-nav-height: 4rem;
+  --m-header-height: calc(var(--m-safe-top) + 4.5rem);
+  --m-safe-top: env(safe-area-inset-top, 0px);
+  --m-safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  [role="button"],
+  label[for] {
+    cursor: pointer;
+  }
+
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+}
+
+@layer components {
+  .m-body {
+    @apply min-h-dvh overflow-x-hidden bg-[#ebeae3] font-sans text-slate-800 antialiased;
+  }
+
+  .m-shell {
+    @apply relative mx-auto flex min-h-dvh w-full max-w-[420px] flex-col bg-white sm:shadow-2xl;
+  }
+
+  .m-hero {
+    @apply sticky top-0 z-30 box-border flex w-screen shrink-0 items-center justify-between text-white shadow-md;
+    height: var(--m-header-height);
+    margin-left: calc(50% - 50vw);
+    padding-top: var(--m-safe-top);
+    padding-left: max(1.25rem, calc(50vw - var(--m-column) / 2 + 1.25rem));
+    padding-right: max(1.25rem, calc(50vw - var(--m-column) / 2 + 1.25rem));
+    background-color: #00613a;
+    background-image: linear-gradient(to bottom, #004d2c, #00613a);
+  }
+
+  .rank-window {
+    max-height: calc(7 * 3.25rem + 6 * 0.5rem);
+  }
+
+  .rank-fade {
+    height: 9rem;
+    background: linear-gradient(to top, rgb(244 249 246 / 0.92) 0%, rgb(244 249 246 / 0.45) 42%, transparent 100%);
+    backdrop-filter: blur(10px);
+    -webkit-mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.72) 28%, rgb(0 0 0 / 0.28) 62%, transparent 100%);
+    mask-image: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.72) 28%, rgb(0 0 0 / 0.28) 62%, transparent 100%);
+  }
+
+  .m-hero-icon-btn {
+    @apply relative flex h-10 w-10 shrink-0 items-center justify-center text-white;
+  }
+
+  .m-hero-icon-btn > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .m-hero-icon-btn > i {
+    display: inline-flex;
+    width: 1.25rem;
+    height: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .m-detail-bar {
+    @apply m-fixed-column z-40 flex items-center justify-between gap-3 border-t border-[#E8ECE6] bg-white/95 px-4 py-2.5 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-md;
+    bottom: 0;
+    padding-bottom: calc(0.625rem + var(--m-safe-bottom));
+  }
+
+  .expandable-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .expandable-grid.is-expanded {
+    grid-template-rows: 1fr;
+  }
+
+  .expandable-inner {
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1), transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .expandable-grid.is-expanded .expandable-inner {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .m-content {
+    @apply flex flex-1 flex-col;
+  }
+
+  /* Leaves room for the fixed bottom nav (and the iOS home indicator). */
+  .m-nav-space {
+    padding-bottom: calc(var(--m-nav-height) + var(--m-safe-bottom) + 1.5rem);
+  }
+
+  .m-bottom-nav {
+    @apply m-fixed-column bottom-0 z-40 flex items-stretch justify-around border-t border-slate-200/90 bg-white/95 px-1 backdrop-blur-md;
+    height: calc(var(--m-nav-height) + var(--m-safe-bottom));
+    padding-bottom: var(--m-safe-bottom);
+  }
+
+  .m-nav-item {
+    @apply flex flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-slate-400 transition-colors hover:text-slate-600;
+  }
+
+  .m-nav-item[aria-current="page"] {
+    @apply font-bold text-forest;
+  }
+
+  .m-nav-icon {
+    @apply flex h-7 w-11 items-center justify-center rounded-xl transition-colors;
+  }
+
+  .m-nav-item[aria-current="page"] .m-nav-icon {
+    @apply bg-brand-100;
+  }
+
+  .m-fab {
+    @apply fixed z-40 flex h-14 w-14 items-center justify-center rounded-full bg-forest-light text-white shadow-2xl transition hover:bg-forest active:scale-95;
+    right: max(1.25rem, calc(50% - var(--m-column) / 2 + 1.25rem));
+    bottom: calc(var(--m-nav-height) + var(--m-safe-bottom) + 1rem);
+  }
+
+  .m-chat-composer {
+    @apply m-fixed-column z-30 border-t border-slate-100 bg-white px-3.5 py-3;
+    bottom: calc(var(--m-nav-height) + var(--m-safe-bottom));
+  }
+
+  #chatScroll[data-empty="true"] {
+    justify-content: center;
+    min-height: calc(100dvh - var(--m-header-height) - var(--m-nav-height) - var(--m-safe-bottom) - 5.75rem);
+  }
+
+  .m-section-title {
+    @apply flex items-center gap-1.5 text-base font-bold tracking-tight text-gray-900;
+  }
+
+  .m-section-subtitle {
+    @apply mt-0.5 text-[11px] text-gray-500;
+  }
+
+  .m-link {
+    @apply text-xs font-semibold text-forest-light hover:underline;
+  }
+
+  .m-card {
+    @apply rounded-2xl border border-slate-200 bg-white p-4 shadow-sm;
+  }
+
+  .m-field {
+    @apply w-full rounded-full border border-[#E3E4DC] bg-white text-sm text-[#2A2E26] shadow-sm placeholder:text-stone-400 focus:border-transparent focus:ring-2 focus:ring-forest-light focus:outline-none;
+  }
+
+  .m-btn-primary {
+    @apply flex w-full items-center justify-center gap-2 rounded-full bg-forest px-6 py-3.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(0,78,46,0.35)] transition hover:bg-forest-dark active:scale-[0.99];
+  }
+
+  .m-btn-outline {
+    @apply flex w-full items-center justify-center gap-2.5 rounded-full border border-[#E5E6DE] bg-white py-3 text-sm font-bold text-[#2A2E26] shadow-sm transition hover:bg-stone-50 active:scale-[0.99];
+  }
+
+  .m-overlay {
+    @apply fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm;
+  }
+
+  .arch-line {
+    position: absolute;
+    top: 55px;
+    left: 14%;
+    right: 14%;
+    height: 48px;
+    border-top: 1.5px dashed #a7d3bd;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .dot-grid-bg {
+    background-image: radial-gradient(#cbd5c0 1.2px, transparent 1.2px);
+    background-size: 16px 16px;
+  }
+
+  .typing-cursor::after {
+    content: "|";
+    color: #142713;
+    font-weight: 400;
+    animation: m-blink 1s step-end infinite;
+    margin-left: 1px;
+  }
+
+  .edit-mode-active {
+    border-color: #007a48 !important;
+    background-color: #fafffc !important;
+    box-shadow: 0 0 0 2px rgba(0, 122, 72, 0.15) !important;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    line-height: 1;
+  }
+
+  .material-symbols-filled {
+    font-variation-settings: "FILL" 1, "wght" 700, "GRAD" 0, "opsz" 24;
+  }
+}
+
+/* Fixed bars stay inside the centered column instead of the viewport edge. */
+@utility m-fixed-column {
+  position: fixed;
+  left: max(0px, calc(50% - var(--m-column) / 2));
+  width: min(100%, var(--m-column));
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes m-blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

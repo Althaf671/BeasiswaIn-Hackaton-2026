@@ -1,0 +1,47 @@
+@model BeasiswaIn.Web.Pages.ExploreCard
+@{
+    var grid = ViewData["CardGrid"] as bool? == true;
+}
+
+<a data-scholarship-card data-name="@Model.Name" href="/detail-beasiswa?nama=@Uri.EscapeDataString(Model.Name)&penyedia=@Uri.EscapeDataString(Model.Provider)&dana=@Uri.EscapeDataString(Model.Funding)&jenjang=@Uri.EscapeDataString(Model.Badge)&batas=@Uri.EscapeDataString(Model.Deadline)" class="@(grid ? "flex w-full min-w-0" : "flex w-[220px] shrink-0 snap-start") flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_3px_12px_rgba(0,0,0,0.05)] transition hover:shadow-md">
+    <div class="relative flex h-28 items-center justify-center" style="background: linear-gradient(to bottom, @Model.From, @Model.To)">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/60 shadow-inner">
+            <span class="select-none text-3xl">@Model.Emoji</span>
+        </div>
+    </div>
+    <div class="flex flex-1 flex-col justify-between gap-2.5 @(grid ? "p-2.5" : "p-3")">
+        <div>
+            @if (grid)
+            {
+                <h3 class="line-clamp-1 text-[11px] font-bold leading-snug text-gray-900">@Model.Name</h3>
+                <div class="mt-1 flex items-center justify-between gap-1.5">
+                    <div class="flex min-w-0 items-center gap-1 text-[10px] text-gray-500">
+                        <i class="fa-solid fa-landmark shrink-0 text-[9px] text-forest-light"></i>
+                        <span class="truncate">@Model.Provider</span>
+                    </div>
+                    <span class="shrink-0 rounded-full px-1.5 py-0.5 text-[8px] font-semibold @(Model.BadgeGreen ? "bg-[#e6f4ed] text-[#00613a]" : "bg-gray-100 text-gray-700")">@Model.Badge</span>
+                </div>
+            }
+            else
+            {
+                <div class="flex items-center justify-between gap-1.5">
+                    <h3 class="line-clamp-1 min-w-0 text-[13px] font-bold leading-snug text-gray-900">@Model.Name</h3>
+                    <span class="shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold @(Model.BadgeGreen ? "bg-[#e6f4ed] text-[#00613a]" : "bg-gray-100 text-gray-700")">@Model.Badge</span>
+                </div>
+                <div class="mt-1 flex items-center gap-1 text-[11px] text-gray-500">
+                    <i class="fa-solid fa-landmark text-[9px] text-forest-light"></i>
+                    <span class="truncate">@Model.Provider</span>
+                </div>
+            }
+        </div>
+        <div class="flex items-center justify-end gap-2 border-t border-gray-100 pt-2 text-[10px]">
+            @if (!grid)
+            {
+                <span class="min-w-0 flex-1 truncate font-bold text-forest-light">@Model.Funding</span>
+            }
+            <span class="flex shrink-0 items-center gap-1 font-medium text-gray-500">
+                <i class="fa-regular fa-calendar text-[9px] text-gray-400"></i>@Model.Deadline
+            </span>
+        </div>
+    </div>
+</a>

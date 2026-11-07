@@ -1,0 +1,79 @@
+@page "/daftar"
+@model BeasiswaIn.Web.Pages.Mobile.Account.SignUpModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<main class="relative flex min-h-dvh flex-col justify-between overflow-hidden bg-white px-6 pb-8 pt-6">
+    <div class="dot-grid-bg pointer-events-none absolute inset-x-0 top-0 -z-0 h-48 opacity-70 [mask-image:linear-gradient(to_bottom,black_60%,transparent_100%)]"></div>
+    <div class="relative z-10 flex w-full flex-col">
+        <header class="mb-5 mt-2 flex flex-col items-center text-center">
+            <div class="relative mb-3 flex h-28 w-28 items-center justify-center rounded-full bg-[#E6F4EA] p-2">
+                <div class="flex h-full w-full items-center justify-center rounded-full border border-[#B7E1CD] bg-white p-3 shadow-inner">
+                    <svg aria-label="Beasiswa-in Mascot" class="h-16 w-16" fill="none" viewBox="0 0 100 100"><path d="M26 32 C26 22, 38 22, 38 32" fill="#00613a"></path><path d="M74 32 C74 22, 62 22, 62 32" fill="#00613a"></path><rect fill="#00613a" height="48" rx="24" width="50" x="25" y="27"></rect><circle cx="41" cy="45" fill="white" r="9" stroke="#004d2e" stroke-width="2.5"></circle><circle cx="59" cy="45" fill="white" r="9" stroke="#004d2e" stroke-width="2.5"></circle><circle cx="41" cy="45" fill="#1D2417" r="3.5"></circle><circle cx="59" cy="45" fill="#1D2417" r="3.5"></circle><polygon fill="#E59B19" points="50,49 46,55 54,55"></polygon></svg>
+                </div>
+            </div>
+            <h1 class="text-xl font-extrabold tracking-tight text-[#232B1C]">Beasiswa-in</h1>
+            <p class="mt-1 text-xs font-medium text-[#737871]">Your Scholarship Journey Starts Here</p>
+        </header>
+        <section>
+            <h2 class="mb-5 text-center text-3xl font-extrabold tracking-tight text-[#004e2e]">Sign Up</h2>
+            <form method="post" class="space-y-3.5">
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#232B1C]" for="name">Name</label>
+                    <div class="relative flex items-center">
+                        <span class="pointer-events-none absolute left-4 text-stone-600"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" stroke-linecap="round"></path><circle cx="12" cy="7" r="4"></circle></svg></span>
+                        <input id="name" name="name" type="text" placeholder="Masukkan nama kamu" class="w-full rounded-2xl border border-[#EBE8E1] bg-white py-3 pl-11 pr-4 text-sm text-stone-800 shadow-sm placeholder:text-stone-400 focus:border-[#588720] focus:outline-none focus:ring-1 focus:ring-[#588720]" />
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#232B1C]" for="email">Email</label>
+                    <div class="relative flex items-center">
+                        <span class="pointer-events-none absolute left-4 text-stone-600"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" stroke-linecap="round"></path></svg></span>
+                        <input id="email" name="email" type="email" placeholder="Masukkan Email kamu" class="w-full rounded-2xl border border-[#EBE8E1] bg-white py-3 pl-11 pr-4 text-sm text-stone-800 shadow-sm placeholder:text-stone-400 focus:border-[#588720] focus:outline-none focus:ring-1 focus:ring-[#588720]" />
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#232B1C]" for="password">Password</label>
+                    <div class="relative flex items-center">
+                        <span class="pointer-events-none absolute left-4 text-stone-600"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="11" rx="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round"></path></svg></span>
+                        <input id="password" name="password" type="password" class="w-full rounded-2xl border border-[#EBE8E1] bg-white py-3 pl-11 pr-11 text-sm shadow-sm focus:border-[#588720] focus:outline-none focus:ring-1 focus:ring-[#588720]" />
+                        <button type="button" data-toggle-password="password" aria-label="Toggle password visibility" class="absolute right-4 text-stone-500"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-linecap="round"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#232B1C]" for="confirm-password">Konfirmasi Password</label>
+                    <div class="relative flex items-center">
+                        <span class="pointer-events-none absolute left-4 text-stone-600"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="11" rx="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round"></path></svg></span>
+                        <input id="confirm-password" name="confirmPassword" type="password" class="w-full rounded-2xl border border-[#EBE8E1] bg-white py-3 pl-11 pr-11 text-sm shadow-sm focus:border-[#588720] focus:outline-none focus:ring-1 focus:ring-[#588720]" />
+                        <button type="button" data-toggle-password="confirm-password" aria-label="Toggle password confirmation visibility" class="absolute right-4 text-stone-500"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-linecap="round"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                    </div>
+                </div>
+                <div class="pt-3">
+                    <button class="flex w-full items-center justify-center gap-2 rounded-full bg-[#004e2e] py-3.5 text-sm font-semibold text-white shadow-md transition hover:bg-[#003d24] active:scale-[0.99]" type="submit">
+                        <span>Create Account</span>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </form>
+            <div class="relative my-4 flex items-center justify-center">
+                <div class="w-full border-t border-[#E5E2D9]"></div>
+                <span class="absolute bg-white px-3 text-[10px] font-medium uppercase tracking-wider text-stone-500">OR CONTINUE WITH</span>
+            </div>
+            <form method="post" asp-page-handler="Google">
+                <button class="flex w-full items-center justify-center gap-2.5 rounded-full border border-[#E6E3DB] bg-white py-3 text-sm font-semibold text-[#2D3326] shadow-sm transition hover:bg-stone-50 active:scale-[0.99]" type="submit">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24"><path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.665-5.17 3.665-9.12z" fill="#4285F4"></path><path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.13C3.27 21.43 7.33 24 12 24z" fill="#34A853"></path><path d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.13z" fill="#FBBC05"></path><path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.27 2.57 1.25 6.58l4.03 3.13c.95-2.83 3.6-4.96 6.72-4.96z" fill="#EA4335"></path></svg>
+                    <span>Sign Up with Google</span>
+                </button>
+            </form>
+        </section>
+    </div>
+    <footer class="mt-6 pb-2 pt-2 text-center text-xs text-stone-500">
+        <span>sudah punya akun? </span>
+        <a class="font-bold text-[#004e2e] hover:underline" asp-page="/Mobile/Account/SignIn">Sign In</a>
+    </footer>
+</main>
+
+@section Scripts {
+    <script src="~/js/mobile/auth.js" asp-append-version="true"></script>
+}

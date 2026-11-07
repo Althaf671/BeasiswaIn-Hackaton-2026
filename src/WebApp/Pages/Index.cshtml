@@ -1,105 +1,45 @@
-﻿@page
-@using BeasiswaIn.Web.Pages
-@model IndexModel
-
+@page
+@model BeasiswaIn.Web.Pages.IndexModel
 @{
-    ViewData["Title"] = "Welcome to BeasiswaIn";
+    Layout = "_MobileLayout";
+    ViewData["Title"] = "Eksplor Beasiswa";
+    ViewData["Nav"] = "eksplor";
+    var sections = new[]
+    {
+        (Title: "Beasiswa Populer", Icon: "fa-solid fa-fire", Cards: Model.Popular),
+        (Title: "Beasiswa Favorit", Icon: "fa-regular fa-bookmark", Cards: Model.Favorite),
+        (Title: "Beasiswa Terbaru", Icon: "fa-solid fa-bolt", Cards: Model.Latest)
+    };
 }
 
-@*
-    Section ini akan otomatis di render di tag head pada _Layout.cshtml
-    nanti kode tailwind yang ditulis di HTML ini akan jadi class tailwind.
-    PASTIKAN section ini selalu ada pada halaman yang mau menggunakan tailwind,
-    kalau misalnya kamu menemukan style ga kerender maka stop server (ctrl + c)
-    dan hidupkan lagi (dotnet watch run)
-*@
-@section Styles {
-    <link rel="stylesheet"
-          href="~/css/tailwind/landing.css"
-          asp-append-version="true" />
-}
-
-<main class="min-h-screen bg-slate-50">
-
-    <!-- HERO SECTION: TESTING MADE BY GPT -->
-    <section class="mx-auto max-w-7xl px-6 py-24 lg:py-32">
-        <div class="grid items-center gap-16 lg:grid-cols-2">
-
-            <div>
-                <span class="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-                    Platform Informasi Beasiswa
-                </span>
-
-                <h1 class="mt-8 text-5xl font-bold tracking-tight text-slate-900 lg:text-7xl">
-                    Temukan Beasiswa,
-                    <span class="text-blue-600">Raih Masa Depan.</span>
-                </h1>
-
-                <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
-                    Temukan berbagai peluang beasiswa dari dalam dan luar
-                    negeri. Mulai perjalanan akademikmu bersama BeasiswaIn.
-                </p>
-
-                <div class="mt-10 flex flex-wrap gap-4">
-                    <a href="/Scholarships"
-                       class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700">
-                        Jelajahi Beasiswa
-                    </a>
-
-                    <a href="/About"
-                       class="rounded-lg border border-slate-300 px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-100">
-                        Pelajari Lebih Lanjut
-                    </a>
-                </div>
-            </div>
-
-            <!-- Illustration -->
-            <div class="relative">
-                <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/60">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-slate-500">
-                                Peluang tersedia
-                            </p>
-                            <h2 class="mt-2 text-4xl font-bold text-slate-900">
-                                250+
-                            </h2>
-                        </div>
-
-                        <div class="rounded-2xl bg-blue-100 p-4 text-2xl">
-                            🎓
-                        </div>
-                    </div>
-
-                    <div class="my-8 h-px bg-slate-100"></div>
-
-                    <div class="space-y-5">
-                        @foreach (var item in new[] {
-                            "Beasiswa Dalam Negeri",
-                            "Beasiswa Luar Negeri",
-                            "Beasiswa Pemerintah"
-                        })
-                        {
-                            <div class="flex items-center gap-4">
-                                <div class="flex size-12 items-center justify-center rounded-xl bg-slate-100 text-xl">
-                                    📚
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-slate-800">
-                                        @item
-                                    </p>
-                                    <p class="text-sm text-slate-500">
-                                        Temukan peluang pendidikan
-                                    </p>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-
+<header class="m-hero">
+    <div class="flex w-full min-w-0 items-center justify-between gap-3">
+        <div class="min-w-0">
+            <h1 class="flex items-center gap-1.5 truncate text-xl font-bold tracking-tight">Hi, @Model.UserName <span aria-hidden="true">👋</span></h1>
         </div>
-    </section>
+        <partial name="_HeroBell" />
+    </div>
+</header>
 
+<main class="m-content m-nav-space gap-7 pt-6">
+    @foreach (var group in sections)
+    {
+        <section>
+            <div class="mb-3 flex items-center justify-between gap-3 px-5">
+                <h2 class="m-section-title min-w-0">
+                    <i class="@group.Icon text-sm text-forest-light" aria-hidden="true"></i>
+                    <span class="truncate">@group.Title</span>
+                </h2>
+                <a href="/list-beasiswa" class="m-link shrink-0">Lihat semua</a>
+            </div>
+            <div class="no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto scroll-px-5 px-5 pb-2 pt-1">
+                @foreach (var card in group.Cards)
+                {
+                    <partial name="_ExploreCard" model="card" />
+                }
+            </div>
+        </section>
+    }
 </main>
+
+@await Html.PartialAsync("_BottomNav")

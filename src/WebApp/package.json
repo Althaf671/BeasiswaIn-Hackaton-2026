@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tw:landing": "tailwindcss -i ./Styles/Tailwind/landing.css -o ./wwwroot/css/tailwind/landing.css --minify",
-    "tw:landing:watch": "tailwindcss -i ./Styles/Tailwind/landing.css -o ./wwwroot/css/tailwind/landing.css --watch"
+    "tw:landing:watch": "tailwindcss -i ./Styles/Tailwind/landing.css -o ./wwwroot/css/tailwind/landing.css --watch",
+    "tw:mobile": "tailwindcss -i ./Styles/Tailwind/mobile.css -o ./wwwroot/css/tailwind/mobile.css --minify",
+    "tw:mobile:watch": "tailwindcss -i ./Styles/Tailwind/mobile.css -o ./wwwroot/css/tailwind/mobile.css --watch"
   },
   "keywords": [],
   "author": "",
