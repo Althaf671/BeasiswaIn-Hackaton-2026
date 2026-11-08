@@ -31,8 +31,8 @@ public sealed record ScholarshipResponse
     public DateTimeOffset? UpdatedAt { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
 
-    public string TotalPrizeText => 
-        $"{NumberFormatter.Rupiah(TotalPrize)}";
+    public string TotalPrizeText =>
+        TotalPrize == 1000m ? string.Empty : NumberFormatter.Rupiah(TotalPrize);
 
     public string RegistrationPeriod =>
         $"{RegistrationStartAt.ToString("d MMMM", new CultureInfo("id-ID"))} - " +

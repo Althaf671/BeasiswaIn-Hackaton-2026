@@ -1,29 +1,37 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BeasiswaIn.Web.Pages.Students;
 
 public static class ProfilBeasiswaGate
 {
-    public const string CookieName = "profilBeasiswaDone";
+    private const string CookiePrefix = "profilBeasiswaDone_";
 
-    public static bool IsDone(HttpRequest request) =>
-        request.Cookies.ContainsKey(CookieName);
-
-    public static void MarkDone(HttpResponse response)
+    public static bool IsDone(HttpContext context)
     {
-        response.Cookies.Append(CookieName, "1", new CookieOptions
+        var name = CookieName(context);
+        return name is not null && context.Request.Cookies.ContainsKey(name);
+    }
+
+    public static void MarkDone(HttpContext context)
+    {
+        var name = CookieName(context);
+        if (name is null) return;
+
+        context.Response.Cookies.Append(name, "1", new CookieOptions
         {
             HttpOnly = true,
             IsEssential = true,
             SameSite = SameSiteMode.Lax,
-            Secure = false,
+            Secure = context.Request.IsHttps,
             Path = "/",
             Expires = DateTimeOffset.UtcNow.AddYears(1)
         });
     }
 
-    public static IActionResult AfterLogin(HttpRequest request) =>
-        IsDone(request)
-            ? new RedirectResult("/")
-            : new RedirectResult("/profil-beasiswa");
+    // Cookie per user, supaya akun lain di browser yang sama tidak ikut dianggap selesai.
+    private static string? CookieName(HttpContext context)
+    {
+        var id = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return string.IsNullOrWhiteSpace(id) ? null : CookiePrefix + id;
+    }
 }

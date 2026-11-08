@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using AspNetCoreHero.ToastNotification;
+using BeasiswaIn.Web.Common.Helpers;
 using BeasiswaIn.Web.Infrastructures.DependencyInjection;
 using BeasiswaIn.Web.Infrastructures.Identity;
 using BeasiswaIn.Web.Infrastructures.Integrations.Services;
@@ -102,6 +103,7 @@ app.UseNotyf();
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<StudentOnboardingMiddleware>();
 
 app.MapStaticAssets();
 app.MapControllers();

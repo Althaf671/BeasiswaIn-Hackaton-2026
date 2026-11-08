@@ -21,7 +21,8 @@ public static class ExploreCardMapper
             Match = s.IsEligible ? "Layak" : "Cek syarat",
             Badge = StatusLabel(s, now),
             BadgeGreen = now >= s.RegistrationStartAt && now <= s.RegistrationEndAt,
-            Funding = s.TotalPrize > 0 ? $"Rp {s.TotalPrize.ToString("N0", IdCulture)}" : "Lihat detail",
+            Funding = s.TotalPrize == 1000m ? string.Empty
+                : s.TotalPrize > 0 ? $"Rp {s.TotalPrize.ToString("N0", IdCulture)}" : "Lihat detail",
             Deadline = $"Batas: {s.RegistrationEndAt.ToLocalTime().ToString("dd MMM yyyy", IdCulture)}",
             From = even ? "#e6f4ed" : "#e0f2fe",
             To = even ? "#cbebd9" : "#cbe7f8",

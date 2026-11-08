@@ -1,0 +1,278 @@
+@page "/onboarding"
+@using System.Text.Json
+@using BeasiswaIn.Web.Pages
+
+@model OnBoardingModel
+@{
+    ViewData["Title"] = "Onboarding";
+    var categoryOptionsJson = JsonSerializer.Serialize(
+        Model.ScholarshipCategoryOptions,
+        new JsonSerializerOptions(JsonSerializerDefaults.Web));
+}
+
+<style>
+    /* hidden harus selalu menang atas class display Tailwind */
+    [data-ob-shell] [hidden] { display: none !important; }
+    .ob-invalid { border-color: #dc2626 !important; }
+    .ob-dragging { background: #F2F9F6; border-color: #004e2e !important; }
+
+    /* ---------- chips ---------- */
+    .ob-chip-box { display: flex; flex-wrap: wrap; align-content: flex-start; align-items: center; gap: .5rem; }
+    .ob-chip { display: inline-flex; align-items: center; gap: .375rem; border: 1px solid #b8e2cb; background: #e6f2eb; color: #004e2e; border-radius: 9999px; padding: .375rem .75rem; font-size: 12px; font-weight: 600; }
+    .ob-chip-remove { border: 0; background: transparent; color: inherit; padding: 0; font-size: 14px; font-weight: 700; line-height: 1; cursor: pointer; }
+    .ob-chip-input { flex: 1 1 100%; min-width: 0; border: 0; outline: 0; background: transparent; padding: 0; font-size: 13.5px; font-weight: 500; color: #112411; }
+    .ob-chip-input:focus { box-shadow: none !important; outline: 0; }
+    .ob-chip-input::placeholder { color: #9EA79C; }
+    .ob-dd { position: fixed; z-index: 1080; max-height: 220px; overflow-y: auto; background: #fff; border: 1px solid #ECEFE6; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,.12); padding: .25rem; }
+    .ob-dd-item { display: block; width: 100%; border: 0; background: transparent; text-align: left; border-radius: .75rem; padding: .5rem .75rem; font-size: 13px; color: #112411; cursor: pointer; }
+    .ob-dd-item.active { background: #e6f2eb; color: #004e2e; font-weight: 600; }
+    .ob-dd-empty { padding: .5rem .75rem; font-size: 13px; color: #697566; }
+
+    /* ---------- file row ---------- */
+    .ob-file { display: flex; align-items: center; justify-content: space-between; gap: .75rem; border: 1px solid rgba(0,78,46,.12); border-radius: 1rem; background: #fff; padding: .875rem; box-shadow: 0 10px 25px -5px rgba(0,78,46,.12); }
+    .ob-file-main { display: flex; min-width: 0; align-items: center; gap: .75rem; }
+    .ob-file-icon { display: flex; width: 2.5rem; height: 2.5rem; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 9999px; background: #E6F4EA; color: #00613a; }
+    .ob-file-text { min-width: 0; }
+    .ob-file-name { margin: 0 0 .125rem; font-size: 13px; font-weight: 700; line-height: 1.2; color: #1C1F16; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ob-file-meta { margin: 0; font-size: 11.5px; color: #7B8074; }
+    .ob-file-remove { flex-shrink: 0; border: 0; background: transparent; padding: .25rem; color: #D93838; cursor: pointer; }
+
+    /* ---------- hasil rekomendasi ---------- */
+    .ob-tone-high { --tone: #004e2e; --tone-bg: #e6f2eb; }
+    .ob-tone-mid  { --tone: #0e7490; --tone-bg: #e0f2f7; }
+    .ob-tone-low  { --tone: #b45309; --tone-bg: #fef3c7; }
+    .ob-rec { border: 1px solid #ECEFE6; border-radius: 1rem; background: #fff; padding: 1rem; box-shadow: 0 2px 12px rgba(0,0,0,.03); }
+    .ob-rec-head { display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; margin-bottom: .75rem; }
+    .ob-rec-title { margin: 0; font-size: 16px; font-weight: 800; line-height: 1.25; color: #112411; }
+    .ob-badge { border-radius: 9999px; padding: .125rem .625rem; font-size: 12px; font-weight: 700; white-space: nowrap; background: var(--tone-bg); color: var(--tone); }
+    .ob-pills { display: flex; flex-wrap: wrap; gap: .375rem; margin-bottom: .5rem; }
+    .ob-pill { border: 1px solid #ECEFE6; background: #F7F9F4; color: #556350; border-radius: 9999px; padding: .125rem .625rem; font-size: 11px; font-weight: 600; }
+    .ob-overview { display: flex; gap: .75rem; align-items: flex-start; margin-bottom: .75rem; }
+    .ob-grow { flex: 1 1 0%; min-width: 0; }
+    .ob-thumb { width: 5rem; height: 5rem; flex-shrink: 0; object-fit: cover; border-radius: .75rem; }
+    .ob-text { margin: 0 0 .5rem; font-size: 12.5px; line-height: 1.5; color: #5F6359; }
+    .ob-clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .ob-strong { margin: 0 0 .25rem; font-size: 12.5px; font-weight: 700; color: #112411; }
+    .ob-label { margin: 0 0 .5rem; font-size: 12px; font-weight: 600; color: #626F5E; }
+    .ob-bar { height: 6px; border-radius: 9999px; background: #E4E9DE; overflow: hidden; margin-bottom: .75rem; }
+    .ob-bar > span { display: block; height: 100%; border-radius: 9999px; background: var(--tone); }
+    .ob-note { border: 1px solid #ECEFE6; background: #F7F9F4; border-radius: .75rem; padding: .625rem .75rem; font-size: 12.5px; line-height: 1.5; color: #3d4a39; margin: 0 0 .75rem; }
+    .ob-details { font-size: 12px; color: #697566; }
+    .ob-details summary { cursor: pointer; }
+    .ob-details p { margin: .5rem 0 0; }
+    .ob-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .5rem; border-top: 1px solid #F1F3ED; padding-top: .75rem; margin-top: .75rem; }
+    .ob-btn { display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; border: 1px solid #004e2e; background: #fff; color: #004e2e; padding: .5rem 1rem; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    .ob-btn[hidden] { display: none !important; }
+    .ob-btn-primary { background: #004e2e; color: #fff; box-shadow: 0 4px 14px rgba(0,78,46,.35); }
+    .ob-empty { border: 1px dashed #b8e2cb; background: #F2F9F6; border-radius: 1rem; padding: 1rem; font-size: 13px; color: #3d4a39; }
+
+    /* ---------- modal detail ---------- */
+    .ob-modal { position: fixed; inset: 0; z-index: 1090; display: flex; align-items: flex-end; justify-content: center; }
+    .ob-modal[hidden] { display: none !important; }
+    .ob-modal-backdrop { position: absolute; inset: 0; background: rgba(17,36,17,.5); }
+    .ob-modal-panel { position: relative; display: flex; flex-direction: column; width: 100%; max-width: 42rem; max-height: 92dvh; background: #fff; border-radius: 1.5rem 1.5rem 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,.2); }
+    @@media (min-width: 640px) {
+        .ob-modal { align-items: center; padding: 1rem; }
+        .ob-modal-panel { border-radius: 1.5rem; max-height: 90dvh; }
+    }
+    .ob-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding: 1.25rem 1.25rem .75rem; }
+    .ob-modal-kicker { margin: 0 0 .25rem; font-size: 12px; color: #697566; }
+    .ob-modal-title { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.25; color: #112411; }
+    .ob-modal-close { flex-shrink: 0; border: 0; background: #F1F3ED; color: #112411; width: 2rem; height: 2rem; border-radius: 9999px; font-size: 18px; line-height: 1; cursor: pointer; }
+    .ob-modal-body { flex: 1 1 auto; overflow-y: auto; padding: 0 1.25rem 1rem; }
+    .ob-modal-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .5rem; border-top: 1px solid #F1F3ED; padding: .875rem 1.25rem; }
+    .ob-sec { margin-bottom: 1rem; }
+    .ob-sec h3 { margin: 0 0 .375rem; font-size: 13px; font-weight: 800; color: #112411; }
+    .ob-sec p, .ob-sec li { font-size: 13px; line-height: 1.55; color: #5F6359; white-space: pre-line; }
+    .ob-sec ul { margin: 0; padding-left: 1.125rem; }
+    .ob-sec li { margin-bottom: .375rem; }
+    .ob-modal-img { display: block; width: 100%; border-radius: .75rem; margin-bottom: 1rem; }
+    .ob-facts { border-radius: 1rem; background: #F7F9F4; padding: .875rem; margin: 0; }
+    .ob-facts dt { font-size: 11.5px; color: #697566; font-weight: 400; margin: 0 0 .125rem; }
+    .ob-facts dd { font-size: 13px; font-weight: 700; color: #112411; margin: 0 0 .75rem; }
+    .ob-facts dd:last-child { margin-bottom: 0; }
+</style>
+
+<div class="bg-white" data-ob-shell>
+    <div class="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-5 pb-6 pt-3">
+
+        <header class="mb-3 flex items-center gap-4 py-3" data-ob-profile-header>
+            <a href="/" data-ob-header-back aria-label="Kembali ke beranda" class="p-1 text-[#142713]">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </a>
+            <span class="text-[20px] font-bold tracking-tight text-[#172714]" data-ob-page-title>Profil Beasiswa</span>
+        </header>
+
+        <section class="mb-6" data-ob-profile-progress>
+            <div class="mb-2 flex items-center justify-between text-[11px] tracking-wide">
+                <span class="font-extrabold uppercase tracking-wider text-[#004e2e]" data-ob-step-label>LANGKAH 1 DARI 2</span>
+                <span class="font-medium text-[#6D7769]" data-ob-step-name>Esai Diri</span>
+            </div>
+            <div class="relative h-1.5 w-full overflow-hidden rounded-full bg-[#E4E9DE]" role="progressbar" aria-label="Progres pengisian profil" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="h-full rounded-full bg-[#004e2e] transition-[width] duration-300" style="width:50%" data-ob-progress-bar></div>
+                <span class="absolute inset-y-0 left-1/2 w-2 -translate-x-1/2 bg-white" aria-hidden="true"></span>
+            </div>
+        </section>
+
+        <div data-ob-result-header hidden>
+            <div class="mb-5 text-center">
+                <h1 class="mb-1 text-[22px] font-extrabold leading-tight tracking-tight text-[#112411]">Temukan Beasiswa yang Cocok</h1>
+                <p class="mb-0 text-[13px] leading-relaxed text-[#5F6359]">Ceritakan dirimu, pilih kategori, dan unggah sertifikat. AI akan merekomendasikan beasiswa terbaik untukmu.</p>
+            </div>
+            <div class="mb-5 flex items-center justify-center gap-2 text-[11.5px] font-semibold">
+                <span class="rounded-full bg-[#F1F3ED] px-3 py-1.5 text-[#626F5E]">1. Profil</span>
+                <span class="rounded-full bg-[#F1F3ED] px-3 py-1.5 text-[#626F5E]">2. Sertifikat</span>
+                <span class="rounded-full bg-[#004e2e] px-3 py-1.5 text-white">3. Hasil</span>
+            </div>
+        </div>
+
+        <form id="onboardingForm" class="flex flex-1 flex-col" method="post" asp-page-handler="Analyze" enctype="multipart/form-data" novalidate>
+
+            @* ===== STEP 1 ===== *@
+            <section data-ob-step="1" class="flex flex-1 flex-col justify-between" aria-labelledby="obProfileTitle">
+                <div>
+                    <h1 id="obProfileTitle" tabindex="-1" class="mb-5 text-[26px] font-extrabold leading-tight tracking-tight text-[#112411] outline-none">Jelaskan Tentang Dirimu</h1>
+
+                    <div class="mb-5">
+                        <label asp-for="CreateStudentProfileRequest.FinalScore" class="mb-1.5 block text-[13px] font-semibold text-[#004e2e]">IPK / Nilai Akhir</label>
+                        <input asp-for="CreateStudentProfileRequest.FinalScore" type="text" inputmode="decimal" autocomplete="off" placeholder="Contoh: 3.75"
+                               class="w-full rounded-2xl border border-[#ECEFE6] bg-white px-4 py-3 text-[13.5px] font-medium text-[#112411] shadow-[0_2px_12px_rgba(0,0,0,0.03)] outline-none placeholder:text-[#9EA79C] focus:border-[#004e2e] focus:ring-0" />
+                        <div class="mt-1 text-xs text-red-600" data-ob-error="FinalScore" role="alert"></div>
+                    </div>
+
+                    <div class="mb-2 rounded-2xl border border-[#ECEFE6] bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)]" data-ob-essay-card>
+                        <div class="flex items-center justify-between pb-3">
+                            <label for="Essay" class="mb-0 flex items-center gap-1.5 text-[13px] font-semibold text-[#004e2e]">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M3.75 6.75h16.5M3.75 12h10.5m-10.5 5.25h16.5" stroke-linecap="round"></path></svg>
+                                <span>Esai Singkat</span>
+                            </label>
+                            <span id="essayHelp" class="text-[12px] font-medium text-[#697566]"><span data-ob-essay-count>0</span> / 500</span>
+                        </div>
+                        <textarea id="Essay" name="Essay" rows="7" maxlength="500"
+                                  class="min-h-[170px] w-full resize-none border-0 bg-transparent p-0 text-[13.5px] leading-relaxed text-[#112411] outline-none placeholder:text-[#9EA79C] focus:ring-0"
+                                  placeholder="Contoh : Saya mahasiswa baru, memiliki pengalaman organisasi....."
+                                  aria-describedby="essayHelp essayTip essayError"></textarea>
+                        <div class="my-3 h-px w-full bg-[#F1F3ED]"></div>
+                        <div id="essayTip" class="flex items-start gap-2 text-[11.5px] leading-snug text-[#626F5E]">
+                            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#004e2e]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.688a4.5 4.5 0 01-4.5 0" stroke-linecap="round"></path></svg>
+                            <p class="mb-0">Tips: Ceritakan minat spesifik dan kontribusi yang ingin kamu berikan.</p>
+                        </div>
+                    </div>
+                    <div id="essayError" class="mb-3 text-xs text-red-600" data-ob-error="Essay" role="alert"></div>
+
+                    <div data-ob-chips data-options="@categoryOptionsJson" data-placeholder="Ketik kategori lalu Enter">
+                        <div class="mb-2.5 flex items-center justify-between px-0.5">
+                            <label for="obChipInput" class="mb-0 flex items-center gap-1.5 text-[14px] font-bold text-[#142614]">
+                                <svg class="h-4 w-4 text-[#004e2e]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.386l3.41-2.006" stroke-linecap="round"></path></svg>
+                                <span>Kategori Beasiswa</span>
+                            </label>
+                            <span class="rounded-full bg-[#e6f2eb] px-2.5 py-0.5 text-[11px] font-bold text-[#004e2e]"><span data-ob-category-count>0</span> Terpilih</span>
+                        </div>
+                        <div data-ob-chips-box class="ob-chip-box min-h-44 rounded-2xl border-2 border-[#004e2e] bg-white p-3.5 shadow-sm"></div>
+                        <div class="mt-2 text-xs text-red-600" data-ob-error="CategoryIds" role="alert"></div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-col items-center gap-2.5 pt-1">
+                    <div class="w-full text-center text-xs text-red-600 empty:hidden" data-ob-error="profile" role="alert"></div>
+                    <button type="button" data-ob-next class="flex w-full items-center justify-center gap-2 rounded-full bg-[#004e2e] px-6 py-3.5 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(0,78,46,0.35)] transition active:scale-[0.99]">
+                        <span>Simpan dan Lanjut</span>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                </div>
+            </section>
+
+            @* ===== STEP 2 ===== *@
+            <section data-ob-step="2" class="flex flex-1 flex-col justify-between" hidden aria-labelledby="obCertificateTitle">
+                <div>
+                    <div class="mb-5">
+                        <h1 id="obCertificateTitle" tabindex="-1" class="mb-1.5 text-xl font-bold tracking-tight text-[#161A10] outline-none">Unggah Dokumen Sertifikat</h1>
+                        <p class="mb-0 text-[13px] leading-relaxed text-[#5F6359]">Lampirkan bukti sertifikat prestasi, TOEFL/IELTS, atau sertifikat organisasi terbaru untuk memperkuat profil beasiswamu.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <div data-ob-dropzone class="relative block w-full cursor-pointer rounded-2xl border-2 border-dashed border-[#00613a] bg-white px-4 py-8 text-center transition hover:bg-[#F2F9F6]">
+                            <input id="certificateInput" type="file" title="" class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                                   accept="image/jpeg,image/png,image/webp" aria-label="Pilih gambar sertifikat" aria-describedby="certificateHelp" />
+                            <div class="pointer-events-none">
+                                <div class="relative mb-3.5 flex items-center justify-center">
+                                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-[#E6F4EA]">
+                                        <svg class="h-7 w-7 text-[#00613a]" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+                                    </div>
+                                    <div class="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#00613a] text-white">
+                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round"></path></svg>
+                                    </div>
+                                </div>
+                                <p class="mb-1 text-[14.5px] font-bold text-[#1A1E14]">Pilih dokumen atau seret ke sini</p>
+                                <p id="certificateHelp" class="mx-auto mb-0 max-w-[215px] text-[11.5px] leading-tight text-[#787D72]">Format didukung: JPG, PNG, WebP (Maks. @(OnBoardingModel.MaxFileSizeBytes / 1024 / 1024) MB per berkas)</p>
+                            </div>
+                        </div>
+                        <p class="mb-0 mt-2 text-xs text-red-600" data-ob-error="Certificates" role="alert"></p>
+                    </div>
+
+                    <div class="mb-5">
+                        <div class="mb-3 flex items-center justify-between px-0.5">
+                            <div class="flex items-center gap-2">
+                                <h2 class="mb-0 text-sm font-bold text-[#1B1E14]">File Terpilih</h2>
+                                <span class="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#E6F4EA] px-1 text-[11px] font-bold text-[#00613a]" data-ob-file-count>0</span>
+                            </div>
+                            <span class="text-xs text-[#70766B]">Maks 1 berkas</span>
+                        </div>
+                        <ul class="m-0 list-none space-y-2.5 p-0" data-ob-file-list aria-live="polite"></ul>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <p class="mb-3 text-center text-xs text-red-600 empty:hidden" data-ob-error="general" role="alert"></p>
+                    <button type="submit" data-ob-submit class="flex w-full items-center justify-center gap-2 rounded-full bg-[#004e2e] px-6 py-3.5 text-sm font-bold text-white shadow-[0_4px_14px_0_rgba(0,78,46,0.35)] disabled:cursor-not-allowed disabled:opacity-70">
+                        <span>Submit dan Analisa</span>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                    <button type="button" data-ob-back class="mx-auto mt-3 block border-0 bg-transparent p-0 text-[12.5px] font-medium text-[#00613a] underline-offset-2 hover:underline">Kembali ke profil</button>
+                </div>
+            </section>
+
+            @* ===== STEP 3 (diisi JS) ===== *@
+            <section data-ob-step="3" class="flex-1" hidden>
+                <div class="mb-3 flex items-center justify-between">
+                    <h2 class="mb-0 text-[18px] font-extrabold tracking-tight text-[#112411]">Rekomendasi Beasiswa</h2>
+                    <a href="/onboarding" class="ob-btn">Mulai ulang</a>
+                </div>
+                <div class="flex flex-col gap-3" data-ob-result aria-live="polite"></div>
+
+                <div class="mt-6 pb-2">
+                    <a href="/main-page" class="ob-btn ob-btn-primary w-full py-3.5 text-[15px]">Ke halaman utama</a>
+                </div>
+            </section>
+        </form>
+
+        <div class="flex items-center justify-center gap-1.5 pb-1 pt-4 text-[11.5px] text-[#556350]" data-ob-profile-footer>
+            <svg class="h-3.5 w-3.5 text-[#004e2e]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" stroke-linecap="round"></path></svg>
+            <span>Lengkapi profil untuk rekomendasi yang lebih sesuai</span>
+        </div>
+    </div>
+</div>
+
+@* ===== Modal detail beasiswa (tanpa Bootstrap) ===== *@
+<div id="obScholarshipModal" class="ob-modal" hidden role="dialog" aria-modal="true" aria-labelledby="obScholarshipModalTitle">
+    <div class="ob-modal-backdrop" data-ob-modal-close></div>
+    <div class="ob-modal-panel">
+        <div class="ob-modal-head">
+            <div>
+                <p class="ob-modal-kicker">Detail Beasiswa</p>
+                <h2 class="ob-modal-title" id="obScholarshipModalTitle"></h2>
+            </div>
+            <button type="button" class="ob-modal-close" data-ob-modal-close aria-label="Tutup detail">&times;</button>
+        </div>
+        <div class="ob-modal-body" data-ob-modal-body></div>
+        <div class="ob-modal-foot">
+            <button type="button" class="ob-btn" data-ob-modal-close>Tutup</button>
+            <a class="ob-btn" data-ob-modal-guide target="_blank" rel="noopener noreferrer">Lihat panduan</a>
+            <a class="ob-btn ob-btn-primary" data-ob-modal-register target="_blank" rel="noopener noreferrer">Daftar beasiswa</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/on-boarding.js" asp-append-version="true"></script>
+}

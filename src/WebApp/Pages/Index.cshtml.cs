@@ -39,7 +39,11 @@ public class IndexModel : PageModel
     //     return Page();
     // }
 
-    public string UserName { get; } = "Dimas";
+    public string UserName => !_userContext.IsAuthenticated
+        ? "Pengunjung"
+        : string.IsNullOrWhiteSpace(_userContext.Username)
+            ? "Pengguna"
+            : string.Join(" ", _userContext.Username.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Take(2));
 
     private readonly IScholarshipService _scholarshipService;
     private readonly INotyfService _toast;
@@ -65,7 +69,12 @@ public class IndexModel : PageModel
             _toast.ToastSuccess("Sukses", message);
 
         await LoadLatestScholarshipAsync(cancellationToken);
-        await LoadRecommendedScholarshipAsync(cancellationToken);
+
+        // Personal recommendations require an authenticated account; a missing identity is
+        // reported in logs, never as a user-facing error that survives into the next page.
+        if (_userContext.IsAuthenticated && !string.IsNullOrWhiteSpace(_userContext.UserId))
+            await LoadRecommendedScholarshipAsync(cancellationToken);
+
         await LoadTrendingScholarshipAsync(cancellationToken);
 
         return Page();
