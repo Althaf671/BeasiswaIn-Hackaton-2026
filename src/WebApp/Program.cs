@@ -50,6 +50,7 @@ builder.Services.AddAppCookie(builder.Environment);
 builder.Services.AddAppRateLimit();
 builder.Services.AddAppCors();
 builder.Services.AddScoped<IDatasetReader, DatasetReader>();
+builder.Services.AddScoped<IStudentOnboardingState, StudentOnboardingState>();
 
 // external integrations
 builder.Services.AddAppDatabase(builder.Configuration);

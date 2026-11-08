@@ -1,5 +1,5 @@
+using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using AspNetCoreHero.ToastNotification.Notyf;
 using BeasiswaIn.Web.Common.Constants;
 using BeasiswaIn.Web.Common.Helpers;
 using BeasiswaIn.Web.Interfaces;
@@ -26,9 +26,7 @@ public sealed class OnBoardingModel : PageModel
     private readonly IScholarshipService _scholarshipService;
     private readonly IOpenAiService _openAiService;
     private readonly IImageStorageService _imageStorageService;
-    private readonly IStudentProfileService _studentProfileService;
-    private readonly INotyfService _toast;
-    private readonly IUserScholarshipPreferenceService _userScholarshipPreferenceService;
+    private readonly IStudentOnboardingState _onboardingState;
 
     public IReadOnlyList<ScholarshipCategoryOptions> ScholarshipCategoryOptions { get; private set; } = [];
     public string ChatResult { get; private set; } = string.Empty;
@@ -38,17 +36,13 @@ public sealed class OnBoardingModel : PageModel
         IScholarshipService scholarshipService,
         IOpenAiService openAiService,
         IImageStorageService imageStorageService,
-        IStudentProfileService studentProfileService,
-        INotyfService notfyService,
-        IUserScholarshipPreferenceService userScholarshipPreferenceService)
+        IStudentOnboardingState onboardingState)
     {
         _scholarshipCategoryService = scholarshipCategoryService;
         _scholarshipService = scholarshipService;
         _openAiService = openAiService;
         _imageStorageService = imageStorageService;
-        _studentProfileService = studentProfileService;
-        _toast = notfyService;
-        _userScholarshipPreferenceService = userScholarshipPreferenceService;
+        _onboardingState = onboardingState;
     }
 
     public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
@@ -64,6 +58,10 @@ public sealed class OnBoardingModel : PageModel
         UserScholarshipOnBoardingRequest request,
         CancellationToken cancellationToken)
     {
+        var accountId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(accountId))
+            return Failure("Sesi login berakhir. Silakan masuk kembali.");
+
         await ValidateCertificateAsync(request.Certificates, cancellationToken);
         if (!ModelState.IsValid)
             return ValidationErrors();
@@ -83,24 +81,17 @@ public sealed class OnBoardingModel : PageModel
             return ValidationErrors();
         }
 
-        var studentProfileResult = await _studentProfileService.CreateAsync(
-            CreateStudentProfileRequest with { Description = request.Essay },
-            cancellationToken);
-        if (studentProfileResult.IsFailure)
-        {
-            _toast.ToastError("Gagal", studentProfileResult.Error.Description!);
-            return Page();
-        }
-
         var scholarshipsResult = await _scholarshipService
             .GetEligibleByCategoryIdsAsync(selectedIds, cancellationToken);
         if (scholarshipsResult.IsFailure)
             return Failure(scholarshipsResult.Error.Description);
 
         var imageResult = await _imageStorageService.UploadAsync(
-            request.Certificates, 
+            request.Certificates,
             FileStorageConstant.FolderDirectory,
             cancellationToken);
+        if (imageResult.IsFailure)
+            return Failure(imageResult.Error.Description);
 
         var extractionResult = await _openAiService.ExtractCertificateAsync(
             imageResult.Value!.Url,
@@ -126,16 +117,14 @@ public sealed class OnBoardingModel : PageModel
             .Take(5)
             .ToList();
 
-        var userId = studentProfileResult.Value!;
-        var isSaved = await _userScholarshipPreferenceService.SaveScholarshipPreferencesAsync(
-            userId,
+        // Satu transaksi: profil + preferensi + penanda "onboarding selesai".
+        var completed = await _onboardingState.CompleteAsync(
+            accountId,
+            CreateStudentProfileRequest with { Description = request.Essay },
             toSave,
             cancellationToken);
-            
-        if (!isSaved)
-        {
-            _toast.ToastError("Gagal", "Gagal menyimpan data preferensi beasiswa");
-        }
+        if (!completed)
+            return Failure("Gagal menyimpan profil. Silakan coba lagi.");
 
         return new JsonResult(new
         {
